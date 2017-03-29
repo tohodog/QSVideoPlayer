@@ -220,6 +220,7 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
             }
             //缓冲好了
             iMediaCallback.onInfo(this, MEDIA_INFO_BUFFERING_END, MEDIA_INFO_BUFFERING_END);
+            mainThreadHandler.removeCallbacks(runnable);
             mainThreadHandler.postDelayed(runnable, 500);
         }
         //播放完毕
