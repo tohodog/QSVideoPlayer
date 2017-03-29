@@ -12,7 +12,7 @@ QSVideoPlayer
 目前测试解码效果ijkMedia最快最好,AndroidMedia个别视频有半途中断BUG,exo无明显缺陷<br>
 
 使用说明<br>
-下载项目 添加qsvideoplayre文件夹为自己的项目依赖即可 [下载apk](https://github.com/tohodog/QSVideoPlayer/blob/master/app-debug.apk)<br>
+下载项目 添加qsvideoplayre文件夹为自己的项目依赖即可 [下载apk](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/app-debug.apk)<br>
 diy播放器: <br>
 可直接修改QSVideoView改造自己的播放器 或 继承BaseVideoView参考QSVideoView<br>
 只需子类提供layout布局以及设置各个状态的ui即可完成自己的播放器,播放逻辑一行不用写<br>
