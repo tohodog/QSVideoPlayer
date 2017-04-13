@@ -16,7 +16,7 @@ QSVideoPlayer
 
 
 ## diy播放器: <br>
-可直接修改QSVideoView改造自己的播放器 或 继承BaseVideoView参考QSVideoView<br>
+可直接修改DemoQSVideoView改造自己的播放器 或 继承QSVideoViewHelp参考DemoQSVideoView <br>
 只需子类提供layout布局以及设置各个状态的ui即可完成自己的播放器,播放逻辑一行不用写<br>
 ```
 QSVideoView qsVideoView = (QSVideoView) findViewById(R.id.xxx);
