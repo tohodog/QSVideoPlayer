@@ -68,6 +68,6 @@ qsVideoView.enterFullMode=1;//进入全屏的模式 0默认是横屏 1是竖屏,
     }
 ```
 
-![输入图片说明](http://git.oschina.net/uploads/images/2017/0301/151443_9778d0d4_530535.jpeg "在这里输入图片标题")
+![输入图片说明](http://git.oschina.net/uploads/images/2017/0409/201818_d6e50594_530535.jpeg "在这里输入图片标题")
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg "在这里输入图片标题")
 
