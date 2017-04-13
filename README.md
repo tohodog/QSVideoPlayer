@@ -1,7 +1,7 @@
 QSVideoPlayer
 ====
   * UI设计基于[jc播放器](https://github.com/lipangit/JieCaoVideoPlayer) ,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
-  * 可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
+  * 可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、[ijkMedia](https://github.com/Bilibili/ijkplayer)(基于ffmepg)+ijkExoMedia(基于exo)、[ExoMedia](https://github.com/google/ExoPlayer)(2.0.4)解码器
   * 根据系统版本选择SurfaceView和TextureView,支持api9+
   * 支持本地视频,在线视频,m3u8直播,手势控制等...
 
