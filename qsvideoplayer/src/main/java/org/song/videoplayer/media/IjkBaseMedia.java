@@ -2,7 +2,6 @@ package org.song.videoplayer.media;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.os.HandlerThread;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 

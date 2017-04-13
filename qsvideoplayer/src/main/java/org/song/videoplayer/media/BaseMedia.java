@@ -1,7 +1,6 @@
 package org.song.videoplayer.media;
 
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.view.Surface;
 

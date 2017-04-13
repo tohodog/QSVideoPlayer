@@ -41,6 +41,10 @@ public interface IVideoPlayer {
 
     void setPlayListener(PlayListener playListener);
 
+    void setAspectRatio(int aspectRatio);
+
+    void setiMediaControl(int i);
+
     boolean onBackPressed();
 
     boolean isPlaying();
@@ -48,6 +52,14 @@ public interface IVideoPlayer {
     int getPosition();
 
     int getDuration();
+
+    int getCurrentMode();
+
+    int getCurrentState();
+
+    void enterWindowFullscreen();
+
+    void quitWindowFullscreen();
 
     void release();
 

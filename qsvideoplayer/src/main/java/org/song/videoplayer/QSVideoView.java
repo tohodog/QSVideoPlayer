@@ -1,33 +1,48 @@
 package org.song.videoplayer;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Color;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import org.song.videoplayer.media.IMediaCallback;
 import org.song.videoplayer.media.IMediaControl;
+import org.song.videoplayer.rederview.IRenderView;
+import org.song.videoplayer.rederview.SufaceRenderView;
 
 /**
- * Created by song on 2017/2/13.
- * ui设计基于jcplayer
+ * Created by on 2017/2/13.
+ * edit on 2017/4/8.
+ * 没有控制ui,纯视频播放器,提供完整控制功能
  */
-public class QSVideoView extends BaseVideoView {
 
-    public boolean isShowWifiDialog = true;//是否显示非wifi提示
+public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCallback {
 
-    protected ImageView backButton;
-    protected ProgressBar bottomProgressBar;
-    protected TextView titleTextView;
-    protected ImageView coverImageView;
-    protected ImageView tinyBackImageView;
+    public static final String TAG = "QSVideoView";
+    public int enterFullMode = 0;//进入全屏的模式 0横屏 1传感器自动横竖屏
+    protected final int progressMax = 1000;
+
+    private IMediaControl iMediaControl;
+
+    protected FrameLayout videoView;
+    private FrameLayout renderViewContainer;//suface容器
+    private IRenderView iRenderView;
+
+    protected String url;
+    protected int currentState = STATE_NORMAL;
+    protected int currentMode = MODE_WINDOW_NORMAL;
+    protected int seekToInAdvance;
+    protected int aspectRatio;
+
+    protected PlayListener playListener;
+    public int urlMode;
+
 
     public QSVideoView(Context context) {
         super(context);
@@ -35,408 +50,371 @@ public class QSVideoView extends BaseVideoView {
 
     public QSVideoView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.video_view;
-    }
-
-    public ImageView getCoverImageView() {
-        return coverImageView;
-    }
-
-    @Override
     protected void init(Context context) {
-        super.init(context);
-
-        bottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
-        titleTextView = (TextView) findViewById(R.id.title);
-        backButton = (ImageView) findViewById(R.id.back);
-        coverImageView = (ImageView) findViewById(R.id.cover);
-        tinyBackImageView = (ImageView) findViewById(R.id.back_tiny);
-
-        bottomProgressBar.setMax(progressMax);
-        backButton.setOnClickListener(this);
-        tinyBackImageView.setOnClickListener(this);
-
-        setUIWithStateAndMode(STATE_NORMAL, currentMode);
+        iMediaControl = ConfigManage.getInstance(getContext()).getIMediaControl(this);
+        videoView = new FrameLayout(context);
+        renderViewContainer = new FrameLayout(context);
+        renderViewContainer.setBackgroundColor(Color.BLACK);
+        videoView.addView(renderViewContainer, new LayoutParams(-1, -1));
+        addView(videoView, new LayoutParams(-1, -1));
     }
 
+
+    //-----------给外部调用的start----------
     @Override
     public void setUp(String url, Object... objects) {
-        super.setUp(url, objects);
-        if (objects != null)
-            titleTextView.setText(String.valueOf(objects[0]));
+        this.url = url;
+        release();
+        setStateAndMode(STATE_NORMAL, currentMode);
+        if (url.startsWith("file"))
+            urlMode = 1;
+    }
+
+    @Override
+    public void play() {
+        if (currentState != STATE_PLAYING)
+            clickPlay();
+    }
+
+    @Override
+    public void seekTo(int duration) {
+        if (checkReady()) {
+            if (duration >= 0) {
+                seek(duration);
+            }
+        } else
+            seekToInAdvance = duration;
+    }
+
+    @Override
+    public void pause() {
+        if (currentState == STATE_PLAYING)
+            clickPlay();
+    }
+
+
+    public void setPlayListener(PlayListener playListener) {
+        this.playListener = playListener;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (currentMode != MODE_WINDOW_NORMAL) {
+            quitWindowFullscreen();
+            return true;
+        }
+        return false;
     }
 
 
     @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        int i = v.getId();
-        if (i == R.id.back)
-            onBackPressed();
-    }
-
-    //---底部进度条 覆盖父类设置数据
-    @Override
-    protected void setProgressAndText() {
-        super.setProgressAndText();
-        bottomProgressBar.setProgress(progressBar.getProgress());
+    public void setAspectRatio(int aspectRatio) {
+        if (iRenderView != null)
+            iRenderView.setAspectRatio(aspectRatio);
+        this.aspectRatio = aspectRatio;
     }
 
     @Override
-    protected void setBufferProgress(int bufferProgress) {
-        super.setBufferProgress(bufferProgress);
-        bottomProgressBar.setSecondaryProgress(progressBar.getSecondaryProgress());
+    public void setiMediaControl(int i) {
+        this.iMediaControl = ConfigManage.getInstance(getContext()).getIMediaControl(this, i);
     }
 
     @Override
-    protected void resetProgressAndTime() {
-        super.resetProgressAndTime();
-        bottomProgressBar.setProgress(0);
-        bottomProgressBar.setSecondaryProgress(0);
+    public boolean isPlaying() {
+        return iMediaControl.isPlaying();
     }
 
     @Override
-    protected void setCompleProgressAndTime() {
-        super.setCompleProgressAndTime();
-        bottomProgressBar.setProgress(progressMax);
+    public int getPosition() {
+        return iMediaControl.getCurrentPosition();
     }
-    //------底部进度条end
+
+    @Override
+    public int getDuration() {
+        return iMediaControl.getDuration();
+    }
+
+    public int getCurrentMode() {
+        return currentMode;
+    }
+
+    public int getCurrentState() {
+        return currentState;
+    }
+
+    @Override
+    public void release() {
+        iMediaControl.release();
+        removeRenderView();
+        setStateAndMode(STATE_NORMAL, currentMode);
+        intiParams();
+    }
 
 
-    @Override//缓冲
+    private long tempLong;
+    private boolean full_flag;//标记状态栏状态
+
+    //全屏
+    @Override
+    public void enterWindowFullscreen() {
+        if (currentMode != MODE_WINDOW_FULLSCREEN & checkEnterOrFullOK()) {
+            full_flag = Util.SET_FULL(getContext());
+            if (enterFullMode == 1)
+                Util.SET_SENSOR(getContext());
+            else
+                Util.SET_LANDSCAPE(getContext());
+
+            ViewGroup vp = (ViewGroup) videoView.getParent();
+            if (vp != null)
+                vp.removeView(videoView);
+            ViewGroup decorView = (ViewGroup) (Util.scanForActivity(getContext())).getWindow().getDecorView();
+            //.findViewById(Window.ID_ANDROID_CONTENT);
+            decorView.addView(videoView, new LayoutParams(-1, -1));
+            setStateAndMode(currentState, MODE_WINDOW_FULLSCREEN);
+        }
+    }
+
+    //退出全屏
+    @Override
+    public void quitWindowFullscreen() {
+        if (currentMode != MODE_WINDOW_NORMAL & checkEnterOrFullOK()) {
+            if (!full_flag)
+                Util.CLEAR_FULL(getContext());
+            Util.SET_PORTRAIT(getContext());
+
+            ViewGroup vp = (ViewGroup) videoView.getParent();
+            if (vp != null)
+                vp.removeView(videoView);
+            addView(videoView, new LayoutParams(-1, -1));
+            setStateAndMode(currentState, MODE_WINDOW_NORMAL);
+        }
+    }
+
+    //防止频繁切换全屏
+    private boolean checkEnterOrFullOK() {
+        long now = System.currentTimeMillis();
+        long d = now - tempLong;
+        if (d > 888)
+            tempLong = now;
+        return d > 888;
+    }
+
+    //-----------给外部调用的end----------
+
+
+    //-----------解码器回调start-----------------
+    @Override
+    public void onPrepared(IMediaControl iMediaControl) {
+        Log.e("MediaCallBack", "onPrepared");
+        if (seekToInAdvance > 0) {
+            iMediaControl.seekTo(seekToInAdvance);
+            seekToInAdvance = 0;
+        }
+        iMediaControl.doPlay();
+        setStateAndMode(STATE_PLAYING, currentMode);
+        if (playListener != null)
+            playListener.onEvent(EVENT_PREPARED, 0);
+    }
+
+
+    @Override
+    public void onCompletion(IMediaControl iMediaControl) {
+        Log.e("MediaCallBack", "onCompletion");
+        setStateAndMode(STATE_AUTO_COMPLETE, currentMode);
+        if (playListener != null)
+            playListener.onEvent(EVENT_COMPLETION);
+    }
+
+    @Override
+    public void onSeekComplete(IMediaControl iMediaControl) {
+        Log.e("MediaCallBack", "onSeekComplete");
+    }
+
+    @Override
+    public void onInfo(IMediaControl iMediaControl, int what, int extra) {
+        Log.e("MediaCallBack", "onInfo" + " what" + what + " extra" + extra);
+        if (what == IMediaControl.MEDIA_INFO_BUFFERING_START) {
+            onBuffering(true);
+            if (playListener != null)
+                playListener.onEvent(EVENT_BUFFERING_START);
+        }
+
+        if (what == IMediaControl.MEDIA_INFO_BUFFERING_END) {
+            onBuffering(false);
+            if (playListener != null)
+                playListener.onEvent(EVENT_BUFFERING_END);
+        }
+    }
+
+
+    @Override
+    public void onVideoSizeChanged(IMediaControl iMediaControl, int width, int height) {
+        Log.e("MediaCallBack", "onVideoSizeChanged" + " width:" + width + " height:" + height);
+        iRenderView.setVideoSize(width, height);
+        if (playListener != null)
+            playListener.onEvent(EVENT_VIDEOSIZECHANGE, width, height);
+    }
+
+    @Override
+    public void onError(IMediaControl iMediaControl, int what, int extra) {
+        Log.e("MediaCallBack", "onError" + "what:" + what + " extra:" + extra);
+        //if (what == 38 | extra == -38 | extra == -19)
+        //    return;
+        Toast.makeText(getContext(), "error: " + what + "," + extra, Toast.LENGTH_SHORT).show();
+        iMediaControl.release();
+        seekToInAdvance = getPosition();//记录错误时进度
+        setStateAndMode(STATE_ERROR, currentMode);
+        if (playListener != null)
+            playListener.onEvent(EVENT_ERROR, what, extra);
+    }
+
+    @Override
+    public void onBufferingUpdate(IMediaControl iMediaControl, float percent) {
+        Log.e("MediaCallBack", "onBufferingUpdate" + percent);
+        setBufferProgress((int) (percent * progressMax));
+        if (playListener != null)
+            playListener.onEvent(EVENT_BUFFERING_UPDATA, (int) (percent * 100));
+    }
+
+    //给子类覆盖
     protected void onBuffering(boolean isBuffering) {
-        bufferingContainer.setVisibility(isBuffering ? VISIBLE : INVISIBLE);
     }
 
-    //隐藏控制ui
-    @Override
-    protected void dismissControlView() {
-        bottomContainer.setVisibility(View.INVISIBLE);
-        topContainer.setVisibility(View.INVISIBLE);
-        bottomProgressBar.setVisibility(View.VISIBLE);
-        if (currentState != STATE_AUTO_COMPLETE)
-            startButton.setVisibility(View.INVISIBLE);
+    //给子类覆盖
+    protected void setBufferProgress(int percent) {
     }
 
+    //-----------解码器回调end-----------------
 
-    //--------------根据各种状态设置ui是否显示(控制view也显示)------------------
-    @Override
-    protected void changeUiWithStateAndMode(final int status, final int mode) {
-        //立即隐藏控制ui标记 初始化好播放立即隐藏控制ui / 切换全屏如果原来是隐藏的也立即隐藏
-        boolean flag = (status == STATE_PLAYING & currentState == STATE_PREPARING) |
-                (mode != currentMode & bottomContainer.getVisibility() != VISIBLE);
-        switch (status) {
-            case STATE_NORMAL:
-                changeUiToNormal(mode);
-                break;
-            case STATE_PREPARING:
-                changeUiToPreparingShow(mode);
-                break;
-            case STATE_PLAYING:
-                changeUiToPlayingShow(mode);
-                startDismissControlViewTimer();
-                break;
-            case STATE_PAUSE:
-                changeUiToPauseShow(mode);
-                break;
-            case STATE_ERROR:
-                changeUiToError(mode);
-                break;
-            case STATE_AUTO_COMPLETE:
-                changeUiToCompleteShow(mode);
-                break;
-        }
-        updateViewImage(status, mode);
-        if (flag) dismissControlView();
+
+    //-----------各种流程逻辑start-----------------
+
+    //初始化一些变量
+    protected void intiParams() {
     }
 
-    protected void changeUiToNormal(int currentMode) {
-        bufferingContainer.setVisibility(INVISIBLE);
-        switch (currentMode) {
-            case MODE_WINDOW_NORMAL:
-                setAllControlsVisible(4, 4, 0, 0, 4, 4);
-                break;
-            case MODE_WINDOW_FULLSCREEN:
-                setAllControlsVisible(0, 4, 0, 0, 4, 4);
-                break;
-            case MODE_WINDOW_TINY:
-                break;
-        }
-    }
-
-    protected void changeUiToPreparingShow(int currentMode) {
-        bufferingContainer.setVisibility(INVISIBLE);
-        switch (currentMode) {
-            case MODE_WINDOW_NORMAL:
-                setAllControlsVisible(4, 4, 4, 4, 4, 0);
-
-                break;
-            case MODE_WINDOW_FULLSCREEN:
-                setAllControlsVisible(4, 4, 4, 4, 4, 0);
-                break;
-            case MODE_WINDOW_TINY:
-                break;
-        }
-    }
-
-    protected void changeUiToPlayingShow(int currentMode) {
-        switch (currentMode) {
-            case MODE_WINDOW_NORMAL:
-                setAllControlsVisible(4, 0, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_FULLSCREEN:
-                setAllControlsVisible(0, 0, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_TINY:
-                break;
-        }
-
-    }
-
-    protected void changeUiToPauseShow(int currentMode) {
-        switch (currentMode) {
-            case MODE_WINDOW_NORMAL:
-                setAllControlsVisible(4, 0, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_FULLSCREEN:
-                setAllControlsVisible(0, 0, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_TINY:
-                break;
-        }
-
-    }
-
-
-    protected void changeUiToCompleteShow(int currentMode) {
-        bufferingContainer.setVisibility(INVISIBLE);
-        switch (currentMode) {
-            case MODE_WINDOW_NORMAL:
-                setAllControlsVisible(4, 0, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_FULLSCREEN:
-                setAllControlsVisible(0, 0, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_TINY:
-                break;
-        }
-
-    }
-
-    protected void changeUiToError(int currentMode) {
-        bufferingContainer.setVisibility(INVISIBLE);
-        switch (currentMode) {
-            case MODE_WINDOW_NORMAL:
-                setAllControlsVisible(4, 4, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_FULLSCREEN:
-                setAllControlsVisible(4, 4, 0, 4, 4, 4);
-                break;
-            case MODE_WINDOW_TINY:
-                break;
-        }
-
-    }
-
-    /**
-     * 0 VISIBLE  4 INVISIBLE 8 GONE
-     * 参数分别为
-     * 0顶部 1底部 2按钮 3封面 4小进度条 5初始化界面
-     */
-    protected void setAllControlsVisible(Integer... arr) {
-        topContainer.setVisibility(arr[0]);
-        bottomContainer.setVisibility(arr[1]);
-        startButton.setVisibility(arr[2]);
-        coverImageView.setVisibility(arr[3]);
-        bottomProgressBar.setVisibility(arr[4]);
-        loadingContainer.setVisibility(arr[5]);
-        //errorContainer.setVisibility(arr[6]);
-    }
-    //--------------根据各种状态设置ui是否显示 end------------------
-
-
-    protected void updateViewImage(int status, int mode) {
-        if (status == STATE_ERROR) {
-            startButton.setImageResource(R.drawable.jc_click_error_selector);
-        } else if (status == STATE_PLAYING) {
-            startButton.setImageResource(R.drawable.jc_click_pause_selector);
-        } else {
-            startButton.setImageResource(R.drawable.jc_click_play_selector);
-        }
-
-        if (mode == MODE_WINDOW_NORMAL)
-            fullscreenButton.setImageResource(R.drawable.jc_enlarge);
+    //设置播放状态
+    private void setStateAndMode(final int status, final int mode) {
+        if (Looper.getMainLooper() == Looper.myLooper())
+            setUIWithStateAndMode(status, mode);
         else
-            fullscreenButton.setImageResource(R.drawable.jc_shrink);
-
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    setUIWithStateAndMode(status, mode);
+                }
+            });
     }
 
+    protected void setUIWithStateAndMode(final int status, final int mode) {
+        Log.e("setStateAndMode", "status:" + status + " mode:" + mode);
+        if (status == STATE_PLAYING)
+            Util.KEEP_SCREEN_ON(getContext());
+        else
+            Util.KEEP_SCREEN_OFF(getContext());
 
-    //-----------------弹窗---------------
-    @Override
+        final int temp_status = this.currentState;
+        final int temp_mode = this.currentMode;
+        this.currentState = status;
+        this.currentMode = mode;
+        if (playListener != null) {
+            if (temp_status != status)
+                playListener.onStatus(status);
+            if (temp_mode != mode)
+                playListener.onMode(mode);
+        }
+    }
+
+    //点击时根据不同状态做出不同的反应
+    protected void clickPlay() {
+        if (TextUtils.isEmpty(url)) {
+            Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (currentState == STATE_NORMAL) {
+            if (urlMode != 1 && !Util.isWifiConnected(getContext())) {
+                if (showWifiDialog())
+                    return;
+            }
+            prepareMediaPlayer();
+        } else if (currentState == STATE_PLAYING) {
+            iMediaControl.doPause();
+            setStateAndMode(STATE_PAUSE, currentMode);
+        } else if (currentState == STATE_PAUSE) {
+            iMediaControl.doPlay();
+            setStateAndMode(STATE_PLAYING, currentMode);
+        } else if (currentState == STATE_AUTO_COMPLETE || currentState == STATE_ERROR) {
+            prepareMediaPlayer();
+        }
+    }
+
     protected boolean showWifiDialog() {
-        if (!isShowWifiDialog)
-            return false;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
+        return false;
+    }
+
+    //一开始点击准备播放--初始化
+    protected void prepareMediaPlayer() {
+        Log.d(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
+        removeRenderView();
+        iMediaControl.doPrepar(getContext(), url, null);
+        addRenderView();
+        setStateAndMode(STATE_PREPARING, currentMode);
+    }
+
+    private void addRenderView() {
+        iRenderView = ConfigManage.getInstance(getContext()).getIRenderView(getContext());
+        iRenderView.addRenderCallback(new IRenderView.IRenderCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                prepareMediaPlayer();
+            public void onSurfaceCreated(IRenderView holder, int width, int height) {
+                holder.bindMedia(iMediaControl);
+            }
+
+            @Override
+            public void onSurfaceChanged(IRenderView holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void onSurfaceDestroyed(IRenderView holder) {
+                if (holder instanceof SufaceRenderView) {
+                    iMediaControl.setDisplay(null);
+                }
             }
         });
-        builder.setNegativeButton(getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-        return true;
+        iRenderView.setAspectRatio(aspectRatio);
+        LayoutParams layoutParams = new LayoutParams(-1, -1, Gravity.CENTER);
+        renderViewContainer.addView(iRenderView.get(), layoutParams);
     }
 
-    protected PopupWindow mProgressDialog;
-    protected ProgressBar mDialogProgressBar;
-    protected TextView tv_current;
-    protected TextView tv_duration;
-    protected TextView tv_delta;
-    protected ImageView mDialogIcon;
-
-    @Override
-    protected boolean showProgressDialog(int delta, int position, int duration) {
-        if (mProgressDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_progress, null);
-            mDialogProgressBar = ((ProgressBar) localView.findViewById(R.id.duration_progressbar));
-            tv_current = ((TextView) localView.findViewById(R.id.tv_current));
-            tv_duration = ((TextView) localView.findViewById(R.id.tv_duration));
-            tv_delta = ((TextView) localView.findViewById(R.id.tv_delta));
-            mDialogIcon = ((ImageView) localView.findViewById(R.id.duration_image_tip));
-            mProgressDialog = getPopupWindow(localView);
-
+    private void removeRenderView() {
+        renderViewContainer.removeAllViews();
+        if (iRenderView != null) {
+            iRenderView.removeRenderCallback();
+            iRenderView = null;
         }
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.showAtLocation(this, Gravity.CENTER, 0, 0);
-        }
-
-        tv_delta.setText(
-                (delta > 0 ? "+" : "") +
-                        delta / 1000 + "秒");
-        tv_current.setText(Util.stringForTime(position + delta) + "/");
-        tv_duration.setText(Util.stringForTime(duration));
-        mDialogProgressBar.setProgress((position + delta) * 100 / duration);
-        if (delta > 0) {
-            mDialogIcon.setBackgroundResource(R.drawable.jc_forward_icon);
-        } else {
-            mDialogIcon.setBackgroundResource(R.drawable.jc_backward_icon);
-        }
-        return true;
-    }
-
-    @Override
-    protected boolean dismissProgressDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
-        return true;
     }
 
 
-    protected PopupWindow mVolumeDialog;
-    protected ProgressBar mDialogVolumeProgressBar;
-    protected TextView mDialogVolumeTextView;
-    protected ImageView mDialogVolumeImageView;
-
-
-    @Override
-    protected boolean showVolumeDialog(int nowVolume, int maxVolume) {
-
-        if (mVolumeDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_volume, null);
-            mDialogVolumeImageView = ((ImageView) localView.findViewById(R.id.volume_image_tip));
-            mDialogVolumeTextView = ((TextView) localView.findViewById(R.id.tv_volume));
-            mDialogVolumeProgressBar = ((ProgressBar) localView.findViewById(R.id.volume_progressbar));
-            mDialogVolumeProgressBar.setMax(maxVolume);
-            mVolumeDialog = getPopupWindow(localView);
+    private void seek(int time) {
+        if (currentState == STATE_PLAYING ||
+                currentState == STATE_PAUSE)
+            iMediaControl.seekTo(time);
+        if (currentState == STATE_AUTO_COMPLETE) {
+            //seekToInAdvance = time;//播放完成 拖动进度条重新播放
+            //prepareMediaPlayer();
+            iMediaControl.seekTo(time);
+            iMediaControl.doPlay();
+            setStateAndMode(STATE_PLAYING, currentMode);
         }
-        if (!mVolumeDialog.isShowing())
-            mVolumeDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), 50));
-
-        mDialogVolumeTextView.setText(nowVolume + "");
-        mDialogVolumeProgressBar.setProgress(nowVolume);
-        return true;
     }
 
-    @Override
-    protected boolean dismissVolumeDialog() {
-        if (mVolumeDialog != null) {
-            mVolumeDialog.dismiss();
-        }
-        return true;
+
+    protected boolean checkReady() {
+        return currentState != STATE_NORMAL
+                & currentState != STATE_PREPARING
+                & currentState != STATE_ERROR;
     }
-
-    protected PopupWindow mBrightnessDialog;
-    protected ProgressBar mDialogBrightnessProgressBar;
-    protected TextView mDialogBrightnessTextView;
-
-    @Override
-    protected boolean showBrightnessDialog(int brightnessPercent, int max) {
-        if (mBrightnessDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_brightness, null);
-            mDialogBrightnessTextView = ((TextView) localView.findViewById(R.id.tv_brightness));
-            mDialogBrightnessProgressBar = ((ProgressBar) localView.findViewById(R.id.brightness_progressbar));
-            mDialogBrightnessProgressBar.setMax(max);
-            //mBrightnessDialog = getDialog(Gravity.TOP, 0, Util.dp2px(getContext(), 50));
-            //mBrightnessDialog.setContentView(localView);
-
-            mBrightnessDialog = getPopupWindow(localView);
-        }
-        if (!mBrightnessDialog.isShowing())
-            mBrightnessDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), 50));
-
-        mDialogBrightnessTextView.setText(brightnessPercent + "");
-        mDialogBrightnessProgressBar.setProgress(brightnessPercent);
-        return true;
-    }
-
-    @Override
-    protected boolean dismissBrightnessDialog() {
-        if (mBrightnessDialog != null) {
-            mBrightnessDialog.dismiss();
-        }
-        return true;
-    }
-
-//
-//    private Dialog getDialog(int graviaty, int marginX, int marginY) {
-//        Dialog dialog = new Dialog(getContext(), R.style.jc_style_dialog_progress);
-//        dialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
-//        dialog.getWindow().addFlags(32);
-//        dialog.getWindow().addFlags(16);
-//        dialog.getWindow().setLayout(-2, -2);
-//        WindowManager.LayoutParams localLayoutParams = dialog.getWindow().getAttributes();
-//        localLayoutParams.gravity = graviaty;
-//        if (marginX > 0)
-//            localLayoutParams.x = marginX;
-//        if (marginY > 0)
-//            localLayoutParams.y = marginY;
-//        dialog.getWindow().setAttributes(localLayoutParams);
-//
-//        return dialog;
-//    }
-
-    private PopupWindow getPopupWindow(View popupView) {
-        PopupWindow mPopupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
-        mPopupWindow.setTouchable(true);
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
-        mPopupWindow.setAnimationStyle(R.style.jc_popup_toast_anim);
-        return mPopupWindow;
-    }
-
 }

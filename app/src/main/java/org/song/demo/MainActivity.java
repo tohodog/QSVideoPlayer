@@ -5,14 +5,15 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
-import org.song.videoplayer.QSVideoView;
+import org.song.videoplayer.DemoQSVideoView;
 
 public class MainActivity extends AppCompatActivity {
 
-    QSVideoView qsVideoView;
+    DemoQSVideoView demoVideoView;
 
     String mp4 = "http://sz-kpie-videos.oss-cn-shenzhen.aliyuncs.com/videos/20161110/11.mp4";
 
@@ -26,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        qsVideoView = (QSVideoView) findViewById(R.id.qs);
-        qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
-        qsVideoView.setPlayListener(new PlayListener() {
+        demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
+        demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
+        demoVideoView.setPlayListener(new PlayListener() {
             @Override
             public void onStatus(int status) {//播放状态
                 if (status == IVideoPlayer.STATE_AUTO_COMPLETE)
-                    qsVideoView.quitWindowFullscreen();//播放完成退出全屏
+                    demoVideoView.quitWindowFullscreen();//播放完成退出全屏
             }
 
             @Override//全屏/普通
@@ -51,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void play(String url, int media) {
-        qsVideoView.release();
-        qsVideoView.setiMediaControl(media);
-        qsVideoView.setUp(url, "这是一一一一一一一一一个标题");
+        demoVideoView.release();
+        demoVideoView.setiMediaControl(media);
+        demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
         //qsVideoView.seekTo(12300);
-        qsVideoView.play();
+        demoVideoView.play();
         this.url = url;
         this.media = media;
 
@@ -92,18 +93,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void m3u8直播(View v) {
         play(m3u8, media);
     }
 
+    String[] arr={"适应","填充","原尺寸","拉伸","16:9","4:3"};
+    int mode;
+    public void 缩放模式(View v) {
+        demoVideoView.setAspectRatio(++mode>5?mode=0:mode);
+        ((Button)v).setText(arr[mode]);
+    }
+
+
+
     public void 销毁(View v) {
-        qsVideoView.release();
+        demoVideoView.release();
     }
 
 
     @Override
     public void onBackPressed() {
-        if (qsVideoView.onBackPressed())
+        if (demoVideoView.onBackPressed())
             return;
         super.onBackPressed();
     }
@@ -112,10 +123,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         if (flag)
-            qsVideoView.play();
+            demoVideoView.play();
         handler.removeCallbacks(runnable);
         if (position > 0) {
-            qsVideoView.seekTo(position);
+            demoVideoView.seekTo(position);
             position = 0;
         }
 
@@ -127,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();//暂停
-        flag = qsVideoView.isPlaying();
-        qsVideoView.pause();
+        flag = demoVideoView.isPlaying();
+        demoVideoView.pause();
     }
 
 
@@ -141,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();//销毁
-        qsVideoView.release();
+        demoVideoView.release();
     }
 
 
@@ -149,9 +160,9 @@ public class MainActivity extends AppCompatActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (qsVideoView.getCurrentState() != IVideoPlayer.STATE_AUTO_COMPLETE)
-                position = qsVideoView.getPosition();
-            qsVideoView.release();
+            if (demoVideoView.getCurrentState() != IVideoPlayer.STATE_AUTO_COMPLETE)
+                position = demoVideoView.getPosition();
+            demoVideoView.release();
         }
     };
 

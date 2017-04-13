@@ -1,6 +1,5 @@
 package org.song.videoplayer;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -28,7 +27,7 @@ public class HandleTouchEvent {
 
     long tempTime;
 
-    public boolean handleEvent(MotionEvent event, View view) {
+    public boolean handleEvent(View view, MotionEvent event) {
 
         float x = event.getX();
         float y = event.getY();

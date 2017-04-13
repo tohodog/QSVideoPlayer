@@ -9,6 +9,10 @@ import android.net.NetworkInfo;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.song.videoplayer.media.IMediaCallback;
+
+import java.lang.reflect.Constructor;
+
 /**
  * Created by song on 2017/2/13.
  */
@@ -21,7 +25,7 @@ public class Util {
         }
         int totalSeconds = timeMs / 1000;
         int seconds = totalSeconds % 60;
-        int minutes = (totalSeconds / 60) % 60;
+        int minutes = totalSeconds / 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
 
@@ -92,5 +96,20 @@ public class Util {
             return scanForActivity(((ContextWrapper) context).getBaseContext());
         }
         throw new IllegalStateException("context得不到activity");
+    }
+
+    /**
+     * 实例化
+     */
+    public static <T extends Object> T newInstance(String className, IMediaCallback iMediaCallback) {
+        Class<?>[] paramsTypes = new Class[]{IMediaCallback.class};
+        try {
+            Class<?> cls = Class.forName(className);
+            Constructor<?> con = cls.getConstructor(paramsTypes);
+            return (T) con.newInstance(new Object[]{iMediaCallback});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

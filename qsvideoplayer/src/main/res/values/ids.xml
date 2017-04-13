@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--必须提供的控件-->
-    <item name="start" type="id" />
-    <item name="progress" type="id" />
-    <item name="current" type="id" />
-    <item name="total" type="id" />
-    <item name="surface_container" type="id" />
-    <item name="layout_bottom" type="id" />
-    <!--可选控件-->
-    <item name="fullscreen" type="id" />
-    <item name="start2" type="id" />
-    <item name="progress2" type="id" />
-    <item name="loading_container" type="id" />
-    <item name="buffering_container" type="id" />
-    <item name="error_container" type="id" />
-    <item name="layout_top" type="id" />
+    <item name="help_start" type="id" />
+    <item name="help_start2" type="id" />
+
+    <item name="help_total" type="id" />
+    <item name="help_current" type="id" />
+
+    <item name="help_progress" type="id" />
+    <item name="help_seekbar" type="id" />
+
+    <item name="help_fullscreen" type="id" />
+    <item name="help_back" type="id" />
 </resources>

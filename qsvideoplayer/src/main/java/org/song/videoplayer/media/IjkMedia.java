@@ -1,10 +1,6 @@
 package org.song.videoplayer.media;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.text.TextUtils;
-import android.view.Surface;
-import android.view.SurfaceHolder;
 
 import java.util.Map;
 

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="org.song.demo.MainActivity">
 
-    <org.song.videoplayer.QSVideoView
+    <org.song.videoplayer.DemoQSVideoView
         android:id="@+id/qs"
         android:layout_width="match_parent"
         android:layout_height="250dp" />
@@ -80,6 +80,13 @@
             android:text="m3u8直播" />
 
     </LinearLayout>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="缩放模式"
+        android:text="适应" />
 
     <Button
         android:layout_width="match_parent"

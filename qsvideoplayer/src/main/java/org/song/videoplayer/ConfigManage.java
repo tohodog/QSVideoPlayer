@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import org.song.videoplayer.media.AndroidMedia;
-import org.song.videoplayer.media.ExoMedia;
-import org.song.videoplayer.media.IjkExoMedia;
-import org.song.videoplayer.media.IjkMedia;
 import org.song.videoplayer.media.IMediaCallback;
 import org.song.videoplayer.media.IMediaControl;
 import org.song.videoplayer.rederview.IRenderView;
@@ -49,12 +46,19 @@ public class ConfigManage {
     //后期扩展其他解码器 exo ijk... exo api需大于16
     public IMediaControl getIMediaControl(IMediaCallback iMediaCallback, int MEDIA_MODE) {
         if (MEDIA_MODE == 1)
-            return new IjkMedia(iMediaCallback);
+            return newInstance("org.song.videoplayer.media.IjkMedia", iMediaCallback);
         if (MEDIA_MODE == 2 & Build.VERSION.SDK_INT >= 16)
-            return new ExoMedia(iMediaCallback);
+            return newInstance("org.song.videoplayer.media.ExoMedia", iMediaCallback);
         if (MEDIA_MODE == 3 & Build.VERSION.SDK_INT >= 16)
-            return new IjkExoMedia(iMediaCallback);
+            return newInstance("org.song.videoplayer.media.IjkExoMedia", iMediaCallback);
         return new AndroidMedia(iMediaCallback);
+    }
+
+    private IMediaControl newInstance(String className, IMediaCallback iMediaCallback) {
+        IMediaControl i = Util.newInstance(className, iMediaCallback);
+        if (i == null)
+            i = new AndroidMedia(iMediaCallback);
+        return i;
     }
 
     //后期扩展其他解码器 exo ijk... exo api需大于16
