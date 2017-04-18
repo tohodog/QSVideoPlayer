@@ -89,6 +89,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         setClick(startButton, startButton2, fullscreenButton, backView);
 
         initView(controlContainer);
+        setUIWithStateAndMode(STATE_NORMAL, currentMode);
     }
 
     //-----------ui监听start-----------------
@@ -173,6 +174,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                 cancelProgressTimer();
                 resetProgressAndTime();
                 onBuffering(false);
+                isShowControlView = false;
                 break;
             case STATE_PLAYING:
                 startDismissControlViewTimer();
@@ -182,6 +184,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             case STATE_ERROR:
                 cancelProgressTimer();
                 onBuffering(false);
+                isShowControlView = false;
                 break;
             case STATE_AUTO_COMPLETE:
                 cancelProgressTimer();
