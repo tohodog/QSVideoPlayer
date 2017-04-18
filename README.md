@@ -11,8 +11,8 @@ QSVideoPlayer
 根据需求自行选择需要的解码器,不需要的解码器在build.gradle注释掉/删掉jar,media包里错误的类删掉即可,不会影响其他<br/>
 1.一般简单播放视频AndroidMedia足够(体积最小,无依赖)<br/>
 2.有点需求可选择AndroidMedia+ExoMedia(1MB)<br/>
-3.需求高的可选AndroidMedia+(ijkMedia+ijkExoMedia)(打完包6MB+)<br/>
-目前测试解码效果ijkMedia最快最好,AndroidMedia个别视频有半途中断BUG,exo无明显缺陷
+3.需求高的可选AndroidMedia+(ijkMedia+ijkExoMedia)(2MB(单v7a包))<br/>
+目前测试解码效果ijkMedia兼容性最好,AndroidMedia个别视频有半途中断BUG,exo无明显缺陷
 
 
 ## diy播放器: <br>
