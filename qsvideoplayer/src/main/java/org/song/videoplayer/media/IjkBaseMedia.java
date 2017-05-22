@@ -146,15 +146,19 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
 
     @Override
     public void release() {
-        if (mediaPlayer != null)
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                }
-            }).start();
-
+        if (mediaPlayer != null) {
+//            final IMediaPlayer temp = mediaPlayer;
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (temp != null) {
+//                        temp.release();
+//                    }
+//                }
+//            }).start();
+            mediaPlayer.release();
+        }
+        mediaPlayer = null;
         this.surface = null;
         isPrepar = false;
     }
