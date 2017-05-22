@@ -34,21 +34,27 @@ public class DemoQSVideoView extends QSVideoViewHelp {
     protected List<View> changeViews;//根据状态隐藏显示的view集合
 
     public DemoQSVideoView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public DemoQSVideoView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+
     }
 
-    //提交xml
+    public DemoQSVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initView();
+        setUIWithStateAndMode(STATE_NORMAL, currentMode);
+    }
+
+    //提交xml 需要父类替你完成某个控件的逻辑 控件的id按照values/ids.xml去定义 如播放按钮id定义为(android:id="@id/help_start") @id 不是 @+id
     @Override
     protected int getLayoutId() {
         return R.layout.video_view;
     }
 
-    @Override
-    protected void initView(View viewGroup) {
+    protected void initView() {
         topContainer = (ViewGroup) findViewById(R.id.layout_top);
         bottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
 

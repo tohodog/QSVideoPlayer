@@ -46,17 +46,19 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     private MyOnClickListener myOnClickListener;
 
     public QSVideoViewHelp(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public QSVideoViewHelp(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
+    public QSVideoViewHelp(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initHelpView(context);
+    }
 
-    @Override
-    protected void init(Context context) {
-        super.init(context);
+    protected void initHelpView(Context context) {
         myOnClickListener = new MyOnClickListener();
         mHandler = new Handler(Looper.getMainLooper());
         handleTouchEvent = new HandleTouchEvent(this);
@@ -88,8 +90,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             progressBar.setMax(progressMax);
         setClick(startButton, startButton2, fullscreenButton, backView);
 
-        initView(controlContainer);
-        setUIWithStateAndMode(STATE_NORMAL, currentMode);
+
     }
 
     //-----------ui监听start-----------------
@@ -141,9 +142,11 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        int time = seekBar.getProgress() * getDuration() / progressMax;
-        if (currentTimeTextView != null)
-            currentTimeTextView.setText(Util.stringForTime(time));
+        if (getDuration() > 1) {
+            int time = seekBar.getProgress() * getDuration() / progressMax;
+            if (currentTimeTextView != null)
+                currentTimeTextView.setText(Util.stringForTime(time));
+        }
         //Log.i(TAG, "onProgressChanged " + Util.stringForTime(time));
     }
 
@@ -155,8 +158,10 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        int time = seekBar.getProgress() * getDuration() / progressMax;
-        seekTo(time);
+        if (getDuration() > 1) {
+            int time = seekBar.getProgress() * getDuration() / progressMax;
+            seekTo(time);
+        }
         startProgressTimer();
         if (currentState == STATE_PLAYING)
             startDismissControlViewTimer(1314);
@@ -301,8 +306,6 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
      * ========================================
      */
     protected abstract int getLayoutId();//id见ids.xml
-
-    protected abstract void initView(View viewGroup);
 
     protected abstract void changeUiWithStateAndMode(int status, int mode);//根据状态设置ui显示/隐藏
 

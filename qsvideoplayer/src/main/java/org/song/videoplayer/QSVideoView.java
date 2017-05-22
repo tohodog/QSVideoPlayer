@@ -17,7 +17,7 @@ import org.song.videoplayer.rederview.IRenderView;
 import org.song.videoplayer.rederview.SufaceRenderView;
 
 /**
- * Created by on 2017/2/13.
+ * Created by song on 2017/2/13.
  * edit on 2017/4/8.
  * 没有控制ui,纯视频播放器,提供完整控制功能
  */
@@ -45,15 +45,19 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
 
     public QSVideoView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public QSVideoView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public QSVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    protected void init(Context context) {
+    private void init(Context context) {
         iMediaControl = ConfigManage.getInstance(getContext()).getIMediaControl(this);
         videoView = new FrameLayout(context);
         renderViewContainer = new FrameLayout(context);
