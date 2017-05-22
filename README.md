@@ -53,6 +53,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 ## Demo使用
 ```
+//DemoQSVideoView的ui用的jc播放器
 DemoQSVideoView qsVideoView = (DemoQSVideoView) findViewById(R.id.xxx);
 
 qsVideoView.setUp(url, "这是一一一一一一一一一个标题");
