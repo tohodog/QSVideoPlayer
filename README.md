@@ -4,12 +4,13 @@ QSVideoPlayer
   * QSVideoView接口完善,事件的监听,设置视频比例,切换全屏等
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
   * 根据系统版本自动选择SurfaceView和TextureView,支持api9+
+  * 提供list视频列表自动销毁播放代码
   * 支持本地视频,在线视频,m3u8直播等...
 
 
 
 ## 使用说明
-下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 [ **[下载apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/app-debug-2.0.apk)
+下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 [ **[下载apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/app-debug-2.1.apk)
 
 
 源码有4个解码器,根据需求自行选择需要的解码器:<br/>
