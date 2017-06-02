@@ -34,7 +34,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     protected View controlContainer;//控制ui容器
     //提供辅助的控件
     protected ImageView startButton, startButton2;//播放按钮
-    protected SeekBar seekBar;//进度条
+    protected SeekBar seekBar;//拖动条
     protected TextView currentTimeTextView, totalTimeTextView;//播放时间/视频长度
     protected ImageView fullscreenButton;//全屏按钮
     protected ProgressBar progressBar;//第二进度条
@@ -173,10 +173,10 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     @Override//覆盖监听播放器状态
     protected void setUIWithStateAndMode(final int status, final int mode) {
         cancelDismissControlViewTimer();
+        cancelProgressTimer();
         switch (status) {
             case STATE_NORMAL:
             case STATE_PREPARING:
-                cancelProgressTimer();
                 resetProgressAndTime();
                 onBuffering(false);
                 isShowControlView = false;
@@ -187,12 +187,10 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                 startProgressTimer();
                 break;
             case STATE_ERROR:
-                cancelProgressTimer();
                 onBuffering(false);
                 isShowControlView = false;
                 break;
             case STATE_AUTO_COMPLETE:
-                cancelProgressTimer();
                 setCompleProgressAndTime();
                 onBuffering(false);
                 break;
@@ -259,7 +257,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     //-----------定时任务更新进度start-----------------
     protected void startProgressTimer() {
         cancelProgressTimer();
-        mHandler.postDelayed(updateProgress, 500);
+        mHandler.post(updateProgress);
     }
 
     protected void cancelProgressTimer() {

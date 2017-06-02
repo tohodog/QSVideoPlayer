@@ -1,5 +1,6 @@
 package org.song.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     DemoQSVideoView demoVideoView;
 
-    String mp4 = "http://sz-kpie-videos.oss-cn-shenzhen.aliyuncs.com/videos/20161110/11.mp4";
+    String mp4 = "http://videos.kpie.com.cn/videos/20170526/037DCE54-EECE-4520-AA92-E4002B1F29B0.mp4";
 
     String m3u8 = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
 
@@ -93,18 +94,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void 视频列表(View v) {
+        startActivity(new Intent(this, ListVideoActivity.class));
+    }
+
 
     public void m3u8直播(View v) {
         play(m3u8, media);
     }
 
-    String[] arr={"适应","填充","原尺寸","拉伸","16:9","4:3"};
+    String[] arr = {"适应", "填充", "原尺寸", "拉伸", "16:9", "4:3"};
     int mode;
-    public void 缩放模式(View v) {
-        demoVideoView.setAspectRatio(++mode>5?mode=0:mode);
-        ((Button)v).setText(arr[mode]);
-    }
 
+    public void 缩放模式(View v) {
+        demoVideoView.setAspectRatio(++mode > 5 ? mode = 0 : mode);
+        ((Button) v).setText(arr[mode]);
+    }
 
 
     public void 销毁(View v) {

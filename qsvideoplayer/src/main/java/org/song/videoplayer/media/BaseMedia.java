@@ -20,7 +20,9 @@ public abstract class BaseMedia implements IMediaControl {
     }
 
     public BaseMedia(IMediaCallback iMediaCallback) {
+        if (iMediaCallback == null)
+            throw new IllegalArgumentException();
         this.iMediaCallback = iMediaCallback;
-        mainThreadHandler=new Handler(Looper.getMainLooper());
+        mainThreadHandler = new Handler(Looper.getMainLooper());
     }
 }

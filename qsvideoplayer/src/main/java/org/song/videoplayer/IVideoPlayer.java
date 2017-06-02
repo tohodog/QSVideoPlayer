@@ -14,21 +14,22 @@ public interface IVideoPlayer {
     //去掉这个状态 缓冲只是显示个进度 不影响其他状态
     //int STATE_PLAYING_BUFFERING_START = 3;//缓冲
 
-    int STATE_PAUSE = 5;//暂停中
-    int STATE_AUTO_COMPLETE = 6;//播放完成
-    int STATE_ERROR = 7;//播放出错
+    int STATE_PAUSE = 4;//暂停中
+    int STATE_AUTO_COMPLETE = 5;//播放完成
+    int STATE_ERROR = 6;//播放出错
 
     int MODE_WINDOW_NORMAL = 100;//普通模式
     int MODE_WINDOW_FULLSCREEN = 101;//全屏模式
     int MODE_WINDOW_TINY = 102;//小窗口模式
 
-    int EVENT_BUFFERING_START = 10;//缓冲
-    int EVENT_BUFFERING_END = 11;//缓冲结束
-    int EVENT_PREPARED = 12;//初始化完成
-    int EVENT_ERROR = 13;//出错
-    int EVENT_VIDEOSIZECHANGE = 14;//视频长宽大小
-    int EVENT_COMPLETION = 15;//播放完成
-    int EVENT_BUFFERING_UPDATA = 16;//缓冲进度
+    int EVENT_PREPARE_START = 10;//初始化开始
+    int EVENT_PREPARE_END = 11;//初始化完成
+    int EVENT_BUFFERING_START = 12;//缓冲
+    int EVENT_BUFFERING_END = 13;//缓冲结束
+    int EVENT_ERROR = 14;//出错
+    int EVENT_VIDEOSIZECHANGE = 15;//视频长宽大小
+    int EVENT_COMPLETION = 16;//播放完成
+    int EVENT_BUFFERING_UPDATE = 17;//缓冲进度
 
 
     void setUp(String url, Object... objects);//设置视频地址
@@ -39,11 +40,11 @@ public interface IVideoPlayer {
 
     void seekTo(int duration);//进度调节
 
-    void setPlayListener(PlayListener playListener);//播放监听 参数含义参照上面
+    void setPlayListener(PlayListener playListener);//播放监听 参数含义参照本类
 
-    void setAspectRatio(int aspectRatio);//设置视频比例
+    void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
-    void setiMediaControl(int i);//设置解码模块
+    void setiMediaControl(int i);//设置解码模块 参数见ConfigManage
 
     boolean onBackPressed();//返回键退出全屏
 

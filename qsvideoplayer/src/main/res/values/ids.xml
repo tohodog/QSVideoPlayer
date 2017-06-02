@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--播放按钮1 2-->
+    <!--ImageView播放按钮1 2-->
     <item name="help_start" type="id" />
     <item name="help_start2" type="id" />
-    <!--两个时间控件-->
+    <!--TextView播放时间  视频时长-->
     <item name="help_total" type="id" />
     <item name="help_current" type="id" />
-    <!--进度条 拖动条-->
+    <!--ProgressBar进度条  SeekBar拖动条-->
     <item name="help_progress" type="id" />
     <item name="help_seekbar" type="id" />
-    <!--全屏按钮 返回按钮-->
+    <!--ImageView全屏按钮  View返回按钮-->
     <item name="help_fullscreen" type="id" />
     <item name="help_back" type="id" />
 </resources>

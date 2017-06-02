@@ -220,7 +220,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         iMediaControl.doPlay();
         setStateAndMode(STATE_PLAYING, currentMode);
         if (playListener != null)
-            playListener.onEvent(EVENT_PREPARED, 0);
+            playListener.onEvent(EVENT_PREPARE_END, 0);
     }
 
 
@@ -280,7 +280,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         Log.e("MediaCallBack", "onBufferingUpdate" + percent);
         setBufferProgress((int) (percent * progressMax));
         if (playListener != null)
-            playListener.onEvent(EVENT_BUFFERING_UPDATA, (int) (percent * 100));
+            playListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (percent * 100));
     }
 
     //给子类覆盖
@@ -366,6 +366,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         iMediaControl.doPrepar(getContext(), url, null);
         addRenderView();
         setStateAndMode(STATE_PREPARING, currentMode);
+        if (playListener != null)
+            playListener.onEvent(EVENT_PREPARE_START);
     }
 
     private void addRenderView() {

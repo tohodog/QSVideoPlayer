@@ -46,7 +46,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
             //mediaPlayer.setDisplay();
         } catch (Exception e) {
             e.printStackTrace();
-            onError(mediaPlayer, 10086, 10086);
+            onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
         }
     }
 
@@ -59,7 +59,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
             this.surface = surface;
         } catch (Exception e) {
             e.printStackTrace();
-            onError(mediaPlayer, 10010, 10010);
+            onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
         }
     }
 
@@ -72,7 +72,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
                 this.surface = surfaceHolder.getSurface();
         } catch (Exception e) {
             e.printStackTrace();
-            onError(mediaPlayer, 10010, 10010);
+            onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
         }
     }
 

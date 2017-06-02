@@ -3,6 +3,7 @@ package org.song.videoplayer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.view.View;
 
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.IMediaCallback;
@@ -11,13 +12,21 @@ import org.song.videoplayer.rederview.IRenderView;
 import org.song.videoplayer.rederview.SufaceRenderView;
 import org.song.videoplayer.rederview.TextureRenderView;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Created by song on 2017/2/10.
+ * 管理 统筹
  */
 
 public class ConfigManage {
 
     private static ConfigManage instance;
+
+    private static List<WeakReference<QSVideoView>> videos = new ArrayList<>();
 
     public static ConfigManage getInstance(Context context) {
         if (instance == null)
@@ -45,6 +54,8 @@ public class ConfigManage {
 
     //后期扩展其他解码器 exo ijk... exo api需大于16
     public IMediaControl getIMediaControl(IMediaCallback iMediaCallback, int MEDIA_MODE) {
+        if (iMediaCallback instanceof QSVideoView)
+            addVideoView((QSVideoView) iMediaCallback);
         if (MEDIA_MODE == 1)
             return newInstance("org.song.videoplayer.media.IjkMedia", iMediaCallback);
         if (MEDIA_MODE == 2 & Build.VERSION.SDK_INT >= 16)
@@ -64,6 +75,34 @@ public class ConfigManage {
     //后期扩展其他解码器 exo ijk... exo api需大于16
     public IMediaControl getIMediaControl(IMediaCallback iMediaCallback) {
         return getIMediaControl(iMediaCallback, media_mode);
+    }
+
+    private void addVideoView(QSVideoView q) {
+        WeakReference<QSVideoView> w = new WeakReference<>(q);
+        videos.add(w);
+        Iterator<WeakReference<QSVideoView>> iterList = videos.iterator();//List接口实现了Iterable接口
+        while (iterList.hasNext()) {
+            WeakReference<QSVideoView> ww = iterList.next();
+            if (ww.get() == null)
+                iterList.remove();
+        }
+    }
+
+    public static void releaseAll() {
+        for (WeakReference<QSVideoView> w : videos) {
+            QSVideoView q = w.get();
+            if (q != null)
+                q.release();
+        }
+        videos.clear();
+    }
+
+    public static void releaseOther(QSVideoView qs) {
+        for (WeakReference<QSVideoView> w : videos) {
+            QSVideoView q = w.get();
+            if (q != null & q != qs)
+                q.release();
+        }
     }
 
     public void setMedia_mode(int media_mode) {

@@ -61,7 +61,7 @@ public final class MeasureHelper {
 
         int width = View.getDefaultSize(mVideoWidth, widthMeasureSpec);
         int height = View.getDefaultSize(mVideoHeight, heightMeasureSpec);
-        if (mCurrentAspectRatio == IRenderView.AR_MATCH_PARENT) {
+        if (mCurrentAspectRatio == IRenderView.AR_MATCH_PARENT) {//填充
             width = widthMeasureSpec;
             height = heightMeasureSpec;
         } else if (mVideoWidth > 0 && mVideoHeight > 0) {
@@ -71,7 +71,7 @@ public final class MeasureHelper {
             //Log.i("viewsize", "容器控件大小 = " + widthSpecSize + "," + heightSpecSize);
 
             float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
-            float displayAspectRatio;
+            float displayAspectRatio;//根据模式算出宽高比例
             switch (mCurrentAspectRatio) {
                 case IRenderView.AR_16_9_FIT_PARENT:
                     displayAspectRatio = 16.0f / 9.0f;
@@ -92,7 +92,7 @@ public final class MeasureHelper {
                         displayAspectRatio = displayAspectRatio * mVideoSarNum / mVideoSarDen;
                     break;
             }
-            boolean shouldBeWider = displayAspectRatio > specAspectRatio;
+            boolean shouldBeWider = displayAspectRatio > specAspectRatio;//算出的视频比例 是否大于 容器view比例
 
             switch (mCurrentAspectRatio) {
                 case IRenderView.AR_ASPECT_FILL_PARENT:

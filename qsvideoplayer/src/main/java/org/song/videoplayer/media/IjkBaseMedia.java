@@ -44,7 +44,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
             mediaPlayer.prepareAsync();
         } catch (Exception e) {
             e.printStackTrace();
-            onError(mediaPlayer, 10086, 10086);
+            onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
         }
         //}  }).start();
 
@@ -61,7 +61,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
             this.surface = surface;
         } catch (Exception e) {
             e.printStackTrace();
-            iMediaCallback.onError(this, 10010, 10010);
+            iMediaCallback.onError(this, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
                 this.surface = surfaceHolder.getSurface();
         } catch (Exception e) {
             e.printStackTrace();
-            iMediaCallback.onError(this, 10010, 10010);
+            iMediaCallback.onError(this, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
         }
     }
 

@@ -10,12 +10,12 @@ import org.song.videoplayer.media.IMediaControl;
  * 接口化渲染view
  */
 public interface IRenderView {
-    int AR_ASPECT_FIT_PARENT = 0; // 根据视频大小缩放 填充屏幕 *默认
-    int AR_ASPECT_FILL_PARENT = 1; // 根据视频大小缩放 完全填充屏幕
+    int AR_ASPECT_FIT_PARENT = 0; //适应 根据视频大小缩放 至少一边填充屏幕 *默认
+    int AR_ASPECT_FILL_PARENT = 1; //填充 根据视频大小缩放 完全填充屏幕
     int AR_ASPECT_WRAP_CONTENT = 2;//原画
-    int AR_MATCH_PARENT = 3;//强制拉伸全屏 会变形
-    int AR_16_9_FIT_PARENT = 4;//强制16:9 填充屏幕
-    int AR_4_3_FIT_PARENT = 5;//强制4:3 填充屏幕
+    int AR_MATCH_PARENT = 3;//拉伸 强制全屏 比例不对会变形
+    int AR_16_9_FIT_PARENT = 4;//强制16:9 适应屏幕 比例不对会变形
+    int AR_4_3_FIT_PARENT = 5;//强制4:3 适应屏幕 比例不对会变形
 
     //boolean shouldWaitForResize();
 
