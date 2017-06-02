@@ -20,35 +20,6 @@ QSVideoPlayer
 ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
 删除exo解码器: libs里删除jar,media包里删除ExoMedia即可<br/>
 
-## diy播放器:
-0.read source code.<br/>
-1.可直接修改DemoQSVideoView改造自己的播放器<br/>
-2.继承QSVideoViewHelp参考DemoQSVideoView,源码均有注释,不用写一行播放逻辑
-<br/>   1) 子类提供layout布局,布局里需要help类实现逻辑的控件,设置id为以下特定id即可
-```
-    <!--ImageView播放按钮1 2-->
-    <item name="help_start" type="id" />
-    <item name="help_start2" type="id" />
-    <!--TextView播放时间  视频时长-->
-    <item name="help_total" type="id" />
-    <item name="help_current" type="id" />
-    <!--ProgressBar进度条  SeekBar拖动条-->
-    <item name="help_progress" type="id" />
-    <item name="help_seekbar" type="id" />
-    <!--ImageView全屏按钮  View返回按钮-->
-    <item name="help_fullscreen" type="id" />
-    <item name="help_back" type="id" />
-    
-    //如播放按钮定义,注意: @id 没有加号,这样定义父类会自动完成该按钮逻辑
-    <ImageView
-            android:id="@id/help_start"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_centerInParent="true"/>
-```
-<br/>  2) java代码里设置各个状态的ui即可完成自己的播放器,具体参考DemoQSVideoView<br/>
-3.直接使用QSVideoView,自己写控制ui和逻辑<br/>
-(继承关系:DemoQSVideoView → QSVideoViewHelp → QSVideoView)
 
 
 ## Demo使用
@@ -97,6 +68,36 @@ qsVideoView.play();//
     }
 ```
 
+## DIY播放器:
+0.read source code.<br/>
+1.可直接修改DemoQSVideoView改造自己的播放器<br/>
+2.继承QSVideoViewHelp参考DemoQSVideoView,源码均有注释,不用写一行播放逻辑
+<br/>   1) 子类提供layout布局,布局里需要help类实现逻辑的控件,设置id为以下特定id即可
+```
+    <!--ImageView播放按钮1 2-->
+    <item name="help_start" type="id" />
+    <item name="help_start2" type="id" />
+    <!--TextView播放时间  视频时长-->
+    <item name="help_total" type="id" />
+    <item name="help_current" type="id" />
+    <!--ProgressBar进度条  SeekBar拖动条-->
+    <item name="help_progress" type="id" />
+    <item name="help_seekbar" type="id" />
+    <!--ImageView全屏按钮  View返回按钮-->
+    <item name="help_fullscreen" type="id" />
+    <item name="help_back" type="id" />
+    
+    //如播放按钮定义,注意: @id 没有加号,这样定义父类会自动完成该按钮逻辑
+    <ImageView
+            android:id="@id/help_start"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"/>
+```
+<br/>  2) java代码里设置各个状态的ui即可完成自己的播放器,具体参考DemoQSVideoView<br/>
+3.直接使用QSVideoView,自己写控制ui和逻辑<br/>
+(继承关系:DemoQSVideoView → QSVideoViewHelp → QSVideoView)
+
 
 ## QSVideoView API接口
 ```
@@ -133,6 +134,7 @@ qsVideoView.play();//
     void release();//销毁
 
 ```
+最后开个坑:模仿bili写个弹幕播放器,期限?不存在的
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0409/201818_d6e50594_530535.jpeg "在这里输入图片标题")
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg "在这里输入图片标题")
