@@ -14,8 +14,8 @@ QSVideoPlayer
 
 源码有4个解码器,根据需求自行选择需要的解码器:<br/>
 1.一般简单播放视频AndroidMedia足够(体积最小,无依赖)<br/>
-2.有点需求可选择AndroidMedia+ExoMedia(1MB)<br/>
-3.需求高的可选AndroidMedia+(ijkMedia+ijkExoMedia)(2MB(单v7a包))<br/>
+2.有点需求可选择AndroidMedia+ExoMedia<br/>
+3.需求高的可选AndroidMedia+(ijkMedia+ijkExoMedia)(单v7a包1MB)<br/>
 目前测试解码效果ijkMedia兼容性最好,AndroidMedia个别视频有半途中断BUG,exo无明显缺陷<br/>
 ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
 删除exo解码器: libs里删除jar,media包里删除ExoMedia即可<br/>
