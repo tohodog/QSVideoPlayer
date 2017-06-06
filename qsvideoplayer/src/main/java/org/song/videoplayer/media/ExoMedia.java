@@ -185,6 +185,7 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
 
     @Override
     public void release() {
+        isPrepar = false;
         if (simpleExoPlayer != null) {
             simpleExoPlayer.release();
         }
@@ -194,7 +195,6 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
         surface = null;
         currentVideoWidth = 0;
         currentVideoHeight = 0;
-        isPrepar = false;
     }
 
     /////////////  media 回调   ///////////////////

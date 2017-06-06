@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -41,14 +42,17 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
         calculator = new ListCalculator(new RecyclerViewGetter((LinearLayoutManager) recyclerView.getLayoutManager(), recyclerView), this);
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int newState = 0;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                this.newState = newState;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     calculator.onScrolled(300);
             }
 
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                calculator.onScrolling();
+                calculator.onScrolling(newState);
 
             }
         });
@@ -57,15 +61,18 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
     DemoQSVideoView demoQSVideoView;
 
     @Override
-    public void setActive(View newActiveView, int position) {
+    public void setActive(View newActiveView, int setActive) {
         demoQSVideoView = (DemoQSVideoView) newActiveView.findViewById(R.id.qs);
         demoQSVideoView.play();
+        Log.d("2333setActive", "" + setActive);
     }
 
     @Override
     public void deactivate(View currentView, int position) {
         DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         demoQSVideoView.release();
+        Log.d("2333deactivate", "" + position);
+
     }
 
     @Override

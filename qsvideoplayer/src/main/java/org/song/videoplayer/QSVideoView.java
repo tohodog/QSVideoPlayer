@@ -268,8 +268,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         //if (what == 38 | extra == -38 | extra == -19)
         //    return;
         Toast.makeText(getContext(), "error: " + what + "," + extra, Toast.LENGTH_SHORT).show();
-        iMediaControl.release();
         seekToInAdvance = getPosition();//记录错误时进度
+        iMediaControl.release();
         setStateAndMode(STATE_ERROR, currentMode);
         if (playListener != null)
             playListener.onEvent(EVENT_ERROR, what, extra);

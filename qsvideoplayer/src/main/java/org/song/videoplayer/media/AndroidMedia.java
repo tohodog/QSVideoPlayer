@@ -144,11 +144,12 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
 
     @Override
     public void release() {
+
+        isPrepar = false;
+        this.surface = null;
         if (mediaPlayer != null)
             mediaPlayer.release();
         mediaPlayer = null;
-        this.surface = null;
-        isPrepar = false;
     }
 
     /////////////以下MediaPlayer回调//////////////
@@ -166,8 +167,8 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        isPrepar = false;
         iMediaCallback.onError(this, what, extra);
+        isPrepar = false;
         return true;
     }
 

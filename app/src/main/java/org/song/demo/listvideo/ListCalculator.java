@@ -15,6 +15,7 @@ public class ListCalculator {
     private CallBack callBack;
 
     private int VISIBILITY_PERCENTS = 70;
+    private int currentActiveItem = -1;//当前活动的item
 
 
     public ListCalculator(Getter getter, CallBack callBack) {
@@ -22,9 +23,14 @@ public class ListCalculator {
         this.callBack = callBack;
     }
 
-    public int getCurrentActiveItem() {
-        return currentActiveItem;
+    /**
+     * true 滚动结束后才会播放
+     * false 滚动过程就会播放
+     */
+    public void setScrollIdel(boolean scrollIdel) {
+        isScrollIdel = scrollIdel;
     }
+
 
     //todo 如果外部手动点了播放 需要设置这里的活动item
     public void setCurrentActiveItem(int currentActiveItem) {
@@ -36,32 +42,25 @@ public class ListCalculator {
 
             currentView = getter.getChildAt(currentActiveItem - firstVisiblePosition);
             if (currentView != null) {
-                callBack.setActive(currentView, currentActiveItem);
                 this.currentActiveItem = currentActiveItem;
+                callBack.setActive(currentView, currentActiveItem);
             }
         }
     }
 
-    private int currentActiveItem = 0;//当前活动的item
-
-    /**
-     * true 滚动结束后才会播放
-     * false 滚动过程就会播放
-     */
-    public void setScrollIdel(boolean scrollIdel) {
-        isScrollIdel = scrollIdel;
+    public int getCurrentActiveItem() {
+        return currentActiveItem;
     }
 
     private boolean isScrollUp = true;//滚动方向
     private boolean isScrollIdel = true;//是否停止滚动才设置播放
     private boolean isActiveFlag = false;//
-    private boolean isFristFlag = true;//
 
     /**
      * 滚动中
      */
-    public void onScrolling() {
-        if (!checkUnDown())
+    public void onScrolling(int status) {
+        if (!checkUnDown() || (status == 0 & currentActiveItem >= 0))
             return;
 
         int firstVisiblePosition = getter.getFirstVisiblePosition();
@@ -101,7 +100,7 @@ public class ListCalculator {
             View v1 = getter.getChildAt(currentActiveItem - firstVisiblePosition);
             if (v1 != null)
                 callBack.deactivate(v1, currentActiveItem);
-            if (!isScrollIdel) {
+            if (!isScrollIdel | currentActiveItem < 0) {
                 View v2 = getter.getChildAt(activeItem - firstVisiblePosition);
                 if (v2 != null)
                     callBack.setActive(v2, activeItem);
@@ -110,12 +109,8 @@ public class ListCalculator {
             currentActiveItem = activeItem;
         }
 
-        if (isFristFlag) {
-            isFristFlag = false;
-            if (currentView != null)
-                callBack.setActive(currentView, activeItem);
-        }
 
+        handler.removeCallbacks(run);
 
     }
 
@@ -130,7 +125,6 @@ public class ListCalculator {
      */
     public void onScrolled(int delayed) {
         if (isActiveFlag) {
-            isActiveFlag = false;
             handler.removeCallbacks(run);
             handler.postDelayed(run, delayed);
         }
@@ -140,6 +134,7 @@ public class ListCalculator {
     private Runnable run = new Runnable() {
         @Override
         public void run() {
+            isActiveFlag = false;
             View v = getter.getChildAt(currentActiveItem - getter.getFirstVisiblePosition());
             if (v != null)
                 callBack.setActive(v, currentActiveItem);
@@ -174,7 +169,7 @@ public class ListCalculator {
     }
 
 
-    public int getVisibilityPercents(View view) {
+    private int getVisibilityPercents(View view) {
         final Rect currentViewRect = new Rect();
 
         int percents = 100;
