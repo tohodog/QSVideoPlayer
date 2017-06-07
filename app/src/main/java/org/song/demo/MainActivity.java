@@ -1,12 +1,17 @@
 package org.song.demo;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.ListPreference;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
@@ -17,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     DemoQSVideoView demoVideoView;
 
     String mp4 = "http://videos.kpie.com.cn/videos/20170526/037DCE54-EECE-4520-AA92-E4002B1F29B0.mp4";
-
     String m3u8 = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
 
     String url;
@@ -28,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                changeUrl();
+                return true;
+            }
+        });
         demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
         demoVideoView.setPlayListener(new PlayListener() {
@@ -53,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void play(String url, int media) {
+        Log.e("=====url:",url);
         demoVideoView.release();
         demoVideoView.setiMediaControl(media);
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
@@ -117,6 +129,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    EditText editText;
+
+    public void changeUrl() {
+        editText = new EditText(this);
+        new AlertDialog.Builder(this).setView(editText).setTitle("网络视频地址").setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mp4 = editText.getText().toString();
+                play(mp4, media);
+            }
+        }).setPositiveButton("本地视频", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivityForResult(new Intent(getApplication(), ExSelectDialog.class), 1000);
+            }
+        }).create().show();
+
+    }
+
     @Override
     public void onBackPressed() {
         if (demoVideoView.onBackPressed())
@@ -124,6 +155,17 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000 & resultCode == RESULT_OK) {
+            mp4 = "file://" + data.getStringExtra(ExSelectDialog.KEY_RESULT);
+            play(mp4, media);
+        }
+    }
+
+
+    //以下生命周期控制
     @Override
     public void onResume() {
         super.onResume();

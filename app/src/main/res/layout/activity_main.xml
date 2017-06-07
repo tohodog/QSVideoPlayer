@@ -70,11 +70,12 @@
 
 
             <Button
+                android:id="@+id/btn_url"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="网络视频"
-                android:text="网络视频" />
+                android:text="网络视频(长按换地址)" />
 
             <Button
                 android:layout_width="0dp"

@@ -41,7 +41,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
 
         calculator = new ListCalculator(new RecyclerViewGetter((LinearLayoutManager) recyclerView.getLayoutManager(), recyclerView), this);
 
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int newState = 0;
 
             @Override
