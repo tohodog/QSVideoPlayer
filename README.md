@@ -70,8 +70,8 @@ qsVideoView.play();//
 ```
 
 ## DIY播放器:
-0.read source code.<br/>
-1.可直接修改DemoQSVideoView改造自己的播放器<br/>
+0.read source code.<br/><br/>
+1.可直接修改DemoQSVideoView改造自己的播放器<br/><br/>
 2.继承QSVideoViewHelp参考DemoQSVideoView,源码均有注释,不用写一行播放逻辑
 <br/>   1) 子类提供layout布局,布局里需要help类实现逻辑的控件,设置id为以下特定id即可
 ```
@@ -95,7 +95,7 @@ qsVideoView.play();//
             android:layout_height="60dp"
             android:layout_centerInParent="true"/>
 ```
-<br/>  2) java代码里设置各个状态的ui即可完成自己的播放器,具体参考DemoQSVideoView<br/>
+<br/>  2) java代码里设置各个状态的ui即可完成自己的播放器,具体参考DemoQSVideoView<br/><br/>
 3.直接使用QSVideoView,自己写控制ui和逻辑<br/>
 (继承关系:DemoQSVideoView → QSVideoViewHelp → QSVideoView)
 
