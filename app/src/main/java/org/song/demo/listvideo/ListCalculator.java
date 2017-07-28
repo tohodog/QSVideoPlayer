@@ -80,10 +80,7 @@ public class ListCalculator {
             currentActiveItem = activeItem;
             isChangeFlag = true;
         }
-
-
         handler.removeCallbacks(run);
-
     }
 
     private boolean isChangeFlag;
@@ -100,7 +97,6 @@ public class ListCalculator {
      */
     public void onScrolled(int delayed) {
         if (isChangeFlag) {
-            isChangeFlag = false;
             handler.removeCallbacks(run);
             handler.postDelayed(run, delayed);
         }
@@ -110,6 +106,7 @@ public class ListCalculator {
     private Runnable run = new Runnable() {
         @Override
         public void run() {
+            isChangeFlag = false;
             View v = getter.getChildAt(currentActiveItem - getter.getFirstVisiblePosition());
             if (v != null)
                 callBack.activeOnScrolled(v, currentActiveItem);

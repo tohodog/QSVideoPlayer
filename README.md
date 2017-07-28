@@ -10,7 +10,7 @@ QSVideoPlayer
 
 
 ## 使用说明
-下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 [ **[下载apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/app-debug-2.1.apk)
+下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 [ **[下载demo.apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/app-debug-2.1.apk)
 
 
 源码有4个解码器,根据需求自行选择需要的解码器:<br/>
