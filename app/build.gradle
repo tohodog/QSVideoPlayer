@@ -25,9 +25,17 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            //混淆
+            minifyEnabled true
+            zipAlignEnabled true//zipAlign优化
+            shrinkResources true//移除无用的Resources文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    //忽略xml多国语言问题
+    lintOptions {
+        disable 'MissingTranslation', 'ExtraTranslation'
+        abortOnError false
     }
 }
 

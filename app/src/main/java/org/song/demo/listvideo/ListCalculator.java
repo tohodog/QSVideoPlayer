@@ -16,7 +16,7 @@ public class ListCalculator {
     private Getter getter;
     private CallBack callBack;
 
-    private int VISIBILITY_PERCENTS = 70;
+    public int VISIBILITY_PERCENTS = 80;
     private int currentActiveItem = -1;//当前活动的item
 
 

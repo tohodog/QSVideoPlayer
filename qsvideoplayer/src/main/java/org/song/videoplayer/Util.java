@@ -6,6 +6,8 @@ import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -51,15 +53,51 @@ public class Util {
         Window w = scanForActivity(context).getWindow();
         boolean b = (w.getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //hideBottomUIMenu(context);
         return b;
 
     }
 
+
     //取消全屏
     public static void CLEAR_FULL(Context context) {
         scanForActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //showBottomUIMenu(context);
     }
 
+    /**
+     * 隐藏虚拟按键
+     */
+    public static void hideBottomUIMenu(Context context) {
+        Activity a = scanForActivity(context);
+        //隐藏虚拟按键
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = a.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = a.getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;// | View.SYSTEM_UI_FLAG_FULLSCREEN
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
+
+    /**
+     * 显示虚拟按键
+     */
+    public static void showBottomUIMenu(Context context) {
+//        Activity a = scanForActivity(context);
+//        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+//            View v = a.getWindow().getDecorView();
+//            v.setSystemUiVisibility(View.VISIBLE);
+//        } else if (Build.VERSION.SDK_INT >= 19) {
+//            //for new api versions.
+//            View decorView = a.getWindow().getDecorView();
+//            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+//            decorView.setSystemUiVisibility(uiOptions);
+//        }
+    }
 
     //横屏
     public static void SET_LANDSCAPE(Context context) {
@@ -67,7 +105,7 @@ public class Util {
                 (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
-    //竖屏屏
+    //竖屏
     public static void SET_PORTRAIT(Context context) {
         scanForActivity(context).setRequestedOrientation
                 (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
