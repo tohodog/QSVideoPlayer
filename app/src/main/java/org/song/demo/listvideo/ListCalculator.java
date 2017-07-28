@@ -67,14 +67,16 @@ public class ListCalculator {
         }
         //不一样说明活动的item改变了
         if (activeItem != currentActiveItem) {
-            if (currentActiveItem < 0)
-                onScrolled(300);
+
             View v1 = getter.getChildAt(currentActiveItem - firstVisiblePosition);
             if (v1 != null)
                 callBack.deactivate(v1, currentActiveItem);
             View v2 = getter.getChildAt(activeItem - firstVisiblePosition);
-            if (v2 != null)
+            if (v2 != null) {
                 callBack.activeOnScrolling(v2, activeItem);
+                if (currentActiveItem < 0)
+                    callBack.activeOnScrolled(v2, activeItem);
+            }
             currentActiveItem = activeItem;
         }
 
@@ -100,14 +102,6 @@ public class ListCalculator {
 
     private Handler handler = new Handler();
     private Runnable run = new Runnable() {
-        @Override
-        public void run() {
-            View v = getter.getChildAt(currentActiveItem - getter.getFirstVisiblePosition());
-            if (v != null)
-                callBack.activeOnScrolled(v, currentActiveItem);
-        }
-    };
-    private Runnable run2 = new Runnable() {
         @Override
         public void run() {
             View v = getter.getChildAt(currentActiveItem - getter.getFirstVisiblePosition());

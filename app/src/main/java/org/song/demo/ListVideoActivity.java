@@ -64,19 +64,19 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
     public void activeOnScrolled(View newActiveView, int position) {
         demoQSVideoView = (DemoQSVideoView) newActiveView.findViewById(R.id.qs);
         demoQSVideoView.play();
-        Log.d("2333setActive", "" + position);
+        Log.d("activeOnScrolled", "" + position);
     }
 
     @Override
     public void activeOnScrolling(View newActiveView, int position) {
-        Log.d("2333activeOnScrolling", "" + position);
+        Log.d("activeOnScrolled", "" + position);
     }
 
     @Override
     public void deactivate(View currentView, int position) {
         DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         demoQSVideoView.release();
-        Log.d("2333deactivate", "" + position);
+        Log.d("deactivate", "" + position);
     }
 
     @Override
@@ -138,6 +138,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
                     }
                 }
             });
+            demoQSVideoView.isShowWifiDialog=false;
         }
 
         public void bindData(String s) {
