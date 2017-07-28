@@ -61,10 +61,15 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
     DemoQSVideoView demoQSVideoView;
 
     @Override
-    public void setActive(View newActiveView, int setActive) {
+    public void activeOnScrolled(View newActiveView, int position) {
         demoQSVideoView = (DemoQSVideoView) newActiveView.findViewById(R.id.qs);
         demoQSVideoView.play();
-        Log.d("2333setActive", "" + setActive);
+        Log.d("2333setActive", "" + position);
+    }
+
+    @Override
+    public void activeOnScrolling(View newActiveView, int position) {
+        Log.d("2333activeOnScrolling", "" + position);
     }
 
     @Override
@@ -72,7 +77,6 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
         DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         demoQSVideoView.release();
         Log.d("2333deactivate", "" + position);
-
     }
 
     @Override
@@ -141,7 +145,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
             demoQSVideoView.setUp(arr[1], arr[0]);
             demoQSVideoView.getCoverImageView().setImageResource(R.mipmap.ic_launcher);
             FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
-            demoQSVideoView.setLayoutParams(l);
+            //demoQSVideoView.setLayoutParams(l);
         }
 
     }

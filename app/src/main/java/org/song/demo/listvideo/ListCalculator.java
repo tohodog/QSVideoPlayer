@@ -11,6 +11,8 @@ import android.view.View;
  */
 
 public class ListCalculator {
+
+    private boolean isScrollUp = true;//滚动方向
     private Getter getter;
     private CallBack callBack;
 
@@ -23,38 +25,6 @@ public class ListCalculator {
         this.callBack = callBack;
     }
 
-    /**
-     * true 滚动结束后才会播放
-     * false 滚动过程就会播放
-     */
-    public void setScrollIdel(boolean scrollIdel) {
-        isScrollIdel = scrollIdel;
-    }
-
-
-    //todo 如果外部手动点了播放 需要设置这里的活动item
-    public void setCurrentActiveItem(int currentActiveItem) {
-        if (this.currentActiveItem != currentActiveItem) {
-            int firstVisiblePosition = getter.getFirstVisiblePosition();
-            View currentView = getter.getChildAt(this.currentActiveItem - firstVisiblePosition);
-            if (currentView != null)
-                callBack.deactivate(currentView, this.currentActiveItem);
-
-            currentView = getter.getChildAt(currentActiveItem - firstVisiblePosition);
-            if (currentView != null) {
-                this.currentActiveItem = currentActiveItem;
-                callBack.setActive(currentView, currentActiveItem);
-            }
-        }
-    }
-
-    public int getCurrentActiveItem() {
-        return currentActiveItem;
-    }
-
-    private boolean isScrollUp = true;//滚动方向
-    private boolean isScrollIdel = true;//是否停止滚动才设置播放
-    private boolean isActiveFlag = false;//
 
     /**
      * 滚动中
@@ -72,7 +42,7 @@ public class ListCalculator {
         if (activeItem < firstVisiblePosition || activeItem > lastVisiblePosition) {
             activeItem = isScrollUp ? firstVisiblePosition : lastVisiblePosition;
         }
-        //计算当前活动的应该是哪个item
+        //计算当前新的活动item应该是哪个
         View currentView = getter.getChildAt(activeItem - firstVisiblePosition);
         int currentP = getVisibilityPercents(currentView);
         if (isScrollUp) {//往上滚动
@@ -97,15 +67,14 @@ public class ListCalculator {
         }
         //不一样说明活动的item改变了
         if (activeItem != currentActiveItem) {
+            if (currentActiveItem < 0)
+                onScrolled(300);
             View v1 = getter.getChildAt(currentActiveItem - firstVisiblePosition);
             if (v1 != null)
                 callBack.deactivate(v1, currentActiveItem);
-            if (!isScrollIdel | currentActiveItem < 0) {
-                View v2 = getter.getChildAt(activeItem - firstVisiblePosition);
-                if (v2 != null)
-                    callBack.setActive(v2, activeItem);
-            } else
-                isActiveFlag = true;
+            View v2 = getter.getChildAt(activeItem - firstVisiblePosition);
+            if (v2 != null)
+                callBack.activeOnScrolling(v2, activeItem);
             currentActiveItem = activeItem;
         }
 
@@ -114,6 +83,7 @@ public class ListCalculator {
 
     }
 
+    //根据两个item的显示百分比 判断是否销毁上一个item
     private boolean enoughPercentsForDeactivation(int visibilityPercents, int nextVisibilityPercents) {
         return (visibilityPercents < VISIBILITY_PERCENTS && nextVisibilityPercents >= VISIBILITY_PERCENTS) ||
                 (visibilityPercents <= 20 && visibilityPercents > 0) ||//活动的item快要消失
@@ -124,24 +94,51 @@ public class ListCalculator {
      * 停止滚动
      */
     public void onScrolled(int delayed) {
-        if (isActiveFlag) {
-            handler.removeCallbacks(run);
-            handler.postDelayed(run, delayed);
-        }
+        handler.removeCallbacks(run);
+        handler.postDelayed(run, delayed);
     }
 
     private Handler handler = new Handler();
     private Runnable run = new Runnable() {
         @Override
         public void run() {
-            isActiveFlag = false;
             View v = getter.getChildAt(currentActiveItem - getter.getFirstVisiblePosition());
             if (v != null)
-                callBack.setActive(v, currentActiveItem);
+                callBack.activeOnScrolled(v, currentActiveItem);
+        }
+    };
+    private Runnable run2 = new Runnable() {
+        @Override
+        public void run() {
+            View v = getter.getChildAt(currentActiveItem - getter.getFirstVisiblePosition());
+            if (v != null)
+                callBack.activeOnScrolled(v, currentActiveItem);
         }
     };
 
 
+    //todo 如果外部手动点了播放 改变了活动item 需要设置这里的活动item
+    public void setCurrentActiveItem(int currentActiveItem) {
+        if (this.currentActiveItem != currentActiveItem) {
+            int firstVisiblePosition = getter.getFirstVisiblePosition();
+            View currentView = getter.getChildAt(this.currentActiveItem - firstVisiblePosition);
+            if (currentView != null)
+                callBack.deactivate(currentView, this.currentActiveItem);
+
+            currentView = getter.getChildAt(currentActiveItem - firstVisiblePosition);
+            if (currentView != null) {
+                this.currentActiveItem = currentActiveItem;
+                callBack.activeOnScrolled(currentView, currentActiveItem);
+            }
+        }
+    }
+
+    public int getCurrentActiveItem() {
+        return currentActiveItem;
+    }
+
+
+    ///////////////以下为判断item显示百分比的逻辑代码///////////////////
     private int mOldTop;
     private int mOldFirstVisibleItem;
 
@@ -168,7 +165,7 @@ public class ListCalculator {
         return true;
     }
 
-
+    //获取item的显示在屏幕上的百分比
     private int getVisibilityPercents(View view) {
         final Rect currentViewRect = new Rect();
 
