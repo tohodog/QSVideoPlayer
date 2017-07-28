@@ -78,12 +78,15 @@ public class ListCalculator {
                     callBack.activeOnScrolled(v2, activeItem);
             }
             currentActiveItem = activeItem;
+            isChangeFlag = true;
         }
 
 
         handler.removeCallbacks(run);
 
     }
+
+    private boolean isChangeFlag;
 
     //根据两个item的显示百分比 判断是否销毁上一个item
     private boolean enoughPercentsForDeactivation(int visibilityPercents, int nextVisibilityPercents) {
@@ -96,8 +99,11 @@ public class ListCalculator {
      * 停止滚动
      */
     public void onScrolled(int delayed) {
-        handler.removeCallbacks(run);
-        handler.postDelayed(run, delayed);
+        if (isChangeFlag) {
+            isChangeFlag = false;
+            handler.removeCallbacks(run);
+            handler.postDelayed(run, delayed);
+        }
     }
 
     private Handler handler = new Handler();
