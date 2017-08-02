@@ -26,7 +26,6 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     public static final String TAG = "QSVideoView";
     public int enterFullMode = 0;//进入全屏的模式 0横屏 1传感器自动横竖屏
-    protected final int progressMax = 1000;
 
     private IMediaControl iMediaControl;
 
@@ -276,19 +275,19 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     @Override
-    public void onBufferingUpdate(IMediaControl iMediaControl, float percent) {
-        Log.e("MediaCallBack", "onBufferingUpdate" + percent);
-        setBufferProgress((int) (percent * progressMax));
+    public void onBufferingUpdate(IMediaControl iMediaControl, float bufferProgress) {
+        Log.e("MediaCallBack", "onBufferingUpdate" + bufferProgress);
+        setBufferProgress(bufferProgress);
         if (playListener != null)
-            playListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (percent * 100));
+            playListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (bufferProgress * 100));
     }
 
     //给子类覆盖
     protected void onBuffering(boolean isBuffering) {
     }
 
-    //给子类覆盖
-    protected void setBufferProgress(int percent) {
+    //给子类覆盖 0~progressMax
+    protected void setBufferProgress(float bufferProgress) {
     }
 
     //-----------解码器回调end-----------------

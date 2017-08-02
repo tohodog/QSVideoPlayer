@@ -39,6 +39,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     protected ImageView fullscreenButton;//全屏按钮
     protected ProgressBar progressBar;//第二进度条
     protected View backView;//返回
+    protected final int progressMax = 1000;
 
     protected boolean isShowControlView;
     protected Handler mHandler;
@@ -205,20 +206,24 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
     //缓冲进度
     @Override
-    protected void setBufferProgress(int bufferProgress) {
+    protected void setBufferProgress(float bufferProgress) {
         if (seekBar != null)
-            seekBar.setSecondaryProgress(bufferProgress);
+            seekBar.setSecondaryProgress((int) (bufferProgress * progressMax));
         if (progressBar != null)
-            progressBar.setSecondaryProgress(bufferProgress);
+            progressBar.setSecondaryProgress((int) (bufferProgress * progressMax));
     }
 
     //设置进度和时间
     protected void setProgressAndText() {
         int position = getPosition();
         int duration = getDuration();
-        int progress = (int) (((long) position * progressMax) / (duration <= 0 ? 1 : duration));
-        if (progress < 0)
-            progress = 0;
+        if (position < 0)
+            position = 0;
+        if (duration <= 0)
+            duration = 1;
+        int progress = (int) (((long) position * progressMax) / duration);
+        if (progress < 0)//防止溢出
+            progress = progressMax;
         setProgressBar(progress, seekBar, progressBar);
         if (currentTimeTextView != null)
             currentTimeTextView.setText(Util.stringForTime(position));
