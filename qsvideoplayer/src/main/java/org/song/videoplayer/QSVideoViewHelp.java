@@ -216,7 +216,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     protected void setProgressAndText() {
         int position = getPosition();
         int duration = getDuration();
-        int progress = position / (duration <= 0 ? 1 : duration) * progressMax;
+        int progress = (int) (((long) position * progressMax) / (duration <= 0 ? 1 : duration));
         if (progress < 0)
             progress = 0;
         setProgressBar(progress, seekBar, progressBar);
