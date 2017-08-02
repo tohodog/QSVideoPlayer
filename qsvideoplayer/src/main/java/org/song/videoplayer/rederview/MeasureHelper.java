@@ -47,10 +47,7 @@ public final class MeasureHelper {
     }
 
     /**
-     * Must be called by View.onMeasure(int, int)
-     *
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
+     * 根据模式计算视频显示的大小
      */
     public void doMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
@@ -61,7 +58,7 @@ public final class MeasureHelper {
 
         int width = View.getDefaultSize(mVideoWidth, widthMeasureSpec);
         int height = View.getDefaultSize(mVideoHeight, heightMeasureSpec);
-        if (mCurrentAspectRatio == IRenderView.AR_MATCH_PARENT) {//填充
+        if (mCurrentAspectRatio == IRenderView.AR_MATCH_PARENT) {
             width = widthMeasureSpec;
             height = heightMeasureSpec;
         } else if (mVideoWidth > 0 && mVideoHeight > 0) {
@@ -70,8 +67,7 @@ public final class MeasureHelper {
 
             //Log.i("viewsize", "容器控件大小 = " + widthSpecSize + "," + heightSpecSize);
 
-            float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
-            float displayAspectRatio;//根据模式算出宽高比例
+            float displayAspectRatio;//计算不同模式的视频比例
             switch (mCurrentAspectRatio) {
                 case IRenderView.AR_16_9_FIT_PARENT:
                     displayAspectRatio = 16.0f / 9.0f;
@@ -92,8 +88,11 @@ public final class MeasureHelper {
                         displayAspectRatio = displayAspectRatio * mVideoSarNum / mVideoSarDen;
                     break;
             }
-            boolean shouldBeWider = displayAspectRatio > specAspectRatio;//算出的视频比例 是否大于 容器view比例
-
+            //容器view比例
+            float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
+            //容器比例和视频比例大小 (确定是哪一边抵触边缘用,true表示视频比容器胖 false表示表示比较瘦
+            boolean shouldBeWider = displayAspectRatio > specAspectRatio;
+            //计算出宽高
             switch (mCurrentAspectRatio) {
                 case IRenderView.AR_ASPECT_FILL_PARENT:
                     if (shouldBeWider) {
