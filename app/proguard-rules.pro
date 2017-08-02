@@ -68,7 +68,7 @@
 #===================Android通用===================
 
 
-#==========RXJAVA==========
+#==========videoplayer==========
 -dontwarn org.song.videoplayer.**
 -keep class org.song.videoplayer.** { *; }
-#==========RXJAVA==========
+#==========videoplayer==========

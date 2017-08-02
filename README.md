@@ -21,7 +21,11 @@ QSVideoPlayer
 ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
 删除exo解码器: libs里删除jar,media包里删除ExoMedia即可<br/>
 
-
+混淆
+```
+-dontwarn org.song.videoplayer.**
+-keep class org.song.videoplayer.** { *; }
+```
 
 ## Demo使用
 ```
