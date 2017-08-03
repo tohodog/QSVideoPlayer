@@ -7,10 +7,10 @@ QSVideoPlayer
   * 提供list视频列表自动销毁播放代码
   * 支持本地视频,在线视频,m3u8直播等...
 
-
+![ **[下载demo.apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png)
 
 ## 使用说明
-下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 [ **[下载demo.apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/app-debug-2.1.apk)
+下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 
 
 
 源码有4个解码器,根据需求自行选择需要的解码器:<br/>
@@ -143,6 +143,6 @@ qsVideoView.play();//
 最后开个坑:模仿bili写个弹幕播放器,期限?不存在的
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0614/173143_a73430c9_530535.jpeg "在这里输入图片标题")
-![](https://github.com//tohodog/QSVideoPlayer/raw/master/lsit.gif)
+![](https://github.com//tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg "在这里输入图片标题")
