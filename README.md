@@ -9,7 +9,7 @@ QSVideoPlayer
 
 ![下载demo.apk](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png)
 <br/>
-扫码 [demo.apk](https://github.com//tohodog/QSRefreshLayout/raw/master/source/qsvideoplayer.apk) 下载
+扫码 [demo.apk](https://github.com//tohodog/QSVideoPlayer/raw/master/source/qsvideoplayer.apk) 下载
 
 ## 使用说明
 下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 
