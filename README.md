@@ -7,6 +7,7 @@ QSVideoPlayer
   * 提供list视频列表自动销毁播放代码
   * 支持本地视频,在线视频,m3u8直播等...
 
+扫码 demo.apk 下载
 ![ **[下载demo.apk]** ](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png)
 
 ## 使用说明
