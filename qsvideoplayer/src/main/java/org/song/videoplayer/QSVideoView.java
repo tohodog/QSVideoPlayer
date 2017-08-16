@@ -25,7 +25,7 @@ import org.song.videoplayer.rederview.SufaceRenderView;
 public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCallback {
 
     public static final String TAG = "QSVideoView";
-    public int enterFullMode = 0;//进入全屏的模式 0横屏 1传感器自动横竖屏
+    public int enterFullMode = 0;//进入全屏的模式 0横屏 1传感器自动横竖屏 2竖屏  -1什么都不做
 
     private IMediaControl iMediaControl;
 
@@ -159,16 +159,21 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     private long tempLong;
     private boolean full_flag;//标记状态栏状态
+    private boolean orientation_flag;//标记横竖屏状态
 
     //全屏
     @Override
     public void enterWindowFullscreen() {
         if (currentMode != MODE_WINDOW_FULLSCREEN & checkEnterOrFullOK()) {
             full_flag = Util.SET_FULL(getContext());
-            if (enterFullMode == 1)
-                Util.SET_SENSOR(getContext());
-            else
+            orientation_flag = Util.isScreenOriatationPortrait(getContext());
+
+            if (enterFullMode == 0)
                 Util.SET_LANDSCAPE(getContext());
+            else if (enterFullMode == 1)
+                Util.SET_SENSOR(getContext());
+            else if (enterFullMode == 2)
+                Util.SET_PORTRAIT(getContext());
 
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)
@@ -184,9 +189,14 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void quitWindowFullscreen() {
         if (currentMode != MODE_WINDOW_NORMAL & checkEnterOrFullOK()) {
-            if (!full_flag)
+            if (full_flag)
+                Util.SET_FULL(getContext());
+            else
                 Util.CLEAR_FULL(getContext());
-            Util.SET_PORTRAIT(getContext());
+            if (orientation_flag)
+                Util.SET_PORTRAIT(getContext());
+            else
+                Util.SET_LANDSCAPE(getContext());
 
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)

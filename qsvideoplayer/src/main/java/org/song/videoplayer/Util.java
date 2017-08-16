@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -65,6 +66,34 @@ public class Util {
         //showBottomUIMenu(context);
     }
 
+
+    //横屏
+    public static void SET_LANDSCAPE(Context context) {
+        scanForActivity(context).setRequestedOrientation
+                (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    //竖屏
+    public static void SET_PORTRAIT(Context context) {
+        scanForActivity(context).setRequestedOrientation
+                (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    //重力感应
+    public static void SET_SENSOR(Context context) {
+        scanForActivity(context).setRequestedOrientation
+                (ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+    }
+
+    /**
+     * 返回当前屏幕是否为竖屏。
+     */
+    public static boolean isScreenOriatationPortrait(Context context) {
+        int i = context.getResources().getConfiguration().orientation;
+        return i != Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+
     /**
      * 隐藏虚拟按键
      */
@@ -97,24 +126,6 @@ public class Util {
 //            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
 //            decorView.setSystemUiVisibility(uiOptions);
 //        }
-    }
-
-    //横屏
-    public static void SET_LANDSCAPE(Context context) {
-        scanForActivity(context).setRequestedOrientation
-                (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    }
-
-    //竖屏
-    public static void SET_PORTRAIT(Context context) {
-        scanForActivity(context).setRequestedOrientation
-                (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-    //重力感应
-    public static void SET_SENSOR(Context context) {
-        scanForActivity(context).setRequestedOrientation
-                (ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     public static int dp2px(Context context, float value) {
