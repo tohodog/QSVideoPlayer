@@ -24,8 +24,8 @@ import java.util.List;
 public class DemoQSVideoView extends QSVideoViewHelp {
 
     protected ImageView coverImageView;//封面
-    protected ViewGroup bottomContainer;//顶部
-    protected ViewGroup topContainer;//顶部
+    protected ViewGroup bottomContainer;//底部栏
+    protected ViewGroup topContainer;//顶部栏
     protected ViewGroup loadingContainer;//初始化
     protected ViewGroup errorContainer;//出错了显示的 重试
     protected ViewGroup bufferingContainer;//缓冲

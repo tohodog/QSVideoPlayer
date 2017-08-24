@@ -144,7 +144,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (getDuration() > 1) {
-            int time = seekBar.getProgress() * getDuration() / progressMax;
+            int time = seekBar.getProgress() * (getDuration() / progressMax);
             if (currentTimeTextView != null)
                 currentTimeTextView.setText(Util.stringForTime(time));
         }
@@ -160,7 +160,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (getDuration() > 1) {
-            int time = seekBar.getProgress() * getDuration() / progressMax;
+            int time = seekBar.getProgress() * (getDuration() / progressMax);
             seekTo(time);
         }
         startProgressTimer();
@@ -222,7 +222,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         if (duration <= 0)
             duration = 1;
         int progress = (int) (((long) position * progressMax) / duration);
-        if (progress < 0)//防止溢出
+        if (progress < 0 || progress > progressMax)//防止溢出
             progress = progressMax;
         setProgressBar(progress, seekBar, progressBar);
         if (currentTimeTextView != null)
@@ -358,7 +358,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         //进度
         if (type == HandleTouchEvent.GestureEvent.TOUCH_FULL_X & checkReady()) {
             int duration = getDuration();
-            if (duration <= 0)
+            if (duration <= 1)
                 return;
             int delta = (int) (level * duration);
             if (delta < -tempPosition)
