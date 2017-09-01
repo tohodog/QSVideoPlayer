@@ -1,5 +1,8 @@
 package org.song.demo;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
@@ -60,11 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
         });
         play(mp4, 0);
+
     }
 
 
     private void play(String url, int media) {
-        Log.e("=====url:",url);
+        Log.e("=====url:", url);
         demoVideoView.release();
         demoVideoView.setiMediaControl(media);
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
@@ -142,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
         }).setPositiveButton("本地视频", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(getApplication(), ExSelectDialog.class), 1000);
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 1);
+                //startActivityForResult(new Intent(getApplication(), ExSelectDialog.class), 1000);
             }
         }).create().show();
 
@@ -161,6 +168,14 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1000 & resultCode == RESULT_OK) {
             mp4 = "file://" + data.getStringExtra(ExSelectDialog.KEY_RESULT);
             play(mp4, media);
+        }
+
+        if (requestCode == 1 & resultCode == RESULT_OK) {
+            mp4 = data.getData().toString();
+            Toast.makeText(this, mp4, Toast.LENGTH_LONG).show();
+            play(mp4, media);
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("text", mp4));
         }
     }
 

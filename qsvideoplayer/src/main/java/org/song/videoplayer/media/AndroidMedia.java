@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -30,9 +32,21 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
             release();
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            Class<MediaPlayer> clazz = MediaPlayer.class;
-            Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
-            method.invoke(mediaPlayer, url, headers);//反射不传context
+            if (url.startsWith("content")) {
+                if (Build.VERSION.SDK_INT >= 14)
+                    mediaPlayer.setDataSource(context, Uri.parse(url), headers);
+                else
+                    mediaPlayer.setDataSource(context, Uri.parse(url));
+            } else {
+                try {
+                    Class<MediaPlayer> clazz = MediaPlayer.class;
+                    Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
+                    method.invoke(mediaPlayer, url, headers);//反射
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mediaPlayer.setDataSource(url);
+                }
+            }
             mediaPlayer.setLooping(false);
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
