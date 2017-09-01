@@ -1,6 +1,7 @@
 package org.song.videoplayer.media;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -32,7 +33,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
             release();
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            if (url.startsWith("content")) {
+            if (url.startsWith(ContentResolver.SCHEME_CONTENT) || url.startsWith(ContentResolver.SCHEME_ANDROID_RESOURCE)) {
                 if (Build.VERSION.SDK_INT >= 14)
                     mediaPlayer.setDataSource(context, Uri.parse(url), headers);
                 else

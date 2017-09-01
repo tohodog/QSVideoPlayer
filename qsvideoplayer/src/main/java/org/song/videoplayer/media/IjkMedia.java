@@ -1,5 +1,6 @@
 package org.song.videoplayer.media;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 
@@ -23,7 +24,7 @@ public class IjkMedia extends IjkBaseMedia {
     IMediaPlayer getMedia(Context context, String url, Map<String, String> headers) throws Exception {
         IjkMediaPlayer mediaPlayer = new IjkMediaPlayer();
 
-        if (url.startsWith("content"))
+        if (url.startsWith(ContentResolver.SCHEME_CONTENT) || url.startsWith(ContentResolver.SCHEME_ANDROID_RESOURCE))
             mediaPlayer.setDataSource(context, Uri.parse(url), headers);
         else
             mediaPlayer.setDataSource(url, headers);
