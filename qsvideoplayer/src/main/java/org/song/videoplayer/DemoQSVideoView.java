@@ -81,7 +81,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
     @Override
     public void setUp(String url, Object... objects) {
         super.setUp(url, objects);
-        if (objects != null)
+        if (objects != null && objects.length > 0)
             titleTextView.setText(String.valueOf(objects[0]));
     }
 
