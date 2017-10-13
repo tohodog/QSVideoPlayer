@@ -25,7 +25,7 @@ import org.song.videoplayer.rederview.SufaceRenderView;
 public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCallback {
 
     public static final String TAG = "QSVideoView";
-    public int enterFullMode = 0;//进入全屏的模式 0横屏 1传感器自动横竖屏 2竖屏  -1什么都不做
+    public int enterFullMode = 0;//进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
 
     private IMediaControl iMediaControl;
 
@@ -165,15 +165,23 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void enterWindowFullscreen() {
         if (currentMode != MODE_WINDOW_FULLSCREEN & checkEnterOrFullOK()) {
+            boolean flag = false;
+            if (enterFullMode == 3) {
+                flag = true;
+                enterFullMode = height > width ? 1 : 0;
+            }
+
             full_flag = Util.SET_FULL(getContext());
             orientation_flag = Util.isScreenOriatationPortrait(getContext());
 
             if (enterFullMode == 0)
                 Util.SET_LANDSCAPE(getContext());
             else if (enterFullMode == 1)
-                Util.SET_SENSOR(getContext());
-            else if (enterFullMode == 2)
                 Util.SET_PORTRAIT(getContext());
+            else if (enterFullMode == 2)
+                Util.SET_SENSOR(getContext());
+            if (flag)
+                enterFullMode = 3;
 
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)
@@ -262,11 +270,14 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         }
     }
 
+    private int width, height;
 
     @Override
     public void onVideoSizeChanged(IMediaControl iMediaControl, int width, int height) {
         Log.e("MediaCallBack", "onVideoSizeChanged" + " width:" + width + " height:" + height);
         iRenderView.setVideoSize(width, height);
+        this.width = width;
+        this.height = height;
         if (playListener != null)
             playListener.onEvent(EVENT_VIDEOSIZECHANGE, width, height);
     }
@@ -307,6 +318,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     //初始化一些变量
     protected void intiParams() {
+        this.width = 0;
+        this.height = 0;
     }
 
     //设置播放状态

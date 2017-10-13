@@ -57,8 +57,8 @@ qsVideoView.setPlayListener(new PlayListener() {
             }
 
         });
-
-qsVideoView.enterFullMode=1;//进入全屏的模式 0默认是横屏 1是竖屏,随传感器自动切换横屏
+//进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
+qsVideoView.enterFullMode=1;
 
 qsVideoView.play();//
 
