@@ -183,6 +183,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             if (flag)
                 enterFullMode = 3;
 
+            Util.showNavigationBar(getContext(), false);
+
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)
                 vp.removeView(videoView);
@@ -205,6 +207,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
                 Util.SET_PORTRAIT(getContext());
             else
                 Util.SET_LANDSCAPE(getContext());
+
+            Util.showNavigationBar(getContext(), true);
 
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)

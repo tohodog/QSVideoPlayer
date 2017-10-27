@@ -54,7 +54,9 @@ public class Util {
         Window w = scanForActivity(context).getWindow();
         boolean b = (w.getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         //hideBottomUIMenu(context);
+        //showNavigationBar(context, false);
         return b;
 
     }
@@ -62,8 +64,11 @@ public class Util {
 
     //取消全屏
     public static void CLEAR_FULL(Context context) {
-        scanForActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Window w = scanForActivity(context).getWindow();
+        w.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         //showBottomUIMenu(context);
+        //showNavigationBar(context, true);
     }
 
 
@@ -98,34 +103,52 @@ public class Util {
      * 隐藏虚拟按键
      */
     public static void hideBottomUIMenu(Context context) {
-        Activity a = scanForActivity(context);
-        //隐藏虚拟按键
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = a.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = a.getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;// | View.SYSTEM_UI_FLAG_FULLSCREEN
-            decorView.setSystemUiVisibility(uiOptions);
-        }
+        showNavigationBar(context, false);
     }
 
     /**
      * 显示虚拟按键
      */
     public static void showBottomUIMenu(Context context) {
-//        Activity a = scanForActivity(context);
-//        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-//            View v = a.getWindow().getDecorView();
-//            v.setSystemUiVisibility(View.VISIBLE);
-//        } else if (Build.VERSION.SDK_INT >= 19) {
-//            //for new api versions.
-//            View decorView = a.getWindow().getDecorView();
-//            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-//            decorView.setSystemUiVisibility(uiOptions);
-//        }
+        showNavigationBar(context, true);
+    }
+
+
+    public static void showNavigationBar(Context context, boolean show) {
+        try {
+            Activity a = scanForActivity(context);
+            if (show) {
+                if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+                    View v = a.getWindow().getDecorView();
+                    v.setSystemUiVisibility(View.GONE);
+                } else if (Build.VERSION.SDK_INT >= 19) {
+                    a.getWindow().getDecorView().setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    );
+                }
+
+            } else {
+                // Set the IMMERSIVE flag.
+                // Set the content to appear under the system bars so that the content
+                // doesn't resize when the system bars hide and show.
+                if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+                    View v = a.getWindow().getDecorView();
+                    v.setSystemUiVisibility(View.VISIBLE);
+                } else if (Build.VERSION.SDK_INT >= 19) {
+                    a.getWindow().getDecorView().setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static int dp2px(Context context, float value) {
