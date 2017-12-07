@@ -32,6 +32,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".RecyVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
+        <activity
             android:name=".ListVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
