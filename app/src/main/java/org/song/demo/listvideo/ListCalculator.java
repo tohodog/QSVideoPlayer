@@ -65,6 +65,9 @@ public class ListCalculator {
                 }
             }
         }
+
+        handler.removeCallbacks(run);
+
         //不一样说明活动的item改变了
         if (activeItem != currentActiveItem) {
 
@@ -74,13 +77,14 @@ public class ListCalculator {
             View v2 = getter.getChildAt(activeItem - firstVisiblePosition);
             if (v2 != null) {
                 callBack.activeOnScrolling(v2, activeItem);
-                if (currentActiveItem < 0)
-                    callBack.activeOnScrolled(v2, activeItem);
+                if (currentActiveItem < 0){
+                    handler.postDelayed(run, 300);
+                    //callBack.activeOnScrolled(v2, activeItem);
+                }
             }
             currentActiveItem = activeItem;
             isChangeFlag = true;
         }
-        handler.removeCallbacks(run);
     }
 
     private boolean isChangeFlag;
