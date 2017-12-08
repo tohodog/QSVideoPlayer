@@ -69,8 +69,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //-----------给外部调用的start----------
     @Override
     public void setUp(String url, Object... objects) {
-        this.url = url;
         release();
+        this.url = url;
         setStateAndMode(STATE_NORMAL, currentMode);
         if (url.startsWith("file"))
             urlMode = 1;
@@ -448,5 +448,17 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         return currentState != STATE_NORMAL
                 & currentState != STATE_PREPARING
                 & currentState != STATE_ERROR;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getVideoWidth() {
+        return width;
+    }
+
+    public int getVideoHeight() {
+        return height;
     }
 }

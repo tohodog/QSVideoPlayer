@@ -114,7 +114,7 @@ public class SufaceRenderView extends SurfaceView implements SurfaceHolder.Callb
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.i(TAG, "surfaceChanged " + width + "-" + height);
         if (callback != null)
-            callback.onSurfaceChanged(this, 0, width, height);
+            callback.onSurfaceChanged(this, format, width, height);
     }
 
     @Override
