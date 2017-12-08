@@ -30,6 +30,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 ```
 
 ## Demo使用
+### JAVA
 ```
 //DemoQSVideoView的ui用的jc播放器
 DemoQSVideoView qsVideoView = (DemoQSVideoView) findViewById(R.id.xxx);
@@ -65,7 +66,7 @@ qsVideoView.play();//
 
 ```
 
-## 返回键退出全屏
+### 返回键退出全屏
 ```
     @Override
     public void onBackPressed() {
@@ -73,6 +74,21 @@ qsVideoView.play();//
             return;
         super.onBackPressed();
     }
+```
+### XML
+```
+        <org.song.videoplayer.DemoQSVideoView
+                android:id="@+id/xxx"
+                android:layout_width="match_parent"
+                android:layout_height="400dp" />
+```
+
+### AndroidManifest
+```
+        <activity
+            android:name=".VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
 ```
 
 ## DIY播放器:
