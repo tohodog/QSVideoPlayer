@@ -125,11 +125,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
                 h = (Holder) convertView.getTag();
             h.position = position;
 
-            String[] arr = getItem(position).split(",");
-            h.qsVideoView.setUp(arr[1], arr[0]);
-            h.qsVideoView.getCoverImageView().setImageResource(R.mipmap.ic_launcher);
-            FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
-            //qsVideoView.setLayoutParams(l);
+            h.bindData(getItem(position));
 
 
             return h.itemView;
@@ -170,6 +166,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
 
         public void bindData(String s) {
             String[] arr = s.split(",");
+            if (qsVideoView.isPlaying()) return;
             qsVideoView.setUp(arr[1], arr[0]);
             qsVideoView.getCoverImageView().setImageResource(R.mipmap.ic_launcher);
             FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
