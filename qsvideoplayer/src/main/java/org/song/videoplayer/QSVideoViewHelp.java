@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouchEvent.GestureEvent, SeekBar.OnSeekBarChangeListener {
 
+    public static final int EVENT_CONTROL_VIEW = 1001;
+
     public boolean isWindowGesture = false;//是否非全屏下也可以手势调节进度
 
     protected View controlContainer;//控制ui容器
@@ -202,6 +204,9 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             dismissControlView(status, mode);
         super.setUIWithStateAndMode(status, mode);
 
+        //监听回调永远放在最后
+        if (playListener != null)
+            playListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
     }
 
     //缓冲进度
@@ -298,6 +303,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         public void run() {
             isShowControlView = false;
             dismissControlView(currentState, currentMode);
+            if (playListener != null)
+                playListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
         }
     };
     //-----------定时任务隐藏控制栏end-----------------
