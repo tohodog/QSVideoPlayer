@@ -60,7 +60,7 @@ public interface IVideoPlayer {
 
     void quitWindowFullscreen();//退出全屏
 
-    boolean setMute(boolean isMute);
+    boolean setMute(boolean isMute);//是否静音
 
     void release();//销毁
 
