@@ -58,6 +58,8 @@ public interface IMediaControl {
 
     boolean isPlaying();
 
+    boolean setVolume(float leftVol,float rightVol);
+
     void release();//销毁
 
 }

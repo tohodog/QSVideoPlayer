@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         demoVideoView.setiMediaControl(media);
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
         //qsVideoView.seekTo(12300);
+        demoVideoView.setMute(mute);
         demoVideoView.play();
         this.url = url;
         this.media = media;
@@ -121,10 +122,16 @@ public class MainActivity extends AppCompatActivity {
 
     String[] arr = {"适应", "填充", "原尺寸", "拉伸", "16:9", "4:3"};
     int mode;
+    boolean mute;
 
     public void 缩放模式(View v) {
         demoVideoView.setAspectRatio(++mode > 5 ? mode = 0 : mode);
         ((Button) v).setText(arr[mode]);
+    }
+
+    public void 静音(View v) {
+        demoVideoView.setMute(mute = !mute);
+        ((Button) v).setText(mute ? "静音 ON" : "静音 OFF");
     }
 
 

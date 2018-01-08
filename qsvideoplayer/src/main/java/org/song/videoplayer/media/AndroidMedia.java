@@ -158,6 +158,15 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
     }
 
     @Override
+    public boolean setVolume(float leftVol, float rightVol) {
+        if (leftVol < 0 | rightVol < 0 | leftVol > 1 | rightVol > 1)
+            return false;
+        if (isPrepar)
+            mediaPlayer.setVolume(leftVol, rightVol);
+        return true;
+    }
+
+    @Override
     public void release() {
 
         isPrepar = false;

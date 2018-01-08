@@ -38,6 +38,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected int currentMode = MODE_WINDOW_NORMAL;
     protected int seekToInAdvance;
     protected int aspectRatio;
+    protected boolean isMute;
 
     protected PlayListener playListener;
     public int urlMode;
@@ -156,6 +157,19 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         intiParams();
     }
 
+    //异步销毁，解决list视频销毁卡顿问题
+    public void releaseInThread() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                iMediaControl.release();
+            }
+        }).start();
+        removeRenderView();
+        setStateAndMode(STATE_NORMAL, currentMode);
+        intiParams();
+    }
+
 
     private long tempLong;
     private boolean full_flag;//标记状态栏状态
@@ -218,6 +232,13 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         }
     }
 
+    @Override
+    public boolean setMute(boolean isMute) {
+        this.isMute = isMute;
+        int v = isMute ? 0 : 1;
+        return iMediaControl.setVolume(v, v);
+    }
+
     //防止频繁切换全屏
     private boolean checkEnterOrFullOK() {
         long now = System.currentTimeMillis();
@@ -238,6 +259,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             iMediaControl.seekTo(seekToInAdvance);
             seekToInAdvance = 0;
         }
+        setMute(isMute);
         iMediaControl.doPlay();
         setStateAndMode(STATE_PLAYING, currentMode);
         if (playListener != null)

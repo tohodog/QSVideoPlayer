@@ -10,17 +10,15 @@ public interface IVideoPlayer {
     int STATE_NORMAL = 0;//未播放
     int STATE_PREPARING = 1;//初始化中
     int STATE_PLAYING = 2;//播放中
-
     //去掉这个状态 缓冲只是显示个进度 不影响其他状态
     //int STATE_PLAYING_BUFFERING_START = 3;//缓冲
-
     int STATE_PAUSE = 4;//暂停中
     int STATE_AUTO_COMPLETE = 5;//播放完成
     int STATE_ERROR = 6;//播放出错
 
     int MODE_WINDOW_NORMAL = 100;//普通模式
     int MODE_WINDOW_FULLSCREEN = 101;//全屏模式
-    int MODE_WINDOW_TINY = 102;//小窗口模式
+    int MODE_WINDOW_FLOAT = 102;//悬浮窗口模式
 
     int EVENT_PREPARE_START = 10;//初始化开始
     int EVENT_PREPARE_END = 11;//初始化完成
@@ -61,6 +59,8 @@ public interface IVideoPlayer {
     void enterWindowFullscreen();//全屏
 
     void quitWindowFullscreen();//退出全屏
+
+    boolean setMute(boolean isMute);
 
     void release();//销毁
 

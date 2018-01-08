@@ -86,6 +86,11 @@
 
         </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="静音"
+            android:text="静音 OFF" />
 
         <Button
             android:layout_width="match_parent"
@@ -99,6 +104,7 @@
             android:layout_height="wrap_content"
             android:onClick="销毁"
             android:text="销毁" />
+
 
 
         <Button

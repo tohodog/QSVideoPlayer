@@ -64,6 +64,7 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
         simpleExoPlayer.addListener(ExoMedia.this);
         simpleExoPlayer.setVideoListener(ExoMedia.this);
         simpleExoPlayer.prepare(mediaSource, true, true);
+
     }
 
     private MediaSource buildMediaSource(Context context, Uri uri) {
@@ -181,6 +182,15 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
     @Override
     public boolean isPlaying() {
         return isPrepar && simpleExoPlayer.getPlayWhenReady();
+    }
+
+    @Override
+    public boolean setVolume(float leftVol, float rightVol) {
+        if (leftVol < 0 | rightVol < 0 | leftVol > 1 | rightVol > 1)
+            return false;
+        if (isPrepar)
+            simpleExoPlayer.setVolume((leftVol + rightVol) / 2);
+        return true;
     }
 
     @Override
