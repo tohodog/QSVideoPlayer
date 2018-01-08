@@ -31,6 +31,8 @@ public class HandleTouchEvent {
 
         float x = event.getX();
         float y = event.getY();
+
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 init();
@@ -43,6 +45,9 @@ public class HandleTouchEvent {
                 //Log.e("onTouchEvent", "ACTION_DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (downY < moveLen)
+                    return false;
+
                 float deltaX = x - downX;
                 float deltaY = y - downY;
 
@@ -91,6 +96,8 @@ public class HandleTouchEvent {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (downY < moveLen)
+                    return false;
 
                 long l = System.currentTimeMillis();
                 long delay = l - tempTime;
