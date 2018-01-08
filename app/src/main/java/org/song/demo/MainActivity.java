@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.song.videoplayer.IVideoPlayer;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         });
         demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
+        demoVideoView.enterFullMode = 3;
         demoVideoView.setPlayListener(new PlayListener() {
             @Override
             public void onStatus(int status) {//播放状态
@@ -161,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void setTitle(CharSequence title) {
+        ((TextView) findViewById(R.id.tv_title)).setText(title);
+    }
+
     @Override
     public void onBackPressed() {
         if (demoVideoView.onBackPressed())
@@ -233,5 +239,6 @@ public class MainActivity extends AppCompatActivity {
             demoVideoView.release();
         }
     };
+
 
 }
