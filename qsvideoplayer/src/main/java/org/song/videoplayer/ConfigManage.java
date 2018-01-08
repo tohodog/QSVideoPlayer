@@ -44,7 +44,7 @@ public class ConfigManage {
     }
 
 
-    public IRenderView getIRenderView(Context context) {
+    IRenderView getIRenderView(Context context) {
         if (Build.VERSION.SDK_INT >= 14)
             return new TextureRenderView(context);
         else
@@ -53,7 +53,7 @@ public class ConfigManage {
 
 
     //后期扩展其他解码器 exo ijk... exo api需大于16
-    public IMediaControl getMediaControl(IMediaCallback iMediaCallback, Class<? extends BaseMedia> claxx) {
+    IMediaControl getMediaControl(IMediaCallback iMediaCallback, Class<? extends BaseMedia> claxx) {
         if (iMediaCallback instanceof QSVideoView)
             addVideoView((QSVideoView) iMediaCallback);
         return newInstance(claxx.getName(), iMediaCallback);
@@ -96,7 +96,7 @@ public class ConfigManage {
 
     public void setDecodeMediaClass(String decodeClassName) {
         this.decodeClassName = decodeClassName;
-        preferences.edit().putString("decodeClassName", decodeClassName).commit();
+        preferences.edit().putString("decodeClassName", decodeClassName).apply();
     }
 
     public String getDecodeMediaClass() {
