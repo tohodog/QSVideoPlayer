@@ -162,7 +162,7 @@ qsVideoView.play();//
 ```
 
 ![](https://github.com//tohodog/QSVideoPlayer/raw/master/source/main.png)
-![](https://github.com//tohodog/QSVideoPlayer/raw/master/source/full.png)
+![](https://github.com//tohodog/QSVideoPlayer/raw/master/source/full1.png)
 ![](https://github.com//tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg "在这里输入图片标题")
