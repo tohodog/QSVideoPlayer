@@ -1,5 +1,7 @@
 package org.song.videoplayer;
 
+import org.song.videoplayer.media.BaseMedia;
+
 /**
  * Created by song on 2017/2/10.
  * 视频播放器
@@ -42,19 +44,11 @@ public interface IVideoPlayer {
 
     void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
-    void setiMediaControl(int i);//设置解码模块 参数见ConfigManage
+    void setDecodeMedia(Class<? extends BaseMedia> claxx);//设置解码模块
 
     boolean onBackPressed();//返回键退出全屏
 
     boolean isPlaying();//是否播放中
-
-    int getPosition();//获取播放进度
-
-    int getDuration();//获取视频时长
-
-    int getCurrentMode();//获得播放器当前的模式(全屏,普通...)
-
-    int getCurrentState();//获得播放器当前的状态(播放,暂停,完成...)
 
     void enterWindowFullscreen();//全屏
 
@@ -63,5 +57,18 @@ public interface IVideoPlayer {
     boolean setMute(boolean isMute);//是否静音
 
     void release();//销毁
+
+
+    int getPosition();//获取播放进度
+
+    int getDuration();//获取视频时长
+
+    int getVideoWidth();//获取视频宽
+
+    int getVideoHeight();//获取视频长
+
+    int getCurrentMode();//获得播放器当前的模式(全屏,普通...)
+
+    int getCurrentState();//获得播放器当前的状态(播放,暂停,完成...)
 
 }

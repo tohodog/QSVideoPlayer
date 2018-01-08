@@ -3,9 +3,9 @@ package org.song.videoplayer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.view.View;
 
 import org.song.videoplayer.media.AndroidMedia;
+import org.song.videoplayer.media.BaseMedia;
 import org.song.videoplayer.media.IMediaCallback;
 import org.song.videoplayer.media.IMediaControl;
 import org.song.videoplayer.rederview.IRenderView;
@@ -35,12 +35,12 @@ public class ConfigManage {
     }
 
     private SharedPreferences preferences;
-    private int media_mode = 0;
+    private String decodeClassName = "";
 
     private ConfigManage(Context context) {
         preferences = context.getSharedPreferences("cfg_qsvideo",
                 Context.MODE_PRIVATE);
-        media_mode = preferences.getInt("media_mode", 0);
+        decodeClassName = preferences.getString("decodeClassName", AndroidMedia.class.getName());
     }
 
 
@@ -53,16 +53,10 @@ public class ConfigManage {
 
 
     //后期扩展其他解码器 exo ijk... exo api需大于16
-    public IMediaControl getIMediaControl(IMediaCallback iMediaCallback, int MEDIA_MODE) {
+    public IMediaControl getMediaControl(IMediaCallback iMediaCallback, Class<? extends BaseMedia> claxx) {
         if (iMediaCallback instanceof QSVideoView)
             addVideoView((QSVideoView) iMediaCallback);
-        if (MEDIA_MODE == 1)
-            return newInstance("org.song.videoplayer.media.IjkMedia", iMediaCallback);
-        if (MEDIA_MODE == 2 & Build.VERSION.SDK_INT >= 16)
-            return newInstance("org.song.videoplayer.media.ExoMedia", iMediaCallback);
-        if (MEDIA_MODE == 3 & Build.VERSION.SDK_INT >= 16)
-            return newInstance("org.song.videoplayer.media.IjkExoMedia", iMediaCallback);
-        return new AndroidMedia(iMediaCallback);
+        return newInstance(claxx.getName(), iMediaCallback);
     }
 
     private IMediaControl newInstance(String className, IMediaCallback iMediaCallback) {
@@ -70,11 +64,6 @@ public class ConfigManage {
         if (i == null)
             i = new AndroidMedia(iMediaCallback);
         return i;
-    }
-
-    //后期扩展其他解码器 exo ijk... exo api需大于16
-    public IMediaControl getIMediaControl(IMediaCallback iMediaCallback) {
-        return getIMediaControl(iMediaCallback, media_mode);
     }
 
     private void addVideoView(QSVideoView q) {
@@ -105,12 +94,12 @@ public class ConfigManage {
         }
     }
 
-    public void setMedia_mode(int media_mode) {
-        this.media_mode = media_mode;
-        preferences.edit().putInt("media_mode", media_mode).commit();
+    public void setDecodeMediaClass(String decodeClassName) {
+        this.decodeClassName = decodeClassName;
+        preferences.edit().putString("decodeClassName", decodeClassName).commit();
     }
 
-    public int getMedia_mode() {
-        return media_mode;
+    public String getDecodeMediaClass() {
+        return decodeClassName;
     }
 }

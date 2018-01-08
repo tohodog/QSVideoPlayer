@@ -20,6 +20,11 @@ import android.widget.Toast;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
 import org.song.videoplayer.DemoQSVideoView;
+import org.song.videoplayer.media.AndroidMedia;
+import org.song.videoplayer.media.BaseMedia;
+import org.song.videoplayer.media.ExoMedia;
+import org.song.videoplayer.media.IjkExoMedia;
+import org.song.videoplayer.media.IjkMedia;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     String m3u8 = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
 
     String url;
-    int media;
+    Class decodeMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,52 +69,50 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        play(mp4, 0);
+        play(mp4, AndroidMedia.class);
 
     }
 
 
-    private void play(String url, int media) {
+    private void play(String url, Class<? extends BaseMedia> decodeMedia) {
         Log.e("=====url:", url);
         demoVideoView.release();
-        demoVideoView.setiMediaControl(media);
+        demoVideoView.setDecodeMedia(decodeMedia);
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
         //qsVideoView.seekTo(12300);
         demoVideoView.setMute(mute);
         demoVideoView.play();
         this.url = url;
-        this.media = media;
-
-        //qsVideoView.enterFullMode =1;
+        this.decodeMedia = decodeMedia;
     }
 
 
     public void 系统硬解(View v) {
-        play(url, 0);
+        play(url, AndroidMedia.class);
         setTitle("系统硬解");
 
     }
 
     public void ijk_ffmepg解码(View v) {
-        play(url, 1);
+        play(url, IjkMedia.class);
         setTitle("ijk_ffmepg解码");
 
     }
 
     public void exo解码(View v) {
-        play(url, 2);
+        play(url, ExoMedia.class);
         setTitle("exo解码");
 
     }
 
     public void ijk_exo解码(View v) {
-        play(url, 3);
+        play(url, IjkExoMedia.class);
         setTitle("ijk_exo解码");
 
     }
 
     public void 网络视频(View v) {
-        play(mp4, media);
+        play(mp4, decodeMedia);
 
     }
 
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void m3u8直播(View v) {
-        play(m3u8, media);
+        play(m3u8, decodeMedia);
     }
 
     String[] arr = {"适应", "填充", "原尺寸", "拉伸", "16:9", "4:3"};
@@ -150,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mp4 = editText.getText().toString();
-                play(mp4, media);
+                play(mp4, decodeMedia);
             }
         }).setPositiveButton("本地视频", new DialogInterface.OnClickListener() {
             @Override
@@ -179,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1000 & resultCode == RESULT_OK) {
             mp4 = "file://" + data.getStringExtra(ExSelectDialog.KEY_RESULT);
-            play(mp4, media);
+            play(mp4, decodeMedia);
         }
 
         if (requestCode == 1 & resultCode == RESULT_OK) {
             mp4 = data.getData().toString();
             Toast.makeText(this, mp4, Toast.LENGTH_LONG).show();
-            play(mp4, media);
+            play(mp4, decodeMedia);
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("text", mp4));
         }

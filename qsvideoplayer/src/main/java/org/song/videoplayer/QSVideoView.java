@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import org.song.videoplayer.media.AndroidMedia;
+import org.song.videoplayer.media.BaseMedia;
 import org.song.videoplayer.media.IMediaCallback;
 import org.song.videoplayer.media.IMediaControl;
 import org.song.videoplayer.rederview.IRenderView;
@@ -58,7 +60,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     private void init(Context context) {
-        iMediaControl = ConfigManage.getInstance(getContext()).getIMediaControl(this);
+        iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, AndroidMedia.class);
         videoView = new FrameLayout(context);
         renderViewContainer = new FrameLayout(context);
         renderViewContainer.setBackgroundColor(Color.BLACK);
@@ -122,8 +124,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     @Override
-    public void setiMediaControl(int i) {
-        this.iMediaControl = ConfigManage.getInstance(getContext()).getIMediaControl(this, i);
+    public void setDecodeMedia(Class<? extends BaseMedia> claxx) {
+        this.iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, claxx);
     }
 
     @Override
