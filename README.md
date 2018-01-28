@@ -11,10 +11,10 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip]
   * 根据系统版本自动选择SurfaceView和TextureView,支持api9+
   * 提供list视频列表自动销毁播放代码
   * 支持本地视频,在线视频,m3u8直播等...
-  
-[![apkurl][apkurlsvg]][apkurl]
 
 ![qrcode][qrpng]
+<br/>
+[![apkurl][apkurlsvg]][apkurl]
 
 
 ## 使用说明
