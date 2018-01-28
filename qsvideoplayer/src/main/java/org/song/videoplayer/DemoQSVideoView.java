@@ -76,6 +76,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         changeViews.add(startButton);
         changeViews.add(progressBar);
 
+
     }
 
     @Override
@@ -97,9 +98,9 @@ public class DemoQSVideoView extends QSVideoViewHelp {
                 break;
             case STATE_PLAYING:
             case STATE_PAUSE:
-            case STATE_AUTO_COMPLETE://显示底部 播放按钮 [顶部]
+            case STATE_AUTO_COMPLETE://显示 播放按钮  [底部] [顶部]
                 showChangeViews(startButton,
-                        bottomContainer,
+                        mode == MODE_WINDOW_FLOAT ? null : bottomContainer,
                         mode == MODE_WINDOW_FULLSCREEN ? topContainer : null);
                 break;
             case STATE_ERROR://出错显示errorContainer
@@ -107,6 +108,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
                 break;
         }
         updateViewImage(status, mode);
+        floatBackView.setVisibility(mode == MODE_WINDOW_FLOAT ? View.VISIBLE : View.INVISIBLE);
     }
 
     //播放时隐藏的view
@@ -117,6 +119,8 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         progressBar.setVisibility(View.VISIBLE);
         if (status != STATE_AUTO_COMPLETE)
             startButton.setVisibility(View.INVISIBLE);
+        if (mode == MODE_WINDOW_FLOAT)
+            floatBackView.setVisibility(View.INVISIBLE);
     }
 
     //缓冲
@@ -310,7 +314,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
 //        dialog.getWindow().addFlags(32);
 //        dialog.getWindow().addFlags(16);
 //        dialog.getWindow().setLayout(-2, -2);
-//        WindowManager.LayoutParams localLayoutParams = dialog.getWindow().getAttributes();
+//        WindowManage.LayoutParams localLayoutParams = dialog.getWindow().getAttributes();
 //        localLayoutParams.gravity = graviaty;
 //        if (marginX > 0)
 //            localLayoutParams.x = marginX;

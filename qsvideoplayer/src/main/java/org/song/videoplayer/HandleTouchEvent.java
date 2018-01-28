@@ -2,6 +2,7 @@ package org.song.videoplayer;
 
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 /**
  * Created by song on 2017/2/14.22:32
@@ -16,8 +17,8 @@ public class HandleTouchEvent {
         this.gestureEvent = touchEvent;
     }
 
-    private final int moveLen = 66;
-    private final float bili = 0.75f;//调节进度灵敏度 滑动0.75屏幕可以到底
+    private int moveLen;
+    private final float speedrate = 0.75f;//调节进度灵敏度 滑动0.75屏幕可以到底
 
     private float downX, downY;
     private int w, h;
@@ -42,6 +43,8 @@ public class HandleTouchEvent {
                 h = view.getHeight();
                 leftX = (int) (w * 0.25);
                 rightX = (int) (w * 0.75);
+
+                moveLen = ViewConfiguration.get(view.getContext()).getScaledTouchSlop() + 30;
                 //Log.e("onTouchEvent", "ACTION_DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -74,13 +77,13 @@ public class HandleTouchEvent {
 
                 switch (type) {
                     case GestureEvent.TOUCH_FULL_X:
-                        level = 1.0f * deltaX / (w * bili);
+                        level = 1.0f * deltaX / (w * speedrate);
                         break;
                     case GestureEvent.TOUCH_LEFT_Y:
-                        level = 1.0f * -deltaY / (h * bili);
+                        level = 1.0f * -deltaY / (h * speedrate);
                         break;
                     case GestureEvent.TOUCH_RIGHT_Y:
-                        level = 1.0f * -deltaY / (h * bili);
+                        level = 1.0f * -deltaY / (h * speedrate);
                         break;
 
                 }

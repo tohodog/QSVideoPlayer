@@ -12,4 +12,7 @@
     <!--ImageView全屏按钮  View返回按钮-->
     <item name="help_fullscreen" type="id" />
     <item name="help_back" type="id" />
+    <!--ImageView浮窗退出按钮 -->
+    <item name="help_float_back" type="id" />
+
 </resources>

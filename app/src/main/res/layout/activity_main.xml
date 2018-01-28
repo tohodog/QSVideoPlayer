@@ -119,7 +119,17 @@
                     android:onClick="缩放模式"
                     android:text="适应" />
 
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="浮窗"
+                    android:text="浮窗" />
+
             </LinearLayout>
+
+
+
 
             <Button
                 android:id="@+id/button"

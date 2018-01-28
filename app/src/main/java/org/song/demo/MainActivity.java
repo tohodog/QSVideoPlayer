@@ -5,8 +5,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
 import org.song.videoplayer.DemoQSVideoView;
+import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
 import org.song.videoplayer.media.ExoMedia;
@@ -139,6 +142,29 @@ public class MainActivity extends AppCompatActivity {
         ((Button) v).setText(mute ? "静音 ON" : "静音 OFF");
     }
 
+    public void 浮窗(View v) {
+        FloatParams floatParams = new FloatParams();
+        floatParams.x = 0;
+        floatParams.y = 0;
+        floatParams.w = 540;
+        floatParams.h = 270;
+        floatParams.round = 30;
+        floatParams.fade = 0.8f;
+        floatParams.canMove = true;
+
+        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+            demoVideoView.quitWindowFloat();
+        else {
+            if (!demoVideoView.enterWindowFloat(floatParams)) {
+                Toast.makeText(this,"没有浮窗权限",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 0);
+            }
+
+        }
+    }
+
 
     public void 销毁(View v) {
         demoVideoView.release();
@@ -206,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
             demoVideoView.seekTo(position);
             position = 0;
         }
-
     }
 
     boolean flag;//记录退出时播放状态 回来的时候继续播放
@@ -214,7 +239,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        super.onPause();//暂停
+        super.onPause();
+        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+            return;
+        //暂停
         flag = demoVideoView.isPlaying();
         demoVideoView.pause();
     }
@@ -222,13 +250,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        super.onStop();//不马上销毁 延时10秒
+        super.onStop();
+        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+            return;
+        //不马上销毁 延时10秒
         handler.postDelayed(runnable, 1000 * 10);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();//销毁
+        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+            demoVideoView.quitWindowFloat();
         demoVideoView.release();
     }
 

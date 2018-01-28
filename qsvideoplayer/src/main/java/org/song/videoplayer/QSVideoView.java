@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import org.song.videoplayer.floatwindow.FloatParams;
+import org.song.videoplayer.floatwindow.FloatWindowHelp;
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
 import org.song.videoplayer.media.IMediaCallback;
@@ -34,6 +36,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected FrameLayout videoView;
     private FrameLayout renderViewContainer;//suface容器
     private IRenderView iRenderView;
+    private FloatWindowHelp floatWindowHelp;
 
     protected String url;
     protected int currentState = STATE_NORMAL;
@@ -61,6 +64,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     private void init(Context context) {
         iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, AndroidMedia.class);
+        floatWindowHelp = new FloatWindowHelp(context);
         videoView = new FrameLayout(context);
         renderViewContainer = new FrameLayout(context);
         renderViewContainer.setBackgroundColor(Color.BLACK);
@@ -180,7 +184,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //全屏
     @Override
     public void enterWindowFullscreen() {
-        if (currentMode != MODE_WINDOW_FULLSCREEN & checkEnterOrFullOK()) {
+        if (currentMode == MODE_WINDOW_NORMAL & checkSpaceOK()) {
             boolean flag = false;
             if (enterFullMode == 3) {
                 flag = true;
@@ -214,7 +218,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //退出全屏
     @Override
     public void quitWindowFullscreen() {
-        if (currentMode != MODE_WINDOW_NORMAL & checkEnterOrFullOK()) {
+        if (currentMode == MODE_WINDOW_FULLSCREEN & checkSpaceOK()) {
             if (full_flag)
                 Util.SET_FULL(getContext());
             else
@@ -234,6 +238,36 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         }
     }
 
+    //浮窗
+    @Override
+    public boolean enterWindowFloat(FloatParams floatParams) {
+        boolean b = true;
+        if (currentMode == MODE_WINDOW_NORMAL) {
+            ViewGroup vp = (ViewGroup) videoView.getParent();
+            if (vp != null)
+                vp.removeView(videoView);
+            b = floatWindowHelp.enterWindowFloat(videoView, floatParams);
+            setStateAndMode(currentState, MODE_WINDOW_FLOAT);
+            if (!b)
+                quitWindowFloat();
+        }
+        return b;
+    }
+
+    //退出浮窗
+    @Override
+    public void quitWindowFloat() {
+        if (currentMode == MODE_WINDOW_FLOAT) {
+            ViewGroup vp = (ViewGroup) videoView.getParent();
+            if (vp != null)
+                vp.removeView(videoView);
+            addView(videoView, new LayoutParams(-1, -1));
+            floatWindowHelp.quieWindowFloat();
+            setStateAndMode(currentState, MODE_WINDOW_NORMAL);
+        }
+    }
+
+    //静音
     @Override
     public boolean setMute(boolean isMute) {
         this.isMute = isMute;
@@ -242,7 +276,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     //防止频繁切换全屏
-    private boolean checkEnterOrFullOK() {
+    private boolean checkSpaceOK() {
         long now = System.currentTimeMillis();
         long d = now - tempLong;
         if (d > 888)

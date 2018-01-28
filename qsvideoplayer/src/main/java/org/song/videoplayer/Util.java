@@ -54,7 +54,7 @@ public class Util {
         Window w = scanForActivity(context).getWindow();
         boolean b = (w.getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //w.addFlags(WindowManage.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         //hideBottomUIMenu(context);
         //showNavigationBar(context, false);
         return b;
@@ -66,7 +66,7 @@ public class Util {
     public static void CLEAR_FULL(Context context) {
         Window w = scanForActivity(context).getWindow();
         w.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //w.clearFlags(WindowManage.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         //showBottomUIMenu(context);
         //showNavigationBar(context, true);
     }

@@ -3,6 +3,7 @@
     package="org.song.videoplayer">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-sdk tools:overrideLibrary="com.example.ijkplayer_x86_64,
      tv.danmaku.ijk.media.player_arm64,tv.danmaku.ijk.media.player_x86_64" />

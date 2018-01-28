@@ -1,5 +1,6 @@
 package org.song.videoplayer;
 
+import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.BaseMedia;
 
 /**
@@ -54,7 +55,11 @@ public interface IVideoPlayer {
 
     void quitWindowFullscreen();//退出全屏
 
-    boolean setMute(boolean isMute);//是否静音
+    boolean enterWindowFloat(FloatParams floatParams);//浮窗 false没权限
+
+    void quitWindowFloat();//退出浮窗
+
+    boolean setMute(boolean isMute);//是否静音 false不支持
 
     void release();//销毁
 

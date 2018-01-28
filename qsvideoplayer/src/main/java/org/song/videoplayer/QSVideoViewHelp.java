@@ -40,7 +40,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     protected TextView currentTimeTextView, totalTimeTextView;//播放时间/视频长度
     protected ImageView fullscreenButton;//全屏按钮
     protected ProgressBar progressBar;//第二进度条
-    protected View backView;//返回
+    protected View backView, floatBackView;//返回
     protected final int progressMax = 1000;
 
     protected boolean isShowControlView;
@@ -85,13 +85,14 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         currentTimeTextView = (TextView) findViewById(R.id.help_current);
         totalTimeTextView = (TextView) findViewById(R.id.help_total);
         backView = findViewById(R.id.help_back);
+        floatBackView = findViewById(R.id.help_float_back);
         if (seekBar != null) {
             seekBar.setOnSeekBarChangeListener(this);
             seekBar.setMax(progressMax);
         }
         if (progressBar != null)
             progressBar.setMax(progressMax);
-        setClick(startButton, startButton2, fullscreenButton, backView);
+        setClick(startButton, startButton2, fullscreenButton, backView, floatBackView);
 
 
     }
@@ -120,6 +121,10 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                     quitWindowFullscreen();
                 else
                     Util.scanForActivity(getContext()).finish();
+            }
+            if (i == R.id.help_float_back) {
+                quitWindowFloat();
+                release();
             }
 
             if (view == videoView) {
