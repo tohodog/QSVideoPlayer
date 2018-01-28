@@ -1,4 +1,4 @@
-QSVideoPlayer
+QSVideoPlayer　[![GitHub release][relesesvg]][relesezip]
 ====
   * QSVideoView接口完善,功能丰富
     * 支持设置视频比例
@@ -12,9 +12,9 @@ QSVideoPlayer
   * 提供list视频列表自动销毁播放代码
   * 支持本地视频,在线视频,m3u8直播等...
 
-![下载demo.apk](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png)
+![qrcode][qrpng]
 <br/>
-扫码 [demo.apk](https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk) 下载
+[![apkurl][apkurlsvg]][apkurl]
 
 ## 使用说明
 下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 
@@ -208,5 +208,11 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full1.png)
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/float.png)
+![](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg)
 
-![输入图片说明](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg "在这里输入图片标题")
+[qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
+
+[relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
+[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.0
+[apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
+[apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
