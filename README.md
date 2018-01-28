@@ -8,13 +8,21 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
     * 支持静音等
   * 只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
-  * 根据系统版本自动选择SurfaceView和TextureView,支持api9+
+  * 根据系统版本自动选择SurfaceView和TextureView
   * 提供list视频列表自动销毁播放代码
   * 支持本地视频,在线视频,m3u8直播等...
 
 ![qrcode][qrpng]
 <br/>
 [![apkurl][apkurlsvg]][apkurl]
+
+
+## Preview
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/main.png)
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full1.png)
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/float.png)
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full2.jpg)
 
 
 ## 使用说明
@@ -204,12 +212,6 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
   * -fullwindow hide navigation(全屏隐藏虚拟按键)
   * -fix bug(修复bug)
   
-## Preview
-![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/main.png)
-![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full1.png)
-![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
-![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/float.png)
-![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full2.jpg)
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
