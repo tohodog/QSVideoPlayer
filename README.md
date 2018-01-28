@@ -1,7 +1,12 @@
 QSVideoPlayer
 ====
+  * QSVideoView接口完善,功能丰富
+    * 支持设置视频比例
+    * 支持扩展解码器
+    * 自动切换全屏 
+    * 支持悬浮窗
+    * 支持静音等
   * 只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
-  * QSVideoView接口完善,事件的监听,设置视频比例,切换全屏,静音等
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
   * 根据系统版本自动选择SurfaceView和TextureView,支持api9+
   * 提供list视频列表自动销毁播放代码
@@ -29,18 +34,66 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 -keep class org.song.videoplayer.** { *; }
 ```
 
+
+## QSVideoView API接口
+```
+    void setUp(String url, Object... objects);//设置视频地址
+
+    void play();//播放
+
+    void pause();//暂停
+
+    void seekTo(int duration);//进度调节
+
+    void setPlayListener(PlayListener playListener);//播放监听 参数含义参照本类
+
+    void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
+
+    void setDecodeMedia(Class<? extends BaseMedia> claxx);//设置解码模块
+
+    boolean onBackPressed();//返回键退出全屏
+
+    boolean isPlaying();//是否播放中
+
+    void enterWindowFullscreen();//全屏
+
+    void quitWindowFullscreen();//退出全屏
+
+    boolean enterWindowFloat(FloatParams floatParams);//浮窗 false没权限
+
+    void quitWindowFloat();//退出浮窗
+
+    boolean setMute(boolean isMute);//是否静音 false不支持
+
+    void release();//销毁
+
+
+    int getPosition();//获取播放进度
+
+    int getDuration();//获取视频时长
+
+    int getVideoWidth();//获取视频宽
+
+    int getVideoHeight();//获取视频长
+
+    int getCurrentMode();//获得播放器当前的模式(全屏,普通,浮窗)
+
+    int getCurrentState();//获得播放器当前的状态(播放,暂停,完成...)
+
+```
+
 ## Demo使用
 ### JAVA
 ```
-//DemoQSVideoView的ui用的jc播放器
-DemoQSVideoView qsVideoView = (DemoQSVideoView) findViewById(R.id.xxx);
+    //DemoQSVideoView的ui用的jc播放器
+    DemoQSVideoView qsVideoView = (DemoQSVideoView) findViewById(R.id.xxx);
 
-qsVideoView.setUp(url, "这是一一一一一一一一一个标题");
+    qsVideoView.setUp(url, "这是一一一一一一一一一个标题");
 
-qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);//封面
+    qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);//封面
 
-//设置监听
-qsVideoView.setPlayListener(new PlayListener() {
+    //设置监听
+    qsVideoView.setPlayListener(new PlayListener() {
             @Override
             public void onStatus(int status) {//播放器的ui状态
                 if (status == IVideoPlayer.STATE_AUTO_COMPLETE)
@@ -58,12 +111,9 @@ qsVideoView.setPlayListener(new PlayListener() {
             }
 
         });
-//进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
-qsVideoView.enterFullMode=1;
-
-qsVideoView.play();//
-
-
+    //进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
+    qsVideoView.enterFullMode=1;
+    qsVideoView.play();
 ```
 
 ### 返回键退出全屏
@@ -73,6 +123,26 @@ qsVideoView.play();//
         if (qsVideoView.onBackPressed())
             return;
         super.onBackPressed();
+    }
+```
+
+### 悬浮窗
+```
+    FloatParams floatParams = new FloatParams();
+    floatParams.x = 0;//浮窗坐标x
+    floatParams.y = 0;//浮窗坐标y
+    floatParams.w = 540;//宽
+    floatParams.h = 270;//高
+    floatParams.round = 30;//浮窗圆角 需SDK_INT >= 21
+    floatParams.fade = 0.8f;//透明度 需SDK_INT >= 11
+    floatParams.canMove = true;//是否可以拖动
+    
+    if (!qsVideoView.enterWindowFloat(floatParams)) {
+        Toast.makeText(this,"没有浮窗权限",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+              Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, 0);
+        }
     }
 ```
 ### XML
@@ -123,46 +193,20 @@ qsVideoView.play();//
 (继承关系:DemoQSVideoView → QSVideoViewHelp → QSVideoView)
 
 
-## QSVideoView API接口
-```
-    void setUp(String url, Object... objects);//设置视频地址
-
-    void play();//播放
-
-    void pause();//暂停
-
-    void seekTo(int duration);//进度调节
-
-    void setPlayListener(PlayListener playListener);//播放监听
-
-    void setAspectRatio(int aspectRatio);//设置视频比例
-
-    void setiMediaControl(int i);//设置解码模块
-
-    boolean onBackPressed();//返回键退出全屏
-
-    boolean isPlaying();//是否播放中
-
-    int getPosition();//获取播放进度
-
-    int getDuration();//获取视频时长
-
-    int getCurrentMode();//获得播放器当前的模式(全屏,普通...)
-
-    int getCurrentState();//获得播放器当前的状态(播放,暂停,完成...)
-
-    void enterWindowFullscreen();//全屏
-
-    void quitWindowFullscreen();//退出全屏
-    
-    boolean setMute(boolean isMute);//是否静音
-
-    void release();//销毁
-
-```
-
+## LOG
+### v2.2.0(2018-1-28)
+  * add floatwindow(增加悬浮窗功能)
+### v2.1.1(2018-1-8)
+  * -add mute(支持静音)
+  * -add enterfullmode(增加进入全屏的模式,根据视频自动确定横竖屏)
+  * -support content uri(支持uri播放)
+  * -fullwindow hide navigation(全屏隐藏虚拟按键)
+  * -fix bug(修复bug)
+  
+## Preview
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/main.png)
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full1.png)
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/float.png)
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg "在这里输入图片标题")
