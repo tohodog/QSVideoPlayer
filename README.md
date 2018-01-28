@@ -1,4 +1,4 @@
-QSVideoPlayer　[![GitHub release][relesesvg]][relesezip]
+QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
 ====
   * QSVideoView接口完善,功能丰富
     * 支持设置视频比例
@@ -215,5 +215,12 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 [relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
 [relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.0
+
 [apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
 [apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
+
+[apisvg]: https://img.shields.io/badge/API-9+-brightgreen.svg
+[api]: https://android-arsenal.com/api?level=9
+
+[licensesvg]: https://img.shields.io/badge/License-Apache--2.0-red.svg
+[license]: https://github.com/tohodog/QSVideoPlayer/blob/master/LICENSE
