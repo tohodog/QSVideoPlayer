@@ -209,7 +209,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full1.png)
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/lsit.gif)
 ![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/float.png)
-![](http://git.oschina.net/uploads/images/2017/0224/180438_84c8332c_530535.jpeg)
+![](https://github.com/tohodog/QSVideoPlayer/raw/master/source/full2.jpg)
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
