@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 22
-        versionCode 3
-        versionName "2.1"
+        targetSdkVersion 25
+        versionCode 5
+        versionName "2.2.0"
     }
     sourceSets {
         main() {
@@ -26,6 +26,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
         }
     }
     lintOptions {

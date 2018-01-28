@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
+
     defaultConfig {
         applicationId "org.song.demo"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
-        versionName "2.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName "2.2.0"
     }
+
     sourceSets {
         main() {
             manifest.srcFile 'src/main/AndroidManifest.xml'
@@ -26,9 +27,9 @@ android {
     buildTypes {
         release {
             //混淆
-            minifyEnabled true
+            minifyEnabled false
             zipAlignEnabled true//zipAlign优化
-            shrinkResources true//移除无用的Resources文件
+            shrinkResources false//移除无用的Resources文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,9 +48,8 @@ dependencies {
 
     compile project(':qsvideoplayer')
 
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
     testCompile 'junit:junit:4.12'
 }
