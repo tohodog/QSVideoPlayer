@@ -46,7 +46,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected boolean isMute;
 
     protected PlayListener playListener;
-    public int urlMode;
+    public int urlMode;//0网络 1本地 2直播流
 
 
     public QSVideoView(Context context) {
@@ -78,9 +78,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public void setUp(String url, Object... objects) {
         release();
         this.url = url;
+        urlMode = Util.PaserUrl(url);
         setStateAndMode(STATE_NORMAL, currentMode);
-        if (url.startsWith("file"))
-            urlMode = 1;
     }
 
     @Override

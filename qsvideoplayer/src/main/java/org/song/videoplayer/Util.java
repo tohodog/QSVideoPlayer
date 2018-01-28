@@ -1,6 +1,7 @@
 package org.song.videoplayer;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
@@ -168,6 +169,16 @@ public class Util {
             return scanForActivity(((ContextWrapper) context).getBaseContext());
         }
         throw new IllegalStateException("context得不到activity");
+    }
+
+    //url类型　0网络 1本地 2直播流
+    public static int PaserUrl(String url) {
+        int mode = 0;
+        if (url.startsWith("file") || url.startsWith(ContentResolver.SCHEME_CONTENT) || url.startsWith(ContentResolver.SCHEME_ANDROID_RESOURCE))
+            mode = 1;
+        if (url.endsWith("m3u8"))//...
+            mode = 3;
+        return mode;
     }
 
     /**
