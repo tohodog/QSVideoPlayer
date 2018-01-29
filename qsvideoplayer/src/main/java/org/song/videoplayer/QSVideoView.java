@@ -36,9 +36,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected FrameLayout videoView;
     private FrameLayout renderViewContainer;//suface容器
     private IRenderView iRenderView;
-    private FloatWindowHelp floatWindowHelp;
 
     protected String url;
+    public int urlMode;//0网络 1本地 2直播流
     protected int currentState = STATE_NORMAL;
     protected int currentMode = MODE_WINDOW_NORMAL;
     protected int seekToInAdvance;
@@ -46,7 +46,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected boolean isMute;
 
     protected PlayListener playListener;
-    public int urlMode;//0网络 1本地 2直播流
+    protected FloatWindowHelp floatWindowHelp;
 
 
     public QSVideoView(Context context) {
@@ -111,8 +111,11 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public boolean onBackPressed() {
-        if (currentMode != MODE_WINDOW_NORMAL) {
+        if (currentMode == MODE_WINDOW_FULLSCREEN) {
             quitWindowFullscreen();
+            return true;
+        } else if (currentMode == MODE_WINDOW_FLOAT_SYS) {
+            //Util.scanForActivity(getContext()).moveTaskToBack(true);
             return true;
         }
         return false;
@@ -246,7 +249,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             if (vp != null)
                 vp.removeView(videoView);
             b = floatWindowHelp.enterWindowFloat(videoView, floatParams);
-            setStateAndMode(currentState, MODE_WINDOW_FLOAT);
+            setStateAndMode(currentState, floatParams.systemFloat ? MODE_WINDOW_FLOAT_SYS : MODE_WINDOW_FLOAT_ACT);
             if (!b)
                 quitWindowFloat();
         }
@@ -256,7 +259,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //退出浮窗
     @Override
     public void quitWindowFloat() {
-        if (currentMode == MODE_WINDOW_FLOAT) {
+        if (isWindowFloatMode()) {
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)
                 vp.removeView(videoView);
@@ -518,4 +521,13 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public int getVideoHeight() {
         return height;
     }
+    ////是否系统浮窗模式
+    public boolean isSystemFloatMode() {
+        return currentMode == MODE_WINDOW_FLOAT_SYS;
+    }
+    //是否浮窗模式
+    public boolean isWindowFloatMode() {
+        return currentMode == MODE_WINDOW_FLOAT_SYS || currentMode == MODE_WINDOW_FLOAT_ACT;
+    }
+
 }

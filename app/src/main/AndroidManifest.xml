@@ -39,9 +39,6 @@
             android:name=".ListVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
-        <activity
-            android:name=".ExSelectDialog"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
     </application>
 
 </manifest>

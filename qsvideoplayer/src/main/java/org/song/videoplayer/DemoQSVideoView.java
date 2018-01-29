@@ -86,7 +86,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
             titleTextView.setText(String.valueOf(objects[0]));
     }
 
-    //根据状态设置ui显示/隐藏
+    //根据状态设置ui显示/隐藏 用方法內的参数,不要用currentStatus,currentMode
     @Override
     protected void changeUiWithStateAndMode(int status, int mode) {
         switch (status) {
@@ -100,7 +100,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
             case STATE_PAUSE:
             case STATE_AUTO_COMPLETE://显示 播放按钮  [底部] [顶部]
                 showChangeViews(startButton,
-                        mode == MODE_WINDOW_FLOAT ? null : bottomContainer,
+                        mode >= MODE_WINDOW_FLOAT_SYS ? null : bottomContainer,
                         mode == MODE_WINDOW_FULLSCREEN ? topContainer : null);
                 break;
             case STATE_ERROR://出错显示errorContainer
@@ -108,7 +108,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
                 break;
         }
         updateViewImage(status, mode);
-        floatBackView.setVisibility(mode == MODE_WINDOW_FLOAT ? View.VISIBLE : View.INVISIBLE);
+        floatBackView.setVisibility(mode >= MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
     }
 
     //播放时隐藏的view
@@ -119,7 +119,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         progressBar.setVisibility(View.VISIBLE);
         if (status != STATE_AUTO_COMPLETE)
             startButton.setVisibility(View.INVISIBLE);
-        if (mode == MODE_WINDOW_FLOAT)
+        if (mode >= MODE_WINDOW_FLOAT_SYS)
             floatBackView.setVisibility(View.INVISIBLE);
     }
 
@@ -140,16 +140,10 @@ public class DemoQSVideoView extends QSVideoViewHelp {
     }
 
     protected void updateViewImage(int status, int mode) {
-        if (status == STATE_PLAYING)
-            startButton.setImageResource(R.drawable.jc_click_pause_selector);
-        else
-            startButton.setImageResource(R.drawable.jc_click_play_selector);
-
-        if (mode == MODE_WINDOW_NORMAL)
-            fullscreenButton.setImageResource(R.drawable.jc_enlarge);
-        else
-            fullscreenButton.setImageResource(R.drawable.jc_shrink);
-
+        startButton.setImageResource(status == STATE_PLAYING ?
+                R.drawable.jc_click_pause_selector : R.drawable.jc_click_play_selector);
+        fullscreenButton.setImageResource(mode == MODE_WINDOW_FULLSCREEN ?
+                R.drawable.jc_shrink : R.drawable.jc_enlarge);
     }
 
     public ImageView getCoverImageView() {

@@ -21,7 +21,8 @@ public interface IVideoPlayer {
 
     int MODE_WINDOW_NORMAL = 100;//普通模式
     int MODE_WINDOW_FULLSCREEN = 101;//全屏模式
-    int MODE_WINDOW_FLOAT = 102;//悬浮窗口模式
+    int MODE_WINDOW_FLOAT_SYS = 102;//系统悬浮窗口模式 需要权限
+    int MODE_WINDOW_FLOAT_ACT = 103;//界面内悬浮窗口模式
 
     int EVENT_PREPARE_START = 10;//初始化开始
     int EVENT_PREPARE_END = 11;//初始化完成

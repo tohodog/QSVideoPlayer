@@ -142,7 +142,17 @@ public class MainActivity extends AppCompatActivity {
         ((Button) v).setText(mute ? "静音 ON" : "静音 OFF");
     }
 
-    public void 浮窗(View v) {
+    public void 系统浮窗(View v) {
+        enterFloat(true);
+        ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "系统浮窗");
+    }
+
+    public void 界面浮窗(View v) {
+        enterFloat(false);
+        ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "界面浮窗");
+    }
+
+    private void enterFloat(boolean isSystemFloat) {
         FloatParams floatParams = new FloatParams();
         floatParams.x = 0;
         floatParams.y = 0;
@@ -151,17 +161,17 @@ public class MainActivity extends AppCompatActivity {
         floatParams.round = 30;
         floatParams.fade = 0.8f;
         floatParams.canMove = true;
+        floatParams.systemFloat = isSystemFloat;
 
-        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+        if (demoVideoView.isWindowFloatMode())
             demoVideoView.quitWindowFloat();
         else {
             if (!demoVideoView.enterWindowFloat(floatParams)) {
-                Toast.makeText(this,"没有浮窗权限",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "没有浮窗权限", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 0);
             }
-
         }
     }
 
@@ -186,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, 1);
-                //startActivityForResult(new Intent(getApplication(), ExSelectDialog.class), 1000);
             }
         }).create().show();
 
@@ -198,18 +207,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (demoVideoView.onBackPressed())
+        if (demoVideoView.onBackPressed()) {
+            if (demoVideoView.isSystemFloatMode())
+                moveTaskToBack(true);
             return;
+        }
         super.onBackPressed();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000 & resultCode == RESULT_OK) {
-            mp4 = "file://" + data.getStringExtra(ExSelectDialog.KEY_RESULT);
-            play(mp4, decodeMedia);
-        }
 
         if (requestCode == 1 & resultCode == RESULT_OK) {
             mp4 = data.getData().toString();
@@ -240,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+        if (demoVideoView.isSystemFloatMode())
             return;
         //暂停
         flag = demoVideoView.isPlaying();
@@ -251,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+        if (demoVideoView.isSystemFloatMode())
             return;
         //不马上销毁 延时10秒
         handler.postDelayed(runnable, 1000 * 10);
@@ -260,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();//销毁
-        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT)
+        if (demoVideoView.isSystemFloatMode())
             demoVideoView.quitWindowFloat();
         demoVideoView.release();
     }

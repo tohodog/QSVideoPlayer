@@ -7,8 +7,11 @@ import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+
+import org.song.videoplayer.Util;
 
 import java.lang.reflect.Method;
 
@@ -21,6 +24,7 @@ import java.lang.reflect.Method;
 public class FloatWindowHelp implements FloatMoveView.MoveListener {
 
     private WindowManage windowManage;
+    private ViewGroup decorView;
     private FloatMoveView floatMoveView;
     private FloatParams floatParams, newFloatParams;
     private Context context;
@@ -28,12 +32,13 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
 
     public FloatWindowHelp(Context context) {
         this.context = context;
-        windowManage = new WindowManage(context);
         type = WindowManager.LayoutParams.TYPE_PHONE;
+        decorView = (ViewGroup) (Util.scanForActivity(context)).getWindow().getDecorView();
+
     }
 
     public boolean enterWindowFloat(View view, FloatParams floatParams) {
-        if (!checkPermission()) {
+        if (floatParams.systemFloat && !checkPermission()) {
             return false;
         }
         this.floatParams = floatParams;
@@ -45,16 +50,32 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
             floatMoveView.setAlpha(floatParams.fade);
 
         floatMoveView.addView(view, new FrameLayout.LayoutParams(-1, -1));
-        windowManage.addWindowView(floatMoveView, windowManage.creatParams(type, floatParams));
+
+        if (floatParams.systemFloat)
+            getWindowManage().addWindowView(floatMoveView, getWindowManage().creatParams(type, floatParams));
+        else {
+            FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(floatParams.w, floatParams.h);
+            l.leftMargin = (decorView.getMeasuredWidth() - floatParams.w) / 2 + floatParams.x;
+            l.topMargin = (decorView.getMeasuredHeight() - floatParams.h) / 2 + floatParams.y;
+            decorView.addView(floatMoveView, l);
+        }
 
         return true;
     }
 
     public void quieWindowFloat() {
         if (floatMoveView != null) {
-            windowManage.removeWindowView(floatMoveView);
+            if (floatParams.systemFloat)
+                getWindowManage().removeWindowView(floatMoveView);
+            else {
+                ViewGroup vp = (ViewGroup) floatMoveView.getParent();
+                if (vp != null)
+                    vp.removeView(floatMoveView);
+            }
             floatMoveView.removeAllViews();
             floatMoveView = null;
+            floatParams = null;
+            newFloatParams = null;
         }
     }
 
@@ -63,7 +84,14 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
         if (floatMoveView != null && floatParams.canMove) {
             newFloatParams.x = floatParams.x + x;
             newFloatParams.y = floatParams.y + y;
-            windowManage.updateWindowView(floatMoveView, windowManage.creatParams(type, newFloatParams));
+            if (floatParams.systemFloat)
+                getWindowManage().updateWindowView(floatMoveView, getWindowManage().creatParams(type, newFloatParams));
+            else {
+                ViewGroup.MarginLayoutParams l = (ViewGroup.MarginLayoutParams) floatMoveView.getLayoutParams();
+                l.leftMargin = (decorView.getMeasuredWidth() - floatParams.w) / 2 + newFloatParams.x;
+                l.topMargin = (decorView.getMeasuredHeight() - floatParams.h) / 2 + newFloatParams.y;
+                floatMoveView.setLayoutParams(l);
+            }
         }
     }
 
@@ -72,6 +100,13 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
         if (floatMoveView != null)
             floatParams = newFloatParams.clone();
     }
+
+    private WindowManage getWindowManage() {
+        if (windowManage == null)
+            windowManage = new WindowManage(context);
+        return windowManage;
+    }
+
 
     //检查浮窗权限
     public boolean checkPermission() {

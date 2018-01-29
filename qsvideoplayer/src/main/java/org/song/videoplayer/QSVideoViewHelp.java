@@ -124,7 +124,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             }
             if (i == R.id.help_float_back) {
                 quitWindowFloat();
-                release();
+                if (currentMode == MODE_WINDOW_FLOAT_SYS)
+                    release();
             }
 
             if (view == videoView) {

@@ -119,16 +119,35 @@
                     android:onClick="缩放模式"
                     android:text="适应" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:onClick="浮窗"
-                    android:text="浮窗" />
+                    android:onClick="视频列表"
+                    android:text="视频列表" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="界面浮窗"
+                    android:text="界面浮窗" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="系统浮窗"
+                    android:text="系统浮窗" />
 
             </LinearLayout>
-
-
 
 
             <Button
@@ -137,13 +156,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="销毁"
                 android:text="销毁" />
-
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="视频列表"
-                android:text="视频列表" />
 
 
         </LinearLayout>

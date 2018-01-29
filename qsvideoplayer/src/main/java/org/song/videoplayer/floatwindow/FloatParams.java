@@ -14,6 +14,8 @@ public class FloatParams implements Cloneable {
     public float fade = 1;//透明度0-1 SDK_INT >= 11
     public boolean canMove = true;//是否可以移动
 
+    public boolean systemFloat;//TRUE系统浮窗需要权限　FALSE界面内浮窗
+
 
     @Override
     public FloatParams clone() {

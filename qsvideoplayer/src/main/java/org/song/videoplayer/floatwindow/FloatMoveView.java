@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 /**
  * Created by song on 2018/1/9.
+ * 浮窗容器
  * 拦截触摸移动事件，实现浮窗移动
  */
 
