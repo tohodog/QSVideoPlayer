@@ -55,7 +55,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
     void seekTo(int duration);//进度调节
 
-    void setPlayListener(PlayListener playListener);//播放监听 参数含义参照本类
+    void setPlayListener(PlayListener playListener);//播放监听 参数含义参照IVideoPlayer
 
     void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
@@ -217,6 +217,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
   * -fullwindow hide navigation(全屏隐藏虚拟按键)
   * -fix bug(修复bug)
   
+### ~如果项目对你有帮助的话欢迎[![star][starsvg]][star]~
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
@@ -231,3 +232,6 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 [licensesvg]: https://img.shields.io/badge/License-Apache--2.0-red.svg
 [license]: https://github.com/tohodog/QSVideoPlayer/blob/master/LICENSE
+
+[starsvg]: https://img.shields.io/github/stars/tohodog/QSVideoPlayer.svg?style=social&label=Stars
+[star]: https://github.com/tohodog/QSVideoPlayer
