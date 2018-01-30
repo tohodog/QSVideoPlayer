@@ -204,7 +204,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 (继承关系:DemoQSVideoView → QSVideoViewHelp → QSVideoView)
 
 
-## LOG
+## Log
 ### v2.2.1(2018-1-30)
   * add floatwindow in activity(增加界面内悬浮窗功能,无需权限)
   * add event(seekbar) listener(增加seekbar事件监听)
@@ -217,7 +217,9 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
   * -fullwindow hide navigation(全屏隐藏虚拟按键)
   * -fix bug(修复bug)
   
-### ~如果项目对你有帮助的话欢迎[![star][starsvg]][star]~
+## Other
+  * 有问题请Add issues
+  * 如果项目对你有帮助的话欢迎[![star][starsvg]][star]
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
