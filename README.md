@@ -139,15 +139,14 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 ### 悬浮窗
 ```
     FloatParams floatParams = new FloatParams();
-    floatParams.x = 0;//浮窗坐标x
-    floatParams.y = 0;//浮窗坐标y
+    floatParams.x = 0;//浮窗中心坐标x
+    floatParams.y = 0;//浮窗中心坐标y
     floatParams.w = 540;//宽
     floatParams.h = 270;//高
     floatParams.round = 30;//浮窗圆角 需SDK_INT >= 21
     floatParams.fade = 0.8f;//透明度 需SDK_INT >= 11
     floatParams.canMove = true;//是否可以拖动
     floatParams.systemFloat = true;TRUE系统浮窗需要权限　FALSE界面内浮窗
-
 
     if (!qsVideoView.enterWindowFloat(floatParams)) {
         Toast.makeText(this,"没有浮窗权限",Toast.LENGTH_LONG).show();
