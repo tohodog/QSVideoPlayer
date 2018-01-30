@@ -2,9 +2,9 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
 ====
   * QSVideoView接口完善,功能丰富
     * 支持设置视频比例
+    * 支持两种悬浮窗
     * 支持扩展解码器
-    * 自动切换全屏 
-    * 支持悬浮窗
+    * 自动切换全屏
     * 支持静音等
   * 只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
@@ -145,7 +145,9 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
     floatParams.round = 30;//浮窗圆角 需SDK_INT >= 21
     floatParams.fade = 0.8f;//透明度 需SDK_INT >= 11
     floatParams.canMove = true;//是否可以拖动
-    
+    floatParams.systemFloat = true;TRUE系统浮窗需要权限　FALSE界面内浮窗
+
+
     if (!qsVideoView.enterWindowFloat(floatParams)) {
         Toast.makeText(this,"没有浮窗权限",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
