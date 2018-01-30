@@ -249,9 +249,10 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             if (vp != null)
                 vp.removeView(videoView);
             b = floatWindowHelp.enterWindowFloat(videoView, floatParams);
-            setStateAndMode(currentState, floatParams.systemFloat ? MODE_WINDOW_FLOAT_SYS : MODE_WINDOW_FLOAT_ACT);
-            if (!b)
-                quitWindowFloat();
+            if (b)
+                setStateAndMode(currentState, floatParams.systemFloat ? MODE_WINDOW_FLOAT_SYS : MODE_WINDOW_FLOAT_ACT);
+            else
+                addView(videoView, new LayoutParams(-1, -1));
         }
         return b;
     }
@@ -521,10 +522,12 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public int getVideoHeight() {
         return height;
     }
+
     ////是否系统浮窗模式
     public boolean isSystemFloatMode() {
         return currentMode == MODE_WINDOW_FLOAT_SYS;
     }
+
     //是否浮窗模式
     public boolean isWindowFloatMode() {
         return currentMode == MODE_WINDOW_FLOAT_SYS || currentMode == MODE_WINDOW_FLOAT_ACT;

@@ -29,7 +29,11 @@ import android.widget.TextView;
 
 public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouchEvent.GestureEvent, SeekBar.OnSeekBarChangeListener {
 
-    public static final int EVENT_CONTROL_VIEW = 1001;
+    public static final int EVENT_CONTROL_VIEW = 1001;//控制view显示隐藏事件 extra[0]：0显示 1隐藏
+    public static final int EVENT_SEEKBAR_START = 1002;//进度条拖动事件开始
+    public static final int EVENT_SEEKBAR_TOUCHING = 1003;//拖动中 extra[0]进度 extra[1]总进度
+    public static final int EVENT_SEEKBAR_END = 1004;//进度条拖动事件结束
+
 
     public boolean isWindowGesture = false;//是否非全屏下也可以手势调节进度
 
@@ -109,25 +113,28 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         @Override
         public void onClick(View view) {
             int i = view.getId();
+            //播放按钮
             if (i == R.id.help_start || i == R.id.help_start2) {
                 clickPlay();
             }
+            //全屏按钮
             if (i == R.id.help_fullscreen) {
                 clickFull();
             }
-
-            if (i == R.id.help_back) {
+            //退出按钮
+            if (i == R.id.help_back){
                 if (currentMode != MODE_WINDOW_NORMAL)
                     quitWindowFullscreen();
                 else
                     Util.scanForActivity(getContext()).finish();
             }
+            //退出悬浮窗按钮
             if (i == R.id.help_float_back) {
                 if (isSystemFloatMode())
                     release();
                 quitWindowFloat();
             }
-
+            //点击空白处
             if (view == videoView) {
                 if (currentState == STATE_NORMAL || currentState == STATE_ERROR)
                     clickPlay();
@@ -156,6 +163,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             if (currentTimeTextView != null)
                 currentTimeTextView.setText(Util.stringForTime(time));
         }
+        if (playListener != null)
+            playListener.onEvent(EVENT_SEEKBAR_TOUCHING, progress, progressMax);
         //Log.i(TAG, "onProgressChanged " + Util.stringForTime(time));
     }
 
@@ -163,6 +172,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     public void onStartTrackingTouch(SeekBar seekBar) {
         cancelProgressTimer();
         cancelDismissControlViewTimer();
+        if (playListener != null)
+            playListener.onEvent(EVENT_SEEKBAR_START);
     }
 
     @Override
@@ -174,6 +185,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         startProgressTimer();
         if (currentState == STATE_PLAYING)
             startDismissControlViewTimer(1314);
+        if (playListener != null)
+            playListener.onEvent(EVENT_SEEKBAR_END);
     }
     //-----------ui监听end-----------------
 
@@ -325,7 +338,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
     protected abstract void changeUiWithStateAndMode(int status, int mode);//根据状态设置ui显示/隐藏
 
-    protected abstract void dismissControlView(int status, int mode);//隐藏控制ui
+    protected abstract void dismissControlView(int status, int mode);//播放时定时隐藏的控制ui
 
     protected abstract void onBuffering(boolean isBuffering);//缓冲
 
