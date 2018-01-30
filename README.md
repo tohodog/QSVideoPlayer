@@ -205,6 +205,9 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 
 ## LOG
+### v2.2.1(2018-1-30)
+  * add floatwindow in activity(增加界面内悬浮窗功能,无需权限)
+  * add event(seekbar) listener(增加seekbar事件监听)
 ### v2.2.0(2018-1-28)
   * add floatwindow(增加悬浮窗功能)
 ### v2.1.1(2018-1-8)
