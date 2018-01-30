@@ -137,8 +137,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:onClick="界面浮窗"
-                    android:text="界面浮窗" />
+                    android:onClick="界面内浮窗"
+                    android:text="界面内浮窗" />
 
                 <Button
                     android:layout_width="0dp"

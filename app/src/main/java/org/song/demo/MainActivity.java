@@ -143,13 +143,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void 系统浮窗(View v) {
+        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT_ACT)
+            return;
         enterFloat(true);
         ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "系统浮窗");
     }
 
-    public void 界面浮窗(View v) {
+    public void 界面内浮窗(View v) {
+        if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT_SYS)
+            return;
         enterFloat(false);
-        ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "界面浮窗");
+        ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "界面内浮窗");
     }
 
     private void enterFloat(boolean isSystemFloat) {
@@ -180,6 +184,18 @@ public class MainActivity extends AppCompatActivity {
         demoVideoView.release();
     }
 
+    //返回键
+    @Override
+    public void onBackPressed() {
+        //全屏和系统浮窗不finish
+        if (demoVideoView.onBackPressed()) {
+            if (demoVideoView.isSystemFloatMode())
+                //系统浮窗返回上一界面
+                moveTaskToBack(true);
+            return;
+        }
+        super.onBackPressed();
+    }
 
     EditText editText;
 
@@ -205,15 +221,6 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_title)).setText(title);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (demoVideoView.onBackPressed()) {
-            if (demoVideoView.isSystemFloatMode())
-                moveTaskToBack(true);
-            return;
-        }
-        super.onBackPressed();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
