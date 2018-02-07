@@ -161,7 +161,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
     //移动网络提示框
     @Override
     protected boolean showWifiDialog() {
-        if (!isShowWifiDialog || urlMode == 1 || urlMode == 2)
+        if (!isShowWifiDialog)
             return false;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(getResources().getString(R.string.tips_not_wifi));

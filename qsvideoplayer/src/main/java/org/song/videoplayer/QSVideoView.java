@@ -30,7 +30,10 @@ import org.song.videoplayer.rederview.SufaceRenderView;
 public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCallback {
 
     public static final String TAG = "QSVideoView";
-    public int enterFullMode = 0;//进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
+    /**
+     * 进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
+     */
+    public int enterFullMode = 0;
 
     private IMediaControl iMediaControl;
 
@@ -39,7 +42,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     private IRenderView iRenderView;
 
     protected String url;
-    public int urlMode;//0网络 1本地 2直播流
+    public int urlMode;//0网络 -1本地 1直播流
     protected int currentState = STATE_NORMAL;
     protected int currentMode = MODE_WINDOW_NORMAL;
     protected int seekToInAdvance;
@@ -427,7 +430,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             return;
         }
         if (currentState == STATE_NORMAL) {
-            if (urlMode != 1 && !Util.isWifiConnected(getContext())) {
+            if (urlMode >= 0 && !Util.isWifiConnected(getContext())) {
                 if (showWifiDialog())
                     return;
             }

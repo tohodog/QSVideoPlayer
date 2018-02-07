@@ -70,7 +70,7 @@ public class WindowManage {
         return smallWindowParams;
     }
 
-    private static WindowManager windowManager;
+    private WindowManager windowManager;
 
     private WindowManager getWindowManager(Context context) {
         if (windowManager == null) {

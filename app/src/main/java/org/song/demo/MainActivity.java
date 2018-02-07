@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
         demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
+        //进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
         demoVideoView.enterFullMode = 3;
         demoVideoView.setPlayListener(new PlayListener() {
             @Override
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         demoVideoView.release();
     }
 
+
     //返回键
     @Override
     public void onBackPressed() {
@@ -197,46 +199,8 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    EditText editText;
+    //=======================以下生命周期控制=======================
 
-    public void changeUrl() {
-        editText = new EditText(this);
-        new AlertDialog.Builder(this).setView(editText).setTitle("网络视频地址").setNegativeButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mp4 = editText.getText().toString();
-                play(mp4, decodeMedia);
-            }
-        }).setPositiveButton("本地视频", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, 1);
-            }
-        }).create().show();
-
-    }
-
-    public void setTitle(CharSequence title) {
-        ((TextView) findViewById(R.id.tv_title)).setText(title);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1 & resultCode == RESULT_OK) {
-            mp4 = data.getData().toString();
-            Toast.makeText(this, mp4, Toast.LENGTH_LONG).show();
-            play(mp4, decodeMedia);
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("text", mp4));
-        }
-    }
-
-
-    //以下生命周期控制
     @Override
     public void onResume() {
         super.onResume();
@@ -292,4 +256,38 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
+    public void changeUrl() {
+        final EditText editText = new EditText(this);
+        new AlertDialog.Builder(this).setView(editText).setTitle("网络视频地址").setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mp4 = editText.getText().toString();
+                play(mp4, decodeMedia);
+            }
+        }).setPositiveButton("本地视频", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 1);
+            }
+        }).create().show();
+    }
+
+    public void setTitle(CharSequence title) {
+        ((TextView) findViewById(R.id.tv_title)).setText(title);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 & resultCode == RESULT_OK) {
+            mp4 = data.getData().toString();
+            Toast.makeText(this, mp4, Toast.LENGTH_LONG).show();
+            play(mp4, decodeMedia);
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("text", mp4));
+        }
+    }
 }

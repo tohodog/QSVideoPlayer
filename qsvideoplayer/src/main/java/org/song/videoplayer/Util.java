@@ -171,13 +171,13 @@ public class Util {
         throw new IllegalStateException("context得不到activity");
     }
 
-    //url类型　0网络 1本地 2直播流
+    //url类型　0网络 -1本地 1直播流
     public static int PaserUrl(String url) {
         int mode = 0;
         if (url.startsWith("file") || url.startsWith(ContentResolver.SCHEME_CONTENT) || url.startsWith(ContentResolver.SCHEME_ANDROID_RESOURCE))
-            mode = 1;
+            mode = -1;
         if (url.endsWith("m3u8"))//...
-            mode = 3;
+            mode = 1;
         return mode;
     }
 
