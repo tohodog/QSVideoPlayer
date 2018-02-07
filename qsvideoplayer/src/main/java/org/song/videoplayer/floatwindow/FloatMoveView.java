@@ -31,6 +31,10 @@ public class FloatMoveView extends FrameLayout {
         init(context);
     }
 
+    private void init(Context context) {
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+    }
+
     private boolean isBeingDragged;//是否触发拖曳
     private float mInitialMotionY, mInitialMotionX;
 
@@ -83,11 +87,6 @@ public class FloatMoveView extends FrameLayout {
 
         }
         return true;
-    }
-
-    private void init(Context context) {
-        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
     }
 
     public void setRount(int r) {

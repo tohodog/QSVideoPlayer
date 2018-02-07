@@ -24,6 +24,7 @@ import org.song.videoplayer.rederview.SufaceRenderView;
  * Created by song on 2017/2/13.
  * edit on 2017/4/8.
  * 没有控制ui,纯视频播放器,提供完整控制功能
+ * Github: https://github.com/tohodog/QSVideoPlayer
  */
 
 public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCallback {
@@ -448,7 +449,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     //一开始点击准备播放--初始化
     protected void prepareMediaPlayer() {
-        Log.d(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
+        Log.e(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
         removeRenderView();
         iMediaControl.doPrepar(getContext(), url, null);
         addRenderView();
