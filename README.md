@@ -205,6 +205,10 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 
 ## Log
+### v2.2.2(2018-2-13)
+  * can get the floatparams after moving(可以获取移动后的浮窗参数)
+  * 8.0 callback onInfo (804, -1004) problem(8.0断流回调onInfo(804,-1004)问题)
+  * Immersion Demo(沉浸式Demo)
 ### v2.2.1(2018-1-30)
   * add floatwindow in activity(增加界面内悬浮窗功能,无需权限)
   * add event(seekbar) listener(增加seekbar事件监听)
