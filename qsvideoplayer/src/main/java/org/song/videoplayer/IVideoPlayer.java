@@ -34,7 +34,14 @@ public interface IVideoPlayer {
     int EVENT_BUFFERING_UPDATE = 17;//缓冲进度
 
 
-    void setUp(String url, Object... objects);//设置视频地址
+    /**
+     * 设置视频参数
+     *
+     * @param url     视频地址
+     * @param objects [0] 视频标题
+     *                [1] Map<String, String> headers
+     */
+    void setUp(String url, Object... objects);
 
     void play();//播放
 

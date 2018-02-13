@@ -20,6 +20,8 @@ import org.song.videoplayer.media.IMediaControl;
 import org.song.videoplayer.rederview.IRenderView;
 import org.song.videoplayer.rederview.SufaceRenderView;
 
+import java.util.Map;
+
 /**
  * Created by song on 2017/2/13.
  * edit on 2017/4/8.
@@ -36,21 +38,22 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public int enterFullMode = 0;
 
     private IMediaControl iMediaControl;
+    protected PlayListener playListener;
 
     protected FrameLayout videoView;
     private FrameLayout renderViewContainer;//suface容器
     private IRenderView iRenderView;
+    protected FloatWindowHelp floatWindowHelp;
 
     protected String url;
+    protected Map<String, String> headers;
     public int urlMode;//0网络 -1本地 1直播流
+
     protected int currentState = STATE_NORMAL;
     protected int currentMode = MODE_WINDOW_NORMAL;
     protected int seekToInAdvance;
     protected int aspectRatio;
     protected boolean isMute;
-
-    protected PlayListener playListener;
-    protected FloatWindowHelp floatWindowHelp;
 
 
     public QSVideoView(Context context) {
@@ -79,10 +82,13 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     //-----------给外部调用的start----------
     @Override
+    @SuppressWarnings("unchecked")
     public void setUp(String url, Object... objects) {
         release();
         this.url = url;
         urlMode = Util.PaserUrl(url);
+        if (objects != null && objects.length > 1 && objects[1] instanceof Map)
+            headers = (Map<String, String>) objects[1];
         setStateAndMode(STATE_NORMAL, currentMode);
     }
 
@@ -458,7 +464,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected void prepareMediaPlayer() {
         Log.e(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
         removeRenderView();
-        iMediaControl.doPrepar(getContext(), url, null);
+        iMediaControl.doPrepar(getContext(), url, headers);
         addRenderView();
         setStateAndMode(STATE_PREPARING, currentMode);
         if (playListener != null)
