@@ -253,7 +253,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
             mVolumeDialog = getPopupWindow(localView);
         }
         if (!mVolumeDialog.isShowing())
-            mVolumeDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), 50));
+            mVolumeDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), currentMode == MODE_WINDOW_NORMAL ? 25 : 50));
 
         mDialogVolumeTextView.setText(nowVolume + "");
         mDialogVolumeProgressBar.setProgress(nowVolume);
@@ -286,7 +286,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
             mBrightnessDialog = getPopupWindow(localView);
         }
         if (!mBrightnessDialog.isShowing())
-            mBrightnessDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), 50));
+            mBrightnessDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), currentMode == MODE_WINDOW_NORMAL ? 25 : 50));
 
         mDialogBrightnessTextView.setText(brightnessPercent + "");
         mDialogBrightnessProgressBar.setProgress(brightnessPercent);

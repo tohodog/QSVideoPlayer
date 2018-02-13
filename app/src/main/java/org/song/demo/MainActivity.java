@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -16,12 +17,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
 import org.song.videoplayer.DemoQSVideoView;
+import org.song.videoplayer.Util;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
@@ -42,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= 19)//透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
         findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -53,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
         });
         demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
+        demoVideoView.setLayoutParams(new LinearLayout.LayoutParams(-1, getResources().getDisplayMetrics().widthPixels * 9 / 16));
         //进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
         demoVideoView.enterFullMode = 3;
+        //是否非全屏下也可以手势调节进度
+        demoVideoView.isWindowGesture = true;
         demoVideoView.setPlayListener(new PlayListener() {
             @Override
             public void onStatus(int status) {//播放状态
@@ -69,7 +76,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(int what, Integer... extra) {
-
+                if (what == DemoQSVideoView.EVENT_CONTROL_VIEW & Build.VERSION.SDK_INT >= 19 & !demoVideoView.isWindowFloatMode())
+                    if (extra[0] == 0)//状态栏隐藏/显示
+                        Util.CLEAR_FULL(MainActivity.this);
+                    else
+                        Util.SET_FULL(MainActivity.this);
             }
 
         });
