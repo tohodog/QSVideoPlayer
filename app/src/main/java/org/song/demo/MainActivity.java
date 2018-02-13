@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void 视频列表(View v) {
-        startActivity(new Intent(this, ListVideoActivity.class));
+        startActivity(new Intent(this, RecyVideoActivity.class));
     }
 
 
@@ -157,15 +157,19 @@ public class MainActivity extends AppCompatActivity {
         ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "界面内浮窗");
     }
 
+
     private void enterFloat(boolean isSystemFloat) {
-        FloatParams floatParams = new FloatParams();
-        floatParams.x = 0;
-        floatParams.y = 0;
-        floatParams.w = 540;
-        floatParams.h = 270;
-        floatParams.round = 30;
-        floatParams.fade = 0.8f;
-        floatParams.canMove = true;
+        FloatParams floatParams = demoVideoView.getFloatParams();
+        if (floatParams == null) {
+            floatParams = new FloatParams();
+            floatParams.x = 0;
+            floatParams.y = 0;
+            floatParams.w = 640;
+            floatParams.h = 360;
+            floatParams.round = 30;
+            floatParams.fade = 0.8f;
+            floatParams.canMove = true;
+        }
         floatParams.systemFloat = isSystemFloat;
 
         if (demoVideoView.isWindowFloatMode())
@@ -232,8 +236,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (demoVideoView.isSystemFloatMode())
             return;
-        //不马上销毁 延时10秒
-        handler.postDelayed(runnable, 1000 * 10);
+        //不马上销毁 延时15秒
+        handler.postDelayed(runnable, 1000 * 15);
     }
 
     @Override

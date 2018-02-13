@@ -166,7 +166,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         iMediaControl.release();
         removeRenderView();
         setStateAndMode(STATE_NORMAL, currentMode);
-        intiParams();
+        initParams();
     }
 
     //异步销毁，解决list视频销毁卡顿问题
@@ -179,7 +179,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         }).start();
         removeRenderView();
         setStateAndMode(STATE_NORMAL, currentMode);
-        intiParams();
+        initParams();
     }
 
 
@@ -244,18 +244,19 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         }
     }
 
+
     //浮窗
     @Override
     public boolean enterWindowFloat(FloatParams floatParams) {
         boolean b = true;
-        if (currentMode == MODE_WINDOW_NORMAL) {
+        if (currentMode == MODE_WINDOW_NORMAL && floatParams != null) {
             ViewGroup vp = (ViewGroup) videoView.getParent();
             if (vp != null)
                 vp.removeView(videoView);
             b = floatWindowHelp.enterWindowFloat(videoView, floatParams);
-            if (b)
+            if (b) {
                 setStateAndMode(currentState, floatParams.systemFloat ? MODE_WINDOW_FLOAT_SYS : MODE_WINDOW_FLOAT_ACT);
-            else
+            } else
                 addView(videoView, new LayoutParams(-1, -1));
         }
         return b;
@@ -297,7 +298,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //-----------解码器回调start-----------------
     @Override
     public void onPrepared(IMediaControl iMediaControl) {
-        Log.e("MediaCallBack", "onPrepared");
+        Log.e(TAG, "onPrepared");
         if (seekToInAdvance > 0) {
             iMediaControl.seekTo(seekToInAdvance);
             seekToInAdvance = 0;
@@ -312,7 +313,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onCompletion(IMediaControl iMediaControl) {
-        Log.e("MediaCallBack", "onCompletion");
+        Log.e(TAG, "onCompletion");
         setStateAndMode(STATE_AUTO_COMPLETE, currentMode);
         if (playListener != null)
             playListener.onEvent(EVENT_COMPLETION);
@@ -320,12 +321,15 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onSeekComplete(IMediaControl iMediaControl) {
-        Log.e("MediaCallBack", "onSeekComplete");
+        Log.e(TAG, "onSeekComplete");
     }
 
     @Override
     public void onInfo(IMediaControl iMediaControl, int what, int extra) {
-        Log.e("MediaCallBack", "onInfo" + " what" + what + " extra" + extra);
+        Log.e(TAG, "onInfo" + " what" + what + " extra" + extra);
+        if ((what == 804 | what == 805) & extra == -1004)
+            onError(iMediaControl, what, extra);//8.0断流走的onInfo
+
         if (what == IMediaControl.MEDIA_INFO_BUFFERING_START) {
             onBuffering(true);
             if (playListener != null)
@@ -343,7 +347,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onVideoSizeChanged(IMediaControl iMediaControl, int width, int height) {
-        Log.e("MediaCallBack", "onVideoSizeChanged" + " width:" + width + " height:" + height);
+        Log.e(TAG, "onVideoSizeChanged" + " width:" + width + " height:" + height);
         iRenderView.setVideoSize(width, height);
         this.width = width;
         this.height = height;
@@ -353,7 +357,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onError(IMediaControl iMediaControl, int what, int extra) {
-        Log.e("MediaCallBack", "onError" + "what:" + what + " extra:" + extra);
+        Log.e(TAG, "onError" + "what:" + what + " extra:" + extra);
         //if (what == 38 | extra == -38 | extra == -19)
         //    return;
         Toast.makeText(getContext(), "error: " + what + "," + extra, Toast.LENGTH_SHORT).show();
@@ -366,7 +370,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onBufferingUpdate(IMediaControl iMediaControl, float bufferProgress) {
-        Log.e("MediaCallBack", "onBufferingUpdate" + bufferProgress);
+        Log.e(TAG, "onBufferingUpdate" + bufferProgress);
         setBufferProgress(bufferProgress);
         if (playListener != null)
             playListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (bufferProgress * 100));
@@ -386,7 +390,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //-----------各种流程逻辑start-----------------
 
     //初始化一些变量
-    protected void intiParams() {
+    protected void initParams() {
         this.width = 0;
         this.height = 0;
     }
@@ -405,7 +409,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     protected void setUIWithStateAndMode(final int status, final int mode) {
-        Log.e("setStateAndMode", "status:" + status + " mode:" + mode);
+        Log.e(TAG, "status:" + status + " mode:" + mode);
         if (status == STATE_PLAYING)
             Util.KEEP_SCREEN_ON(getContext());
         else
@@ -525,6 +529,11 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     public int getVideoHeight() {
         return height;
+    }
+
+
+    public FloatParams getFloatParams() {
+        return floatWindowHelp.getFloatParams();
     }
 
     ////是否系统浮窗模式

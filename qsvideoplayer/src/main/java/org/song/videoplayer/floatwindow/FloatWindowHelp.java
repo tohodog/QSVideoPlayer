@@ -34,7 +34,6 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
         this.context = context;
         type = WindowManager.LayoutParams.TYPE_PHONE;
         decorView = (ViewGroup) (Util.scanForActivity(context)).getWindow().getDecorView();
-
     }
 
     public boolean enterWindowFloat(View view, FloatParams floatParams) {
@@ -74,8 +73,9 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
             }
             floatMoveView.removeAllViews();
             floatMoveView = null;
-            floatParams = null;
+
             newFloatParams = null;
+            windowManage = null;
         }
     }
 
@@ -100,6 +100,11 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
         if (floatMoveView != null)
             floatParams = newFloatParams.clone();
     }
+
+    public FloatParams getFloatParams() {
+        return floatParams;
+    }
+
 
     private WindowManage getWindowManage() {
         if (windowManage == null)

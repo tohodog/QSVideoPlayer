@@ -73,7 +73,6 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
         controlContainer = View.inflate(context, getLayoutId(), null);
         videoView.addView(controlContainer, new LayoutParams(-1, -1));
-        videoView.setOnClickListener(myOnClickListener);
         videoView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -96,8 +95,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         }
         if (progressBar != null)
             progressBar.setMax(progressMax);
-        setClick(startButton, startButton2, fullscreenButton, backView, floatBackView);
-
+        setClick(videoView, startButton, startButton2, fullscreenButton, backView, floatBackView);
 
     }
 
@@ -122,7 +120,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                 clickFull();
             }
             //退出按钮
-            if (i == R.id.help_back){
+            if (i == R.id.help_back) {
                 if (currentMode != MODE_WINDOW_NORMAL)
                     quitWindowFullscreen();
                 else
