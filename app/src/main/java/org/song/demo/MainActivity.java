@@ -48,13 +48,6 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 19)//透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                changeUrl();
-                return true;
-            }
-        });
         demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
         demoVideoView.setLayoutParams(new LinearLayout.LayoutParams(-1, getResources().getDisplayMetrics().widthPixels * 9 / 16));
@@ -86,6 +79,14 @@ public class MainActivity extends AppCompatActivity {
         });
         play(mp4, AndroidMedia.class);
 
+
+        findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                changeUrl();
+                return true;
+            }
+        });
     }
 
 
