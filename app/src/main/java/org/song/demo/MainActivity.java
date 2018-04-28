@@ -28,7 +28,7 @@ import org.song.videoplayer.Util;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
-import org.song.videoplayer.media.ExoMedia;
+import org.song.demo.media.ExoMedia;
 import org.song.videoplayer.media.IjkExoMedia;
 import org.song.videoplayer.media.IjkMedia;
 

@@ -13,7 +13,7 @@ public abstract class BaseMedia implements IMediaControl {
     protected IMediaCallback iMediaCallback;
     protected Surface surface;
     protected boolean isPrepar;
-    Handler mainThreadHandler;
+    protected Handler mainThreadHandler;
 
     public Surface getSurface() {
         return surface;

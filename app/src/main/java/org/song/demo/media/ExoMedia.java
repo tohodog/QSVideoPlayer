@@ -1,4 +1,4 @@
-package org.song.videoplayer.media;
+package org.song.demo.media;
 
 import android.content.Context;
 import android.net.Uri;
@@ -27,6 +27,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+
+import org.song.videoplayer.media.BaseMedia;
+import org.song.videoplayer.media.IMediaCallback;
 
 import java.util.Map;
 
