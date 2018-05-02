@@ -6,6 +6,8 @@ import android.view.Surface;
 
 /**
  * Created by song on 2017/2/10.
+ * Contact github.com/tohodog
+ * 解码器父类
  */
 
 public abstract class BaseMedia implements IMediaControl {

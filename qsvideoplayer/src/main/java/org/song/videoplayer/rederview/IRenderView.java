@@ -1,5 +1,6 @@
 package org.song.videoplayer.rederview;
 
+import android.graphics.Bitmap;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.View;
 import org.song.videoplayer.media.IMediaControl;
 
 /**
+ * Contact github.com/tohodog
  * 接口化渲染view
  */
 public interface IRenderView {
@@ -39,6 +41,8 @@ public interface IRenderView {
     Surface openSurface();
 
     void bindMedia(IMediaControl iMediaControl);
+
+    Bitmap getCurrentFrame();//截图
 
     interface IRenderCallback {
         void onSurfaceCreated(IRenderView holder, int width, int height);

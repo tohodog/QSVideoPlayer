@@ -10,6 +10,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * Created by song on 2017/2/22.
+ * Contact github.com/tohodog
  */
 
 public class IjkExoMedia extends IjkBaseMedia {

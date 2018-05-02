@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 
 /**
  * Created by song on 2018/1/15.
+ * Contact github.com/tohodog
  * 视频进出浮窗辅助类
  */
 

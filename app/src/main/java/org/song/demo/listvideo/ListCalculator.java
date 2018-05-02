@@ -8,6 +8,7 @@ import android.view.View;
  * list列表 item的生命周期控制(即将滚出屏幕 和 进入活动状态的item 监听)
  * item高度大于listview的一半以上最好
  * Created by song on 2017/6/1.
+ * Contact github.com/tohodog
  */
 
 public class ListCalculator {

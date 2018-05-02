@@ -19,6 +19,8 @@ import java.lang.reflect.Constructor;
 
 /**
  * Created by song on 2017/2/13.
+ * Contact github.com/tohodog
+ * 工具类
  */
 
 public class Util {

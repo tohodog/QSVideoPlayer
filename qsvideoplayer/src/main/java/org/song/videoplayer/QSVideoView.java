@@ -1,6 +1,7 @@
 package org.song.videoplayer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -159,12 +160,19 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         return iMediaControl.getDuration();
     }
 
+    @Override
     public int getCurrentMode() {
         return currentMode;
     }
 
+    @Override
     public int getCurrentState() {
         return currentState;
+    }
+
+    @Override
+    public Bitmap getCurrentFrame() {
+        return iRenderView == null ? null : iRenderView.getCurrentFrame();
     }
 
     @Override

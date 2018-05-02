@@ -1,6 +1,7 @@
 package org.song.videoplayer.rederview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
@@ -11,8 +12,10 @@ import android.view.View;
 import org.song.videoplayer.media.IMediaControl;
 
 /**
+ * Contact github.com/tohodog
  * 小于4.0用这个绘制view
  * ps:切换全屏效果不好 会停顿
+ * 性能较好
  */
 public class SufaceRenderView extends SurfaceView implements SurfaceHolder.Callback, IRenderView {
 
@@ -97,6 +100,12 @@ public class SufaceRenderView extends SurfaceView implements SurfaceHolder.Callb
         //iMediaControl.setDisplay(null);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         iMediaControl.setDisplay(getSurfaceHolder());
+    }
+
+    @Override
+    public Bitmap getCurrentFrame() {
+
+        return null;
     }
 
     private SurfaceHolder holder;

@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * Created by song on 2017/2/10.
+ * Contact github.com/tohodog
  * 解码器控制
  */
 

@@ -3,6 +3,7 @@ package org.song.videoplayer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
 
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
@@ -19,6 +20,7 @@ import java.util.List;
 
 /**
  * Created by song on 2017/2/10.
+ * Contact github.com/tohodog
  * 管理 统筹
  */
 
@@ -61,8 +63,10 @@ public class ConfigManage {
 
     private IMediaControl newInstance(String className, IMediaCallback iMediaCallback) {
         IMediaControl i = Util.newInstance(className, iMediaCallback);
-        if (i == null)
+        if (i == null) {
+            Log.e(QSVideoView.TAG, "newInstance error: " + iMediaCallback);
             i = new AndroidMedia(iMediaCallback);
+        }
         return i;
     }
 

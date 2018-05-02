@@ -5,6 +5,7 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 
 /**
+ * Contact github.com/tohodog
  * 根据缩放模式设置渲染view的大小
  */
 public final class MeasureHelper {

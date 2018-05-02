@@ -2,6 +2,7 @@ package org.song.videoplayer.floatwindow;
 
 /**
  * Created by song on 2018/1/10.
+ * Contact github.com/tohodog
  * 浮窗参数
  */
 public class FloatParams implements Cloneable {

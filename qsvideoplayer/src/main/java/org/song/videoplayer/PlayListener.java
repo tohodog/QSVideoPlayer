@@ -2,6 +2,7 @@ package org.song.videoplayer;
 
 /**
  * Created by song on 2017/2/10.
+ * Contact github.com/tohodog
  * 播放器监听 值的意义见IVideoPlayer
  */
 

@@ -2,6 +2,7 @@ package org.song.videoplayer.rederview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -14,6 +15,7 @@ import android.view.View;
 import org.song.videoplayer.media.IMediaControl;
 
 /**
+ * Contact github.com/tohodog
  * 大于4.0用这个绘制view
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -98,6 +100,12 @@ public class TextureRenderView extends TextureView implements TextureView.Surfac
     @Override
     public void bindMedia(IMediaControl iMediaControl) {
         iMediaControl.setSurface(openSurface());
+    }
+
+    @Override
+    public Bitmap getCurrentFrame() {
+
+        return getBitmap();
     }
 
     private SurfaceTexture surface;

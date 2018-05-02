@@ -11,6 +11,8 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * Created by song on 2017/2/22.
+ * Contact github.com/tohodog
+ * ijk解码器父类
  */
 
 public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,

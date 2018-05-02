@@ -37,6 +37,7 @@ import java.util.Map;
 
 /**
  * Created by song on 2017/2/22.
+ * Contact github.com/tohodog
  * exo-2.0.4
  */
 

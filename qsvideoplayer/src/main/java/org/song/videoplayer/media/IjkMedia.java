@@ -11,6 +11,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * Created by song on 2017/2/22.
+ * Contact github.com/tohodog
  * 哔哩哔哩播放器
  */
 

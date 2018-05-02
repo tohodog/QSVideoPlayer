@@ -6,6 +6,7 @@ import android.view.ViewConfiguration;
 
 /**
  * Created by song on 2017/2/14.22:32
+ * Contact github.com/tohodog
  * 处理触摸监听 响应各种手势
  */
 
@@ -18,7 +19,7 @@ public class HandleTouchEvent {
     }
 
     private int moveLen;
-    private final float speedrate = 0.75f;//调节进度灵敏度 滑动0.75屏幕可以到底
+    private final float speedrate = 0.70f;//调节进度灵敏度 滑动0.xx屏幕可以到底
 
     private float downX, downY;
     private int w, h;

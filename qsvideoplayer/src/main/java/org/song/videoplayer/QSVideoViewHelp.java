@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 /**
  * Created by song on 2017/2/13.
+ * Contact github.com/tohodog
  * UI界面由子类决定
  * edit on 2017/4/8.
  * 分离出QSVideoView,本类作为辅助类.
@@ -37,7 +39,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
     public boolean isWindowGesture = false;//是否非全屏下也可以手势调节进度
 
-    protected View controlContainer;//控制ui容器
+    protected ViewGroup controlContainer;//控制ui容器
     //提供辅助的控件
     protected ImageView startButton, startButton2;//播放按钮
     protected SeekBar seekBar;//拖动条
@@ -71,7 +73,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         handleTouchEvent = new HandleTouchEvent(this);
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
 
-        controlContainer = View.inflate(context, getLayoutId(), null);
+        controlContainer = (ViewGroup) View.inflate(context, getLayoutId(), null);
         videoView.addView(controlContainer, new LayoutParams(-1, -1));
         videoView.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -384,12 +386,14 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             int duration = getDuration();
             if (duration <= 1)
                 return;
-            int delta = (int) (level * duration);
+            int delta = (int) (level * Math.abs(level) * duration);
             if (delta < -tempPosition)
                 delta = -tempPosition;
             if (delta > duration - tempPosition)
                 delta = duration - tempPosition;
-            showProgressDialog(delta, tempPosition, duration);
+            if (showProgressDialog(delta, tempPosition, duration)) {
+
+            }
         }
         //亮度
         if (type == HandleTouchEvent.GestureEvent.TOUCH_LEFT_Y) {

@@ -8,6 +8,7 @@ import android.view.WindowManager.LayoutParams;
 
 /**
  * Created by song on 2018/1/15.
+ * Contact github.com/tohodog
  * 浮窗管理
  */
 

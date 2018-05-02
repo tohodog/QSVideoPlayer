@@ -2,6 +2,7 @@ package org.song.videoplayer.media;
 
 /**
  * Created by song on 2017/2/10.
+ * Contact github.com/tohodog
  * 解码器回调
  */
 

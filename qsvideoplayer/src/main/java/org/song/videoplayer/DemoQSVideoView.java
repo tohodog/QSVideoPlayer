@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by song on 2017/4/9.
+ * Contact github.com/tohodog
  * diy自己的播放器,不需要写播放逻辑,只需设置各个状态下view的显示状态即可
  */
 public class DemoQSVideoView extends QSVideoViewHelp {

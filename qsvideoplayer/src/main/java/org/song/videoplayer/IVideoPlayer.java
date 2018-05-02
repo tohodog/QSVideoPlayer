@@ -1,10 +1,13 @@
 package org.song.videoplayer;
 
+import android.graphics.Bitmap;
+
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.BaseMedia;
 
 /**
  * Created by song on 2017/2/10.
+ * Contact github.com/tohodog
  * 视频播放器
  */
 
@@ -71,6 +74,7 @@ public interface IVideoPlayer {
 
     void release();//销毁
 
+    Bitmap getCurrentFrame();//截图
 
     int getPosition();//获取播放进度
 

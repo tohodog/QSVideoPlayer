@@ -9,6 +9,7 @@ import android.view.ViewOutlineProvider;
 
 /**
  * Created by song on 2018/1/15.
+ * Contact github.com/tohodog
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TextureVideoViewOutlineProvider extends ViewOutlineProvider {
