@@ -163,8 +163,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             if (currentTimeTextView != null)
                 currentTimeTextView.setText(Util.stringForTime(time));
         }
-        if (playListener != null)
-            playListener.onEvent(EVENT_SEEKBAR_TOUCHING, progress, progressMax);
+        handlePlayListener.onEvent(EVENT_SEEKBAR_TOUCHING, progress, progressMax);
         //Log.i(TAG, "onProgressChanged " + Util.stringForTime(time));
     }
 
@@ -172,8 +171,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     public void onStartTrackingTouch(SeekBar seekBar) {
         cancelProgressTimer();
         cancelDismissControlViewTimer();
-        if (playListener != null)
-            playListener.onEvent(EVENT_SEEKBAR_START);
+        handlePlayListener.onEvent(EVENT_SEEKBAR_START);
     }
 
     @Override
@@ -185,8 +183,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         startProgressTimer();
         if (currentState == STATE_PLAYING)
             startDismissControlViewTimer(1314);
-        if (playListener != null)
-            playListener.onEvent(EVENT_SEEKBAR_END);
+        handlePlayListener.onEvent(EVENT_SEEKBAR_END);
     }
     //-----------ui监听end-----------------
 
@@ -224,8 +221,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         super.setUIWithStateAndMode(status, mode);
 
         //监听回调永远放在最后
-        if (playListener != null)
-            playListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
+        handlePlayListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
     }
 
     //缓冲进度
@@ -322,8 +318,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         public void run() {
             isShowControlView = false;
             dismissControlView(currentState, currentMode);
-            if (playListener != null)
-                playListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
+            handlePlayListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
         }
     };
     //-----------定时任务隐藏控制栏end-----------------

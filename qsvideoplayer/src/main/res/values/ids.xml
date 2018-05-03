@@ -15,4 +15,7 @@
     <!--ImageView浮窗退出按钮 -->
     <item name="help_float_back" type="id" />
 
+
+    <item name="qs_videoview" type="id" />
+
 </resources>

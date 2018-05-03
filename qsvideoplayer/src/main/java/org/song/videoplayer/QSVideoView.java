@@ -39,7 +39,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public int enterFullMode = 0;
 
     private IMediaControl iMediaControl;
-    protected PlayListener playListener;
+    protected HandlePlayListener handlePlayListener;
 
     protected FrameLayout videoView;
     private FrameLayout renderViewContainer;//suface容器
@@ -71,9 +71,11 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     private void init(Context context) {
+        handlePlayListener = new HandlePlayListener();
         iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, AndroidMedia.class);
         floatWindowHelp = new FloatWindowHelp(context);
         videoView = new FrameLayout(context);
+        videoView.setId(R.id.qs_videoview);
         renderViewContainer = new FrameLayout(context);
         renderViewContainer.setBackgroundColor(Color.BLACK);
         videoView.addView(renderViewContainer, new LayoutParams(-1, -1));
@@ -115,10 +117,21 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             clickPlay();
     }
 
-
+    @Override
     public void setPlayListener(PlayListener playListener) {
-        this.playListener = playListener;
+        handlePlayListener.setListener(playListener);
     }
+
+    @Override
+    public void addPlayListener(PlayListener playListener) {
+        handlePlayListener.addListener(playListener);
+    }
+
+    @Override
+    public void removePlayListener(PlayListener playListener) {
+        handlePlayListener.removeListener(playListener);
+    }
+
 
     @Override
     public boolean onBackPressed() {
@@ -320,8 +333,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         setMute(isMute);
         iMediaControl.doPlay();
         setStateAndMode(STATE_PLAYING, currentMode);
-        if (playListener != null)
-            playListener.onEvent(EVENT_PREPARE_END, 0);
+        handlePlayListener.onEvent(EVENT_PREPARE_END, 0);
     }
 
 
@@ -329,8 +341,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public void onCompletion(IMediaControl iMediaControl) {
         Log.e(TAG, "onCompletion");
         setStateAndMode(STATE_AUTO_COMPLETE, currentMode);
-        if (playListener != null)
-            playListener.onEvent(EVENT_COMPLETION);
+        handlePlayListener.onEvent(EVENT_COMPLETION);
     }
 
     @Override
@@ -346,14 +357,12 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
         if (what == IMediaControl.MEDIA_INFO_BUFFERING_START) {
             onBuffering(true);
-            if (playListener != null)
-                playListener.onEvent(EVENT_BUFFERING_START);
+            handlePlayListener.onEvent(EVENT_BUFFERING_START);
         }
 
         if (what == IMediaControl.MEDIA_INFO_BUFFERING_END) {
             onBuffering(false);
-            if (playListener != null)
-                playListener.onEvent(EVENT_BUFFERING_END);
+            handlePlayListener.onEvent(EVENT_BUFFERING_END);
         }
     }
 
@@ -365,8 +374,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         iRenderView.setVideoSize(width, height);
         this.width = width;
         this.height = height;
-        if (playListener != null)
-            playListener.onEvent(EVENT_VIDEOSIZECHANGE, width, height);
+        handlePlayListener.onEvent(EVENT_VIDEOSIZECHANGE, width, height);
     }
 
     @Override
@@ -378,16 +386,14 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         seekToInAdvance = getPosition();//记录错误时进度
         iMediaControl.release();
         setStateAndMode(STATE_ERROR, currentMode);
-        if (playListener != null)
-            playListener.onEvent(EVENT_ERROR, what, extra);
+        handlePlayListener.onEvent(EVENT_ERROR, what, extra);
     }
 
     @Override
     public void onBufferingUpdate(IMediaControl iMediaControl, float bufferProgress) {
         Log.e(TAG, "onBufferingUpdate" + bufferProgress);
         setBufferProgress(bufferProgress);
-        if (playListener != null)
-            playListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (bufferProgress * 100));
+        handlePlayListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (bufferProgress * 100));
     }
 
     //给子类覆盖
@@ -433,12 +439,11 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         final int temp_mode = this.currentMode;
         this.currentState = status;
         this.currentMode = mode;
-        if (playListener != null) {
-            if (temp_status != status)
-                playListener.onStatus(status);
-            if (temp_mode != mode)
-                playListener.onMode(mode);
-        }
+        if (temp_status != status)
+            handlePlayListener.onStatus(status);
+        if (temp_mode != mode)
+            handlePlayListener.onMode(mode);
+
     }
 
     //点击时根据不同状态做出不同的反应
@@ -475,8 +480,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         iMediaControl.doPrepar(getContext(), url, headers);
         addRenderView();
         setStateAndMode(STATE_PREPARING, currentMode);
-        if (playListener != null)
-            playListener.onEvent(EVENT_PREPARE_START);
+        handlePlayListener.onEvent(EVENT_PREPARE_START);
     }
 
     private void addRenderView() {

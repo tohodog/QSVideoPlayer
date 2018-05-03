@@ -54,6 +54,10 @@ public interface IVideoPlayer {
 
     void setPlayListener(PlayListener playListener);//播放监听 参数含义参照本类
 
+    void addPlayListener(PlayListener playListener);//多播放监听
+
+    void removePlayListener(PlayListener playListener);//移除播放监听
+
     void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
     void setDecodeMedia(Class<? extends BaseMedia> claxx);//设置解码模块
