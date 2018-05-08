@@ -46,6 +46,8 @@ class HandlePlayListener implements PlayListener {
     }
 
     void addListener(PlayListener playListener) {
+        if (playListener == null)
+            return;
         if (playListenerSet == null)
             playListenerSet = new HashSet<>();
         playListenerSet.add(playListener);

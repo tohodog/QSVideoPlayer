@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by song on 2017/2/13.
  * edit on 2017/4/8.
- * 没有控制ui,纯视频播放器,提供完整控制功能
+ * 轻松视频播放器,提供完整控制功能,没有控制ui
  * Github: https://github.com/tohodog/QSVideoPlayer
  */
 
@@ -205,8 +205,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             }
         }).start();
         removeRenderView();
-        setStateAndMode(STATE_NORMAL, currentMode);
         initParams();
+        setStateAndMode(STATE_NORMAL, currentMode);
+        handlePlayListener.onEvent(EVENT_RELEASE);
     }
 
 
@@ -328,12 +329,14 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         Log.e(TAG, "onPrepared");
         if (seekToInAdvance > 0) {
             iMediaControl.seekTo(seekToInAdvance);
+            handlePlayListener.onEvent(EVENT_SEEK_TO, seekToInAdvance);
             seekToInAdvance = 0;
         }
         setMute(isMute);
         iMediaControl.doPlay();
         setStateAndMode(STATE_PLAYING, currentMode);
         handlePlayListener.onEvent(EVENT_PREPARE_END, 0);
+        handlePlayListener.onEvent(EVENT_PLAY);
     }
 
 
@@ -347,6 +350,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void onSeekComplete(IMediaControl iMediaControl) {
         Log.e(TAG, "onSeekComplete");
+        handlePlayListener.onEvent(EVENT_SEEK_COMPLETION, getPosition());
     }
 
     @Override
@@ -461,9 +465,11 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         } else if (currentState == STATE_PLAYING) {
             iMediaControl.doPause();
             setStateAndMode(STATE_PAUSE, currentMode);
+            handlePlayListener.onEvent(EVENT_PAUSE);
         } else if (currentState == STATE_PAUSE) {
             iMediaControl.doPlay();
             setStateAndMode(STATE_PLAYING, currentMode);
+            handlePlayListener.onEvent(EVENT_PLAY);
         } else if (currentState == STATE_AUTO_COMPLETE || currentState == STATE_ERROR) {
             prepareMediaPlayer();
         }
@@ -527,7 +533,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             iMediaControl.seekTo(time);
             iMediaControl.doPlay();
             setStateAndMode(STATE_PLAYING, currentMode);
+            handlePlayListener.onEvent(EVENT_PLAY);
         }
+        handlePlayListener.onEvent(EVENT_SEEK_TO, time);
     }
 
 

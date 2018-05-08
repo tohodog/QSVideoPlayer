@@ -10,9 +10,9 @@ import org.song.videoplayer.media.BaseMedia;
  * Contact github.com/tohodog
  * 视频播放器
  */
-
 public interface IVideoPlayer {
 
+    //播放器当前状态
     int STATE_NORMAL = 0;//未播放
     int STATE_PREPARING = 1;//初始化中
     int STATE_PLAYING = 2;//播放中
@@ -22,20 +22,27 @@ public interface IVideoPlayer {
     int STATE_AUTO_COMPLETE = 5;//播放完成
     int STATE_ERROR = 6;//播放出错
 
+    //播放器容器模式
     int MODE_WINDOW_NORMAL = 100;//普通模式
     int MODE_WINDOW_FULLSCREEN = 101;//全屏模式
     int MODE_WINDOW_FLOAT_SYS = 102;//系统悬浮窗口模式 需要权限
     int MODE_WINDOW_FLOAT_ACT = 103;//界面内悬浮窗口模式
 
+    //播放事件
     int EVENT_PREPARE_START = 10;//初始化开始
     int EVENT_PREPARE_END = 11;//初始化完成
-    int EVENT_BUFFERING_START = 12;//缓冲
-    int EVENT_BUFFERING_END = 13;//缓冲结束
-    int EVENT_ERROR = 14;//出错
-    int EVENT_VIDEOSIZECHANGE = 15;//视频长宽大小
-    int EVENT_COMPLETION = 16;//播放完成
-    int EVENT_BUFFERING_UPDATE = 17;//缓冲进度
+    int EVENT_PLAY = 12;//播放事件
+    int EVENT_PAUSE = 13;//暂停事件
+    int EVENT_BUFFERING_START = 14;//缓冲
+    int EVENT_BUFFERING_END = 15;//缓冲结束
+    int EVENT_ERROR = 16;//出错
+    int EVENT_VIDEOSIZECHANGE = 17;//视频长宽大小
+    int EVENT_COMPLETION = 18;//播放完成
+    int EVENT_BUFFERING_UPDATE = 19;//缓冲进度
+    int EVENT_SEEK_COMPLETION = 20;//调节进度完成
+    int EVENT_SEEK_TO = 21;//调节进度
 
+    int EVENT_RELEASE = 88;//销毁事件
 
     /**
      * 设置视频参数

@@ -21,6 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.song.demo.danmuku.BindVideoDanmaku;
+import org.song.demo.danmuku.DanmakuConf;
+import org.song.demo.danmuku.QSDanmakuParser;
+import org.song.demo.io.FileUtil;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
 import org.song.videoplayer.DemoQSVideoView;
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        弹幕(null);
         play(mp4, AndroidMedia.class);
 
 
@@ -167,6 +172,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         enterFloat(false);
         ((Button) v).setText(demoVideoView.isWindowFloatMode() ? "退出浮窗" : "界面内浮窗");
+    }
+
+
+    public void 弹幕(View v) {
+        new BindVideoDanmaku().bind(
+                demoVideoView,
+                new QSDanmakuParser(FileUtil.readAssets("danmu.json", this)),
+                DanmakuConf.getDefaultContext()
+        );
     }
 
 
