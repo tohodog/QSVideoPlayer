@@ -3,6 +3,7 @@ package org.song.demo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,8 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
 
             }
         });
+
+        new LinearSnapHelper().attachToRecyclerView(recyclerView);
     }
 
     DemoQSVideoView demoQSVideoView;

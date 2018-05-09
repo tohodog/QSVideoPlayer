@@ -37,6 +37,8 @@ public class BindVideoDanmaku implements PlayListener {
         videoview.addView(danmakuView, 1, new ViewGroup.LayoutParams(-1, -1));
 
         danmakuView.showFPS(true);
+        danmakuView.enableDanmakuDrawingCache(true);
+
         danmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
             @Override
             public void updateTimer(DanmakuTimer timer) {
@@ -54,8 +56,10 @@ public class BindVideoDanmaku implements PlayListener {
 
             @Override
             public void prepared() {
-                if (BindVideoDanmaku.this.qsVideoView.isPlaying())
+                if (BindVideoDanmaku.this.qsVideoView.isPlaying()) {
                     danmakuView.start(BindVideoDanmaku.this.qsVideoView.getPosition());
+                    danmakuView.resume();
+                }
             }
         });
 
@@ -85,9 +89,11 @@ public class BindVideoDanmaku implements PlayListener {
         switch (what) {
             case IVideoPlayer.EVENT_PREPARE_START:
                 danmakuView.prepare(parser, danmakuContext);
+                danmakuView.enableDanmakuDrawingCache(true);
+
                 break;
             case IVideoPlayer.EVENT_PREPARE_END:
-                //if (danmakuView.isPrepared())
+                if (danmakuView.isPrepared())
                     danmakuView.start(0);
             case IVideoPlayer.EVENT_PLAY:
                 danmakuView.resume();
@@ -102,6 +108,7 @@ public class BindVideoDanmaku implements PlayListener {
                 danmakuView.pause();
                 break;
             case IVideoPlayer.EVENT_RELEASE:
+                danmakuView.release();
                 break;
             case IVideoPlayer.EVENT_SEEK_TO:
             case IVideoPlayer.EVENT_BUFFERING_START:

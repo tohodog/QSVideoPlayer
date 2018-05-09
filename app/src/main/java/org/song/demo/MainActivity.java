@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ import org.song.videoplayer.media.BaseMedia;
 import org.song.demo.media.ExoMedia;
 import org.song.videoplayer.media.IjkExoMedia;
 import org.song.videoplayer.media.IjkMedia;
+
+import master.flame.danmaku.danmaku.model.BaseDanmaku;
+import master.flame.danmaku.ui.widget.DanmakuView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -176,11 +180,34 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void 弹幕(View v) {
-        new BindVideoDanmaku().bind(
+        mDanmakuView = new BindVideoDanmaku().bind(
                 demoVideoView,
                 new QSDanmakuParser(FileUtil.readAssets("danmu.json", this)),
                 DanmakuConf.getDefaultContext()
         );
+    }
+
+    DanmakuView mDanmakuView;
+
+    private void addDanmaku(boolean islive) {
+        BaseDanmaku danmaku = DanmakuConf.getDefaultContext().mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
+        if (danmaku == null || mDanmakuView == null) {
+            return;
+        }
+        // for(int i=0;i<100;i++){
+        // }
+        danmaku.text = "这是一条弹幕" + System.nanoTime();
+        danmaku.padding = 5;
+        danmaku.priority = 10;  // 可能会被各种过滤器过滤并隐藏显示
+        danmaku.isLive = islive;
+        danmaku.setTime(mDanmakuView.getCurrentTime() + 1200);
+        danmaku.textSize = 40;
+        danmaku.textColor = Color.RED;
+        danmaku.textShadowColor = Color.WHITE;
+        // danmaku.underlineColor = Color.GREEN;
+        danmaku.borderColor = Color.GREEN;
+        mDanmakuView.addDanmaku(danmaku);
+
     }
 
 

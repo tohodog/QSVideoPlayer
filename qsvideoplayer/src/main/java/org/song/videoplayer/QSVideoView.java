@@ -361,12 +361,12 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
         if (what == IMediaControl.MEDIA_INFO_BUFFERING_START) {
             onBuffering(true);
-            handlePlayListener.onEvent(EVENT_BUFFERING_START);
+            handlePlayListener.onEvent(EVENT_BUFFERING_START, getPosition());
         }
 
         if (what == IMediaControl.MEDIA_INFO_BUFFERING_END) {
             onBuffering(false);
-            handlePlayListener.onEvent(EVENT_BUFFERING_END);
+            handlePlayListener.onEvent(EVENT_BUFFERING_END, getPosition());
         }
     }
 

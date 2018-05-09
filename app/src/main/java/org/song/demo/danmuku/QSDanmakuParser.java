@@ -12,6 +12,7 @@ import master.flame.danmaku.danmaku.model.IDanmakus;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
+import master.flame.danmaku.danmaku.util.DanmakuUtils;
 
 import static master.flame.danmaku.danmaku.model.IDanmakus.ST_BY_TIME;
 
@@ -45,7 +46,7 @@ public class QSDanmakuParser extends BaseDanmakuParser {
     public int index = 0;
 
 
-    //预先解析好 mContext是parser()时才传进来的 所以预先解析需要自己传
+    //可以预先解析好 mContext是parser()时才传进来的 所以预先解析需要自己传
     public synchronized Danmakus preParse(DanmakuContext mContext) {
         this.mContext = mContext;
         result = new Danmakus(ST_BY_TIME, false, mContext.getBaseComparator());
@@ -63,10 +64,13 @@ public class QSDanmakuParser extends BaseDanmakuParser {
                 long time = (long) (parseFloat(values[0]) * 1000); // 出现时间
                 int type = parseInteger(values[1]); // 弹幕类型
                 float textSize = parseFloat(values[2]); // 字体大小
-                int color = (int) ((0x00000000ff000000 | parseLong(values[3])) & 0x00000000ffffffff); // 颜色
+                int color = (int) ((0xff000000 | parseLong(values[3])) & 0xffffffff); // 颜色
 
                 item = buildDanmaku(t, type, time, textSize, color);
-                result.addItem(item);
+                Object lock = result.obtainSynchronizer();
+                synchronized (lock) {
+                    result.addItem(item);
+                }
             }
             json = null;
         } catch (JSONException e) {
@@ -78,13 +82,14 @@ public class QSDanmakuParser extends BaseDanmakuParser {
 
     public BaseDanmaku buildDanmaku(String text, int type, long time, float size, int color) {
         item = mContext.mDanmakuFactory.createDanmaku(type, mContext);
-        item.text = text;
         item.setTime(time);
+        item.setTimer(getTimer());
+
+        DanmakuUtils.fillText(item, text);//支持换行
         item.textSize = size;
         item.textColor = color;
         item.textShadowColor = textShadowColor;
         item.flags = mContext.mGlobalFlagValues;
-
         item.index = index++;
         return item;
     }
