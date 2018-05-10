@@ -33,11 +33,15 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
 
     public FloatWindowHelp(Context context) {
         this.context = context;
-        type = WindowManager.LayoutParams.TYPE_PHONE;
+        if (Build.VERSION.SDK_INT >= 26)  //8.0新特性
+            type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        else
+            type = WindowManager.LayoutParams.TYPE_PHONE;
+
         decorView = (ViewGroup) (Util.scanForActivity(context)).getWindow().getDecorView();
     }
 
-    public boolean enterWindowFloat(View view, FloatParams floatParams) {
+    public boolean enterWindowFloat(View view, final FloatParams floatParams) {
         if (floatParams.systemFloat && !checkPermission()) {
             return false;
         }

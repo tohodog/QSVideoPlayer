@@ -40,4 +40,6 @@ public class DanmakuConf {
                 .setDanmakuMargin(40);
         return mContext;
     }
+
+
 }

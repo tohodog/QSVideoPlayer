@@ -1,5 +1,7 @@
 package org.song.demo.danmuku;
 
+import android.content.Context;
+import android.os.Build;
 import android.view.ViewGroup;
 
 import org.song.demo.R;
@@ -25,18 +27,21 @@ public class BindVideoDanmaku implements PlayListener {
     private QSDanmakuParser parser;
     private QSVideoView qsVideoView;
     private DanmakuContext danmakuContext;
+    private Context context;
 
     public DanmakuView bind(QSVideoView qsVideoView, final QSDanmakuParser parser, DanmakuContext mContext) {
         this.parser = parser;
         this.qsVideoView = qsVideoView;
+        context = qsVideoView.getContext();
         danmakuContext = mContext;
+        parser.setTextSize(context.getResources().getDisplayMetrics().density);
 
         qsVideoView.addPlayListener(this);
-        danmakuView = new DanmakuView(qsVideoView.getContext());
+        danmakuView = new DanmakuView(context);
         ViewGroup videoview = qsVideoView.findViewById(R.id.qs_videoview);
         videoview.addView(danmakuView, 1, new ViewGroup.LayoutParams(-1, -1));
 
-        danmakuView.showFPS(true);
+        //danmakuView.showFPS(true);
         danmakuView.enableDanmakuDrawingCache(true);
 
         danmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
@@ -80,7 +85,10 @@ public class BindVideoDanmaku implements PlayListener {
 
     @Override
     public void onMode(int mode) {
-
+        if (qsVideoView.isWindowFloatMode())
+            hide();
+        else
+            show();
     }
 
 

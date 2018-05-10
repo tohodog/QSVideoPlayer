@@ -57,8 +57,7 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
 
             }
         });
-
-        new LinearSnapHelper().attachToRecyclerView(recyclerView);
+        //new LinearSnapHelper().attachToRecyclerView(recyclerView);
     }
 
     DemoQSVideoView demoQSVideoView;

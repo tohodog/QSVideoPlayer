@@ -34,8 +34,7 @@ public class QSDanmakuParser extends BaseDanmakuParser {
 
     @Override
     protected IDanmakus parse() {
-        if (result == null)
-            return result = preParse(mContext);
+        if (result == null) result = preParse(mContext);
         return result;
     }
 
@@ -46,7 +45,7 @@ public class QSDanmakuParser extends BaseDanmakuParser {
     public int index = 0;
 
 
-    //可以预先解析好 mContext是parser()时才传进来的 所以预先解析需要自己传
+    //可以考虑异步预先加载解析好 再去初始化视频
     public synchronized Danmakus preParse(DanmakuContext mContext) {
         this.mContext = mContext;
         result = new Danmakus(ST_BY_TIME, false, mContext.getBaseComparator());
@@ -86,12 +85,18 @@ public class QSDanmakuParser extends BaseDanmakuParser {
         item.setTimer(getTimer());
 
         DanmakuUtils.fillText(item, text);//支持换行
-        item.textSize = size;
+        item.textSize = size * density;
         item.textColor = color;
         item.textShadowColor = textShadowColor;
         item.flags = mContext.mGlobalFlagValues;
         item.index = index++;
         return item;
+    }
+
+    private float density;
+
+    public void setTextSize(float density) {
+        this.density = density;
     }
 
     private float parseFloat(String floatStr) {
