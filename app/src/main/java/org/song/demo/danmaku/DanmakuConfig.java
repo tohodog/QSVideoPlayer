@@ -1,4 +1,4 @@
-package org.song.demo.danmuku;
+package org.song.demo.danmaku;
 
 import java.util.HashMap;
 

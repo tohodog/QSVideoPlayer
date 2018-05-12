@@ -21,9 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.song.demo.danmuku.DanmakuControl;
-import org.song.demo.danmuku.DanmakuConfig;
-import org.song.demo.danmuku.QSDanmakuParser;
+import org.song.demo.danmaku.DanmakuControl;
+import org.song.demo.danmaku.DanmakuConfig;
+import org.song.demo.danmaku.QSDanmakuParser;
 import org.song.demo.io.FileUtil;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
