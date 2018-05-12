@@ -12,6 +12,7 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
   * 支持本地视频,在线视频,m3u8直播等
   * 提供DemoQSVideoView成品播放器,支持手势
   * 提供list视频列表自动销毁播放框架
+  * 一句代码集成弹幕
 
 ![qrcode][qrpng]
 <br/>
