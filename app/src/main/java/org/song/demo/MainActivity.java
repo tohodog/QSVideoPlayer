@@ -13,16 +13,16 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.song.demo.danmuku.BindVideoDanmaku;
+import org.song.demo.danmuku.DanmakuControl;
 import org.song.demo.danmuku.DanmakuConf;
 import org.song.demo.danmuku.QSDanmakuParser;
 import org.song.demo.io.FileUtil;
@@ -43,6 +43,7 @@ import master.flame.danmaku.ui.widget.DanmakuView;
 public class MainActivity extends AppCompatActivity {
 
     DemoQSVideoView demoVideoView;
+    DanmakuControl danmakuControl;
 
     String mp4 = "http://videos.kpie.com.cn/videos/20170526/037DCE54-EECE-4520-AA92-E4002B1F29B0.mp4";
     String m3u8 = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
@@ -56,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 19)//透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                changeUrl();
+                return true;
+            }
+        });
+
         demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
         demoVideoView.setLayoutParams(new LinearLayout.LayoutParams(-1, getResources().getDisplayMetrics().widthPixels * 9 / 16));
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     demoVideoView.quitWindowFullscreen();//播放完成退出全屏
             }
 
-            @Override//全屏/普通
+            @Override//全屏/普通/浮窗
             public void onMode(int mode) {
 
             }
@@ -85,22 +94,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        弹幕(null);
+        //集成弹幕 播放前调用
+        danmakuControl = new DanmakuControl().bind(
+                demoVideoView,
+                new QSDanmakuParser(FileUtil.readAssets("danmu.json", this)),
+                DanmakuConf.getDefaultContext()
+        );
+        danmakuControl.hide();
         play(mp4, AndroidMedia.class);
 
-
-        findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                changeUrl();
-                return true;
-            }
-        });
     }
 
 
     private void play(String url, Class<? extends BaseMedia> decodeMedia) {
-        Log.e("=====url:", url);
         demoVideoView.release();
         demoVideoView.setDecodeMedia(decodeMedia);
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
@@ -180,34 +186,34 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void 弹幕(View v) {
-        mDanmakuView = new BindVideoDanmaku().bind(
-                demoVideoView,
-                new QSDanmakuParser(FileUtil.readAssets("danmu.json", this)),
-                DanmakuConf.getDefaultContext()
-        );
+        if (danmakuControl.isShow())
+            danmakuControl.hide();
+        else
+            danmakuControl.show();
     }
 
-    DanmakuView mDanmakuView;
+    public void 发弹幕(View v) {
+        addDanmaku(false);
+        //((ImageView) findViewById(R.id.image)).setImageBitmap(demoVideoView.getCurrentFrame());
+    }
 
-    private void addDanmaku(boolean islive) {
-        BaseDanmaku danmaku = DanmakuConf.getDefaultContext().mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
-        if (danmaku == null || mDanmakuView == null) {
+
+    public void 销毁(View v) {
+        demoVideoView.release();
+    }
+
+
+    //返回键
+    @Override
+    public void onBackPressed() {
+        //全屏和系统浮窗不finish
+        if (demoVideoView.onBackPressed()) {
+            if (demoVideoView.isSystemFloatMode())
+                //系统浮窗返回上一界面
+                moveTaskToBack(true);
             return;
         }
-        // for(int i=0;i<100;i++){
-        // }
-        danmaku.text = "这是一条弹幕" + System.nanoTime();
-        danmaku.padding = 5;
-        danmaku.priority = 10;  // 可能会被各种过滤器过滤并隐藏显示
-        danmaku.isLive = islive;
-        danmaku.setTime(mDanmakuView.getCurrentTime() + 1200);
-        danmaku.textSize = 40;
-        danmaku.textColor = Color.RED;
-        danmaku.textShadowColor = Color.WHITE;
-        // danmaku.underlineColor = Color.GREEN;
-        danmaku.borderColor = Color.GREEN;
-        mDanmakuView.addDanmaku(danmaku);
-
+        super.onBackPressed();
     }
 
 
@@ -237,24 +243,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    public void 销毁(View v) {
-        demoVideoView.release();
-    }
-
-
-    //返回键
-    @Override
-    public void onBackPressed() {
-        //全屏和系统浮窗不finish
-        if (demoVideoView.onBackPressed()) {
-            if (demoVideoView.isSystemFloatMode())
-                //系统浮窗返回上一界面
-                moveTaskToBack(true);
+    private void addDanmaku(boolean islive) {
+        BaseDanmaku danmaku = DanmakuConf.getDefaultContext().mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
+        if (danmaku == null || danmakuControl == null) {
             return;
         }
-        super.onBackPressed();
+        // for(int i=0;i<100;i++){
+        // }
+        danmaku.text = "QSVideoPlayer-" + System.nanoTime();
+        danmaku.padding = 5;
+        danmaku.priority = 10;  // 可能会被各种过滤器过滤并隐藏显示
+        danmaku.isLive = islive;
+        danmaku.setTime(demoVideoView.getPosition() + 1200);
+        danmaku.textSize = 40;
+        danmaku.textColor = Color.RED;
+        danmaku.textShadowColor = Color.WHITE;
+        // danmaku.underlineColor = Color.GREEN;
+        danmaku.borderColor = Color.GREEN;
+        danmakuControl.add(danmaku);
+
     }
+
 
     //=======================以下生命周期控制=======================
 

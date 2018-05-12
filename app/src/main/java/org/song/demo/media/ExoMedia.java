@@ -228,14 +228,15 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
         Log.e("ExoMedia", "onPlayerStateChanged " + b + i);
 
         if (i == ExoPlayer.STATE_READY) {
-            if (!isPrepar) {
-                isPrepar = true;
-                iMediaCallback.onPrepared(this);//第一次初始化
-            }
             //缓冲好了
             iMediaCallback.onInfo(this, MEDIA_INFO_BUFFERING_END, MEDIA_INFO_BUFFERING_END);
             mainThreadHandler.removeCallbacks(runnable);
             mainThreadHandler.post(runnable);
+            if (!isPrepar) {
+                isPrepar = true;
+                iMediaCallback.onPrepared(this);//第一次初始化
+            }
+
         }
         //播放完毕
         if (i == ExoPlayer.STATE_ENDED) {

@@ -302,24 +302,6 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         return true;
     }
 
-//
-//    private Dialog getDialog(int graviaty, int marginX, int marginY) {
-//        Dialog dialog = new Dialog(getContext(), R.style.jc_style_dialog_progress);
-//        dialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
-//        dialog.getWindow().addFlags(32);
-//        dialog.getWindow().addFlags(16);
-//        dialog.getWindow().setLayout(-2, -2);
-//        WindowManage.LayoutParams localLayoutParams = dialog.getWindow().getAttributes();
-//        localLayoutParams.gravity = graviaty;
-//        if (marginX > 0)
-//            localLayoutParams.x = marginX;
-//        if (marginY > 0)
-//            localLayoutParams.y = marginY;
-//        dialog.getWindow().setAttributes(localLayoutParams);
-//
-//        return dialog;
-//    }
-
     private PopupWindow getPopupWindow(View popupView) {
         PopupWindow mPopupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
         mPopupWindow.setTouchable(true);

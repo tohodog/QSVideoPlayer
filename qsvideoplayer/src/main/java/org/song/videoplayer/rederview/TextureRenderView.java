@@ -104,7 +104,6 @@ public class TextureRenderView extends TextureView implements TextureView.Surfac
 
     @Override
     public Bitmap getCurrentFrame() {
-
         return getBitmap();
     }
 

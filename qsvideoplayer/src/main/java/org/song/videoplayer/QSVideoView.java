@@ -194,6 +194,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         removeRenderView();
         setStateAndMode(STATE_NORMAL, currentMode);
         initParams();
+        handlePlayListener.onEvent(EVENT_RELEASE);
     }
 
     //异步销毁，解决list视频销毁卡顿问题
