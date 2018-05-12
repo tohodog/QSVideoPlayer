@@ -48,6 +48,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     protected String url;
     protected Map<String, String> headers;
+    protected Object option;
     public int urlMode;//0网络 -1本地 1直播流
 
     protected int currentState = STATE_NORMAL;
@@ -90,8 +91,12 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         release();
         this.url = url;
         urlMode = Util.PaserUrl(url);
-        if (objects != null && objects.length > 1 && objects[1] instanceof Map)
-            headers = (Map<String, String>) objects[1];
+        if (objects != null) {
+            if (objects.length > 1 && objects[1] instanceof Map)
+                headers = (Map<String, String>) objects[1];
+            if (objects.length > 2)
+                option = objects[2];
+        }
         setStateAndMode(STATE_NORMAL, currentMode);
     }
 
@@ -396,7 +401,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onBufferingUpdate(IMediaControl iMediaControl, float bufferProgress) {
-        Log.e(TAG, "onBufferingUpdate" + bufferProgress);
+        //Log.e(TAG, "onBufferingUpdate" + bufferProgress);
         setBufferProgress(bufferProgress);
         handlePlayListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (bufferProgress * 100));
     }

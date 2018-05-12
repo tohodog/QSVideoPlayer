@@ -29,7 +29,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
 
     /////////////以下MediaPlayer控制/////////////
     @Override
-    public void doPrepar(Context context, String url, Map<String, String> headers) {
+    public void doPrepar(Context context, String url, Map<String, String> headers, Object... objects) {
         try {
             release();
             mediaPlayer = new MediaPlayer();

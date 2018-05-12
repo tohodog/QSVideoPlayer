@@ -56,7 +56,7 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
     private final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
     @Override
-    public void doPrepar(Context context, String url, Map<String, String> headers) {
+    public void doPrepar(Context context, String url, Map<String, String> headers, Object... objects) {
         release();
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveVideoTrackSelection.Factory(BANDWIDTH_METER);

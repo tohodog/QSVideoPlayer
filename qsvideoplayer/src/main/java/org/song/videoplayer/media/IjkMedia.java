@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 
+import java.util.List;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -22,7 +23,7 @@ public class IjkMedia extends IjkBaseMedia {
     }
 
     @Override
-    IMediaPlayer getMedia(Context context, String url, Map<String, String> headers) throws Exception {
+    IMediaPlayer getMedia(Context context, String url, Map<String, String> headers, Object... objects) throws Exception {
         IjkMediaPlayer mediaPlayer = new IjkMediaPlayer();
 
         if (url.startsWith(ContentResolver.SCHEME_CONTENT) || url.startsWith(ContentResolver.SCHEME_ANDROID_RESOURCE))
@@ -30,6 +31,13 @@ public class IjkMedia extends IjkBaseMedia {
         else
             mediaPlayer.setDataSource(url, headers);
 
+
+        if (objects != null && objects.length > 0 && objects[0] instanceof List) {
+            List<Option> list = (List<Option>) objects[0];
+            for (Option o : list) {
+                mediaPlayer.setOption(o.category, o.name, o.value);
+            }
+        }
 
 //        if (mSettings.getUsingMediaCodec()) {
 //            mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
@@ -61,5 +69,17 @@ public class IjkMedia extends IjkBaseMedia {
 //
 //        mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
         return mediaPlayer;
+    }
+
+    public class Option {
+        int category;
+        String name;
+        String value;
+
+        public Option(int category, String name, String value) {
+            this.category = category;
+            this.name = name;
+            this.value = value;
+        }
     }
 }

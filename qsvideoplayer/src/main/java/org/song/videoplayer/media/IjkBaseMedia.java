@@ -27,7 +27,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
     }
 
     @Override
-    public void doPrepar(final Context context, final String url, final Map<String, String> headers) {
+    public void doPrepar(final Context context, final String url, final Map<String, String> headers, Object... objects) {
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -53,7 +53,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
 
     }
 
-    abstract IMediaPlayer getMedia(Context context, String url, Map<String, String> headers) throws Exception;
+    abstract IMediaPlayer getMedia(Context context, String url, Map<String, String> headers, Object... objects) throws Exception;
 
     @Override
     public void setSurface(Surface surface) {

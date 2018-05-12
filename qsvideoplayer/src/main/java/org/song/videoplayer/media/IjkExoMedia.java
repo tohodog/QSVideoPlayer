@@ -20,7 +20,7 @@ public class IjkExoMedia extends IjkBaseMedia {
     }
 
     @Override
-    IMediaPlayer getMedia(Context context, String url, Map<String, String> headers) throws Exception {
+    IMediaPlayer getMedia(Context context, String url, Map<String, String> headers, Object... objects) throws Exception {
         IjkExoMediaPlayer mediaPlayer = new IjkExoMediaPlayer(context);
         mediaPlayer.setDataSource(context, Uri.parse(url), headers);
         mainThreadHandler.postDelayed(runnable, 500);

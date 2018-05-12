@@ -50,6 +50,8 @@ public interface IVideoPlayer {
      * @param url     视频地址
      * @param objects [0] 视频标题
      *                [1] Map<String, String> headers
+     *                [2] IJK: List<IjkMeida.Option>
+     *                    ...
      */
     void setUp(String url, Object... objects);
 
