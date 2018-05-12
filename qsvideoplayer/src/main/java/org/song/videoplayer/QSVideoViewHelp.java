@@ -1,6 +1,7 @@
 package org.song.videoplayer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,7 +47,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     protected TextView currentTimeTextView, totalTimeTextView;//播放时间/视频长度
     protected ImageView fullscreenButton;//全屏按钮
     protected ProgressBar progressBar;//第二进度条
-    protected View backView, floatBackView;//返回
+    protected View backView, floatCloseView, floatBackView;//返回
     protected final int progressMax = 1000;
 
     protected boolean isShowControlView;
@@ -90,14 +91,16 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         currentTimeTextView = (TextView) findViewById(R.id.help_current);
         totalTimeTextView = (TextView) findViewById(R.id.help_total);
         backView = findViewById(R.id.help_back);
-        floatBackView = findViewById(R.id.help_float_back);
+        floatCloseView = findViewById(R.id.help_float_close);
+        floatBackView = findViewById(R.id.help_float_goback);
+
         if (seekBar != null) {
             seekBar.setOnSeekBarChangeListener(this);
             seekBar.setMax(progressMax);
         }
         if (progressBar != null)
             progressBar.setMax(progressMax);
-        setClick(videoView, startButton, startButton2, fullscreenButton, backView, floatBackView);
+        setClick(videoView, startButton, startButton2, fullscreenButton, backView, floatCloseView, floatBackView);
 
     }
 
@@ -129,9 +132,21 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                     Util.scanForActivity(getContext()).finish();
             }
             //退出悬浮窗按钮
-            if (i == R.id.help_float_back) {
+            if (i == R.id.help_float_close) {
                 if (isSystemFloatMode())
                     release();
+                quitWindowFloat();
+            }
+            //退出悬浮窗按钮
+            if (i == R.id.help_float_goback) {
+                if (isSystemFloatMode()) {
+                    try {
+                        Intent intent = new Intent(getContext(), Util.scanForActivity(getContext()).getClass());
+                        getContext().getApplicationContext().startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 quitWindowFloat();
             }
             //点击空白处

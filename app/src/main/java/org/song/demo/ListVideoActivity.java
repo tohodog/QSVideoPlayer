@@ -168,7 +168,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
             String[] arr = s.split(",");
             if (arr[1].equals(qsVideoView.getUrl())) return;
             qsVideoView.setUp(arr[1], arr[0]);
-            qsVideoView.getCoverImageView().setImageResource(R.mipmap.ic_launcher);
+            qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
             FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
             //qsVideoView.setLayoutParams(l);
         }

@@ -147,10 +147,20 @@
 
 
     <ImageView
-        android:id="@id/help_float_back"
+        android:id="@id/help_float_close"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:scaleType="fitCenter"
         android:src="@drawable/jc_click_back_tiny_selector" />
+
+    <ImageView
+        android:id="@id/help_float_goback"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/qs_goback" />
 
 </RelativeLayout>

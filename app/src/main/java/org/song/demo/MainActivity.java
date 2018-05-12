@@ -17,13 +17,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.song.demo.danmuku.DanmakuControl;
-import org.song.demo.danmuku.DanmakuConf;
+import org.song.demo.danmuku.DanmakuConfig;
 import org.song.demo.danmuku.QSDanmakuParser;
 import org.song.demo.io.FileUtil;
 import org.song.videoplayer.IVideoPlayer;
@@ -38,7 +37,6 @@ import org.song.videoplayer.media.IjkExoMedia;
 import org.song.videoplayer.media.IjkMedia;
 
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
-import master.flame.danmaku.ui.widget.DanmakuView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         danmakuControl = new DanmakuControl().bind(
                 demoVideoView,
                 new QSDanmakuParser(FileUtil.readAssets("danmu.json", this)),
-                DanmakuConf.getDefaultContext()
+                DanmakuConfig.getDefaultContext()
         );
         danmakuControl.hide();
         play(mp4, AndroidMedia.class);
@@ -170,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         ((Button) v).setText(mute ? "静音 ON" : "静音 OFF");
     }
 
+    //android:launchMode="singleTask" 根据自己需求设置
     public void 系统浮窗(View v) {
         if (demoVideoView.getCurrentMode() == IVideoPlayer.MODE_WINDOW_FLOAT_ACT)
             return;
@@ -241,10 +240,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         }
+        if (demoVideoView.isSystemFloatMode())
+            onBackPressed();
     }
 
     private void addDanmaku(boolean islive) {
-        BaseDanmaku danmaku = DanmakuConf.getDefaultContext().mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
+        BaseDanmaku danmaku = DanmakuConfig.getDefaultContext().mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || danmakuControl == null) {
             return;
         }

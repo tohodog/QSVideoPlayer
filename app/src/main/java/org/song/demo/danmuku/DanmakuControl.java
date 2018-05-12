@@ -20,7 +20,7 @@ import master.flame.danmaku.ui.widget.DanmakuView;
  * Created by song
  * Contact github.com/tohodog
  * Date 2018/5/8
- * 描述
+ * 弹幕关联播放器以及控制
  */
 
 public class DanmakuControl implements PlayListener {

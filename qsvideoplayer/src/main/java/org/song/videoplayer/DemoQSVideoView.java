@@ -109,7 +109,9 @@ public class DemoQSVideoView extends QSVideoViewHelp {
                 break;
         }
         updateViewImage(status, mode);
-        floatBackView.setVisibility(mode >= MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
+        floatCloseView.setVisibility(mode >= MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
+        floatBackView.setVisibility(mode == MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
+
     }
 
     //播放时隐藏的view
@@ -121,6 +123,8 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         if (status != STATE_AUTO_COMPLETE)
             startButton.setVisibility(View.INVISIBLE);
         if (mode >= MODE_WINDOW_FLOAT_SYS)
+            floatCloseView.setVisibility(View.INVISIBLE);
+        if (mode == MODE_WINDOW_FLOAT_SYS)
             floatBackView.setVisibility(View.INVISIBLE);
     }
 

@@ -148,7 +148,7 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
         public void bindData(String s) {
             String[] arr = s.split(",");
             qsVideoView.setUp(arr[1], arr[0]);
-            qsVideoView.getCoverImageView().setImageResource(R.mipmap.ic_launcher);
+            qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
             FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
             //qsVideoView.setLayoutParams(l);
         }

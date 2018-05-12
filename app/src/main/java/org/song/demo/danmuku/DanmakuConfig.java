@@ -10,10 +10,10 @@ import master.flame.danmaku.danmaku.model.android.DanmakuContext;
  * Created by song
  * Contact github.com/tohodog
  * Date 2018/5/8
- * 描述
+ * 弹幕设置
  */
 
-public class DanmakuConf {
+public class DanmakuConfig {
 
 
     private static DanmakuContext mContext;
