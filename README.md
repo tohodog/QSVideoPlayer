@@ -205,6 +205,11 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 
 ## Log
+### v2.2.3(2018-5-12)
+  * +Danmaku(一行代码集成弹幕)
+  * +getCurrentFrame(增加截图>=4.0)
+  * +support systemfloat goback(系统浮窗可返回)
+  * +perfect listenner(完善事件监听)
 ### v2.2.2(2018-2-13)
   * can get the floatparams after moving(可以获取移动后的浮窗参数)
   * 8.0 callback onInfo (804, -1004) problem(8.0断流回调onInfo(804,-1004)问题)
@@ -228,7 +233,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
 [relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
-[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.1
+[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.3
 
 [apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
 [apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
