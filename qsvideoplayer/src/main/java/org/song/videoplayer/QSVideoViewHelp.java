@@ -36,6 +36,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     public static final int EVENT_SEEKBAR_START = 1002;//进度条拖动事件开始
     public static final int EVENT_SEEKBAR_TOUCHING = 1003;//拖动中 extra[0]进度 extra[1]总进度
     public static final int EVENT_SEEKBAR_END = 1004;//进度条拖动事件结束
+    public static final int EVENT_CLICK_VIEW = 1005;//点击事件
 
 
     public boolean isWindowGesture = false;//是否非全屏下也可以手势调节进度
@@ -116,6 +117,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         @Override
         public void onClick(View view) {
             int i = view.getId();
+            handlePlayListener.onEvent(EVENT_CLICK_VIEW, i);
+
             //播放按钮
             if (i == R.id.help_start || i == R.id.help_start2) {
                 clickPlay();
@@ -135,13 +138,17 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             if (i == R.id.help_float_close) {
                 if (isSystemFloatMode())
                     release();
+                else
+                    pause();
                 quitWindowFloat();
+
             }
             //退出悬浮窗按钮
             if (i == R.id.help_float_goback) {
                 if (isSystemFloatMode()) {
                     try {
                         Intent intent = new Intent(getContext(), Util.scanForActivity(getContext()).getClass());
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         getContext().getApplicationContext().startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -235,7 +242,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             dismissControlView(status, mode);
         super.setUIWithStateAndMode(status, mode);
 
-        //监听回调永远放在最后
+        //状态改变监听回调永远放在最后
         handlePlayListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
     }
 

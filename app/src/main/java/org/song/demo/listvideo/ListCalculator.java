@@ -31,7 +31,7 @@ public class ListCalculator {
      * 滚动中
      */
     public void onScrolling(int status) {
-        if (!checkUnDown() || (status == 0 & currentActiveItem >= 0))
+        if (!checkUpDown() || (status == 0 & currentActiveItem >= 0))
             return;
 
         int firstVisiblePosition = getter.getFirstVisiblePosition();
@@ -145,7 +145,7 @@ public class ListCalculator {
     private int mOldFirstVisibleItem;
 
     //检测滑动方向
-    private boolean checkUnDown() {
+    private boolean checkUpDown() {
         View view = getter.getChildAt(0);
         if (view == null)
             return false;

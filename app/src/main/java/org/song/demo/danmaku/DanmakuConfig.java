@@ -16,11 +16,11 @@ import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 public class DanmakuConfig {
 
 
-    private static DanmakuContext mContext;
+    private static DanmakuContext danmakuContext;
 
     public static DanmakuContext getDefaultContext() {
-        if (mContext != null)
-            return mContext;
+        if (danmakuContext != null)
+            return danmakuContext;
 
         // 设置最大显示行数
         HashMap<Integer, Integer> maxLinesPair = new HashMap<>();
@@ -29,8 +29,8 @@ public class DanmakuConfig {
         HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
         overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
         overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
-        mContext = DanmakuContext.create();
-        mContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3)
+        danmakuContext = DanmakuContext.create();
+        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3)
                 .setDuplicateMergingEnabled(false)
                 .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
 //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
@@ -38,7 +38,7 @@ public class DanmakuConfig {
                 .setMaximumLines(maxLinesPair)
                 .preventOverlapping(overlappingEnablePair)
                 .setDanmakuMargin(40);
-        return mContext;
+        return danmakuContext;
     }
 
 

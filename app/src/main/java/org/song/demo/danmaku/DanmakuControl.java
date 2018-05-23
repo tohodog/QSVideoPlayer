@@ -25,6 +25,11 @@ import master.flame.danmaku.ui.widget.DanmakuView;
 
 public class DanmakuControl implements PlayListener {
 
+    public static DanmakuControl bind(QSVideoView qsVideoView, final QSDanmakuParser parser, DanmakuContext danmakuContext) {
+        return new DanmakuControl(qsVideoView, parser, danmakuContext);
+    }
+
+
     private DanmakuView danmakuView;
     private QSDanmakuParser parser;
     private QSVideoView qsVideoView;
@@ -34,11 +39,11 @@ public class DanmakuControl implements PlayListener {
 
 
     //需要播放前调用!!
-    public DanmakuControl bind(QSVideoView qsVideoView, final QSDanmakuParser parser, DanmakuContext mContext) {
+    private DanmakuControl(QSVideoView qsVideoView, final QSDanmakuParser parser, DanmakuContext danmakuContext) {
         this.parser = parser;
         this.qsVideoView = qsVideoView;
         this.context = qsVideoView.getContext();
-        this.danmakuContext = mContext;
+        this.danmakuContext = danmakuContext;
         parser.setTextSize(context.getResources().getDisplayMetrics().density);
 
         qsVideoView.addPlayListener(this);
@@ -70,12 +75,10 @@ public class DanmakuControl implements PlayListener {
                 if (DanmakuControl.this.qsVideoView.isPlaying()) {
                     danmakuView.start(DanmakuControl.this.qsVideoView.getPosition());
                     danmakuView.resume();
-                    Log.e("danmakuView", "prepared ok");
+                    Log.e("danmakuView", "prepared " + DanmakuControl.this.qsVideoView.getPosition());
                 }
             }
         });
-
-        return this;
     }
 
     public boolean isShow() {

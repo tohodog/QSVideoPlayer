@@ -36,7 +36,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     /**
      * 进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
      */
-    public int enterFullMode = 0;
+    public int enterFullMode = 3;
 
     private IMediaControl iMediaControl;
     protected HandlePlayListener handlePlayListener;
@@ -333,16 +333,16 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void onPrepared(IMediaControl iMediaControl) {
         Log.e(TAG, "onPrepared");
+        setMute(isMute);
+        iMediaControl.doPlay();
+        setStateAndMode(STATE_PLAYING, currentMode);
+        handlePlayListener.onEvent(EVENT_PREPARE_END);
+        handlePlayListener.onEvent(EVENT_PLAY, 1);
         if (seekToInAdvance > 0) {
             iMediaControl.seekTo(seekToInAdvance);
             handlePlayListener.onEvent(EVENT_SEEK_TO, seekToInAdvance);
             seekToInAdvance = 0;
         }
-        setMute(isMute);
-        iMediaControl.doPlay();
-        setStateAndMode(STATE_PLAYING, currentMode);
-        handlePlayListener.onEvent(EVENT_PREPARE_END, 0);
-        handlePlayListener.onEvent(EVENT_PLAY);
     }
 
 

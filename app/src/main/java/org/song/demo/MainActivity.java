@@ -89,11 +89,16 @@ public class MainActivity extends AppCompatActivity {
                         Util.CLEAR_FULL(MainActivity.this);
                     else
                         Util.SET_FULL(MainActivity.this);
+                //系统浮窗点击退出退出activity
+                if (what == DemoQSVideoView.EVENT_CLICK_VIEW
+                        && extra[0] == R.id.help_float_close)
+                    if (demoVideoView.isSystemFloatMode())
+                        finish();
             }
 
         });
         //集成弹幕 播放前调用
-        danmakuControl = new DanmakuControl().bind(
+        danmakuControl = DanmakuControl.bind(
                 demoVideoView,
                 new QSDanmakuParser(FileUtil.readAssets("danmu.json", this)),
                 DanmakuConfig.getDefaultContext()
@@ -208,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         //全屏和系统浮窗不finish
         if (demoVideoView.onBackPressed()) {
             if (demoVideoView.isSystemFloatMode())
-                //系统浮窗返回上一界面
+                //系统浮窗返回上一界面 android:launchMode="singleTask"
                 moveTaskToBack(true);
             return;
         }
