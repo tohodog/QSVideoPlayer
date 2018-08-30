@@ -33,7 +33,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
 //            public void run() {
         try {
             release();
-            mediaPlayer = getMedia(context, url, headers);
+            mediaPlayer = getMedia(context, url, headers, objects);
             mediaPlayer.setOnPreparedListener(IjkBaseMedia.this);
             mediaPlayer.setOnVideoSizeChangedListener(IjkBaseMedia.this);
             mediaPlayer.setOnCompletionListener(IjkBaseMedia.this);

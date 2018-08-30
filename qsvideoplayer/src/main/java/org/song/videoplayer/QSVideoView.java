@@ -489,7 +489,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected void prepareMediaPlayer() {
         Log.e(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
         removeRenderView();
-        iMediaControl.doPrepar(getContext(), url, headers);
+        iMediaControl.doPrepar(getContext(), url, headers, option);
         addRenderView();
         setStateAndMode(STATE_PREPARING, currentMode);
         handlePlayListener.onEvent(EVENT_PREPARE_START);
