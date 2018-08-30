@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
             floatParams.round = 30;
             floatParams.fade = 0.8f;
             floatParams.canMove = true;
+            floatParams.canCross = true;
         }
         floatParams.systemFloat = isSystemFloat;
 
