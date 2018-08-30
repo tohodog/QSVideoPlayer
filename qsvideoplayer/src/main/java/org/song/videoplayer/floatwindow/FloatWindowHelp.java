@@ -87,14 +87,28 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
     @Override
     public void move(int x, int y) {
         if (floatMoveView != null && floatParams.canMove) {
+
             newFloatParams.x = floatParams.x + x;
             newFloatParams.y = floatParams.y + y;
+
+            int w = decorView.getMeasuredWidth();
+            int h = decorView.getMeasuredHeight();
+
+            if (!newFloatParams.canCross) {
+                int ww = (w - newFloatParams.w) / 2;
+                int hh = (h - newFloatParams.h) / 2;
+                if (Math.abs(newFloatParams.x) > ww)
+                    newFloatParams.x = newFloatParams.x > 0 ? ww : -ww;
+                if (Math.abs(newFloatParams.y) > hh)
+                    newFloatParams.y = newFloatParams.y > 0 ? hh : -hh;
+            }
+
             if (floatParams.systemFloat)
                 getWindowManage().updateWindowView(floatMoveView, getWindowManage().creatParams(type, newFloatParams));
             else {
                 ViewGroup.MarginLayoutParams l = (ViewGroup.MarginLayoutParams) floatMoveView.getLayoutParams();
-                l.leftMargin = (decorView.getMeasuredWidth() - floatParams.w) / 2 + newFloatParams.x;
-                l.topMargin = (decorView.getMeasuredHeight() - floatParams.h) / 2 + newFloatParams.y;
+                l.leftMargin = (w - floatParams.w) / 2 + newFloatParams.x;
+                l.topMargin = (h - floatParams.h) / 2 + newFloatParams.y;
                 floatMoveView.setLayoutParams(l);
             }
         }
