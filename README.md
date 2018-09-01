@@ -28,8 +28,8 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
 
 
 ## 使用说明
-下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 
 
+下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 
 
 根据需求自行选择需要的解码器:<br/>
 一般简单播放视频AndroidMedia足够(体积最小,无依赖)<br/>
@@ -38,10 +38,18 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
 ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
 删除exo解码器: libs里删除jar,media包里删除ExoMedia即可<br/>
 
-混淆
+Gradle
 ```
--dontwarn org.song.videoplayer.**
--keep class org.song.videoplayer.** { *; }
+allprojects {
+    repositories {
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+dependencies {
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.3'
+}
 ```
 
 
