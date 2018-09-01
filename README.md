@@ -57,6 +57,10 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
     void setPlayListener(PlayListener playListener);//播放监听 参数含义参照IVideoPlayer
 
+    void addPlayListener(PlayListener playListener);//多播放监听
+
+    void removePlayListener(PlayListener playListener);//移除播放监听
+
     void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
     void setDecodeMedia(Class<? extends BaseMedia> claxx);//设置解码模块
@@ -77,6 +81,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
     void release();//销毁
 
+    Bitmap getCurrentFrame();//截图
 
     int getPosition();//获取播放进度
 
@@ -110,19 +115,19 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
                     qsVideoView.quitWindowFullscreen();//播放完成退出全屏
             }
 
-            @Override//全屏/普通...
+            @Override//全屏/普通/浮窗...
             public void onMode(int mode) {
 
             }
 
-            @Override//播放事件 初始化完成/缓冲/出错/...
+            @Override//播放事件 初始化完成/缓冲/出错/点击事件...
             public void onEvent(int what, Integer... extra) {
 
             }
 
         });
     //进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
-    qsVideoView.enterFullMode=1;
+    qsVideoView.enterFullMode=3;
     qsVideoView.play();
 ```
 
@@ -146,6 +151,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
     floatParams.round = 30;//浮窗圆角 需SDK_INT >= 21
     floatParams.fade = 0.8f;//透明度 需SDK_INT >= 11
     floatParams.canMove = true;//是否可以拖动
+    floatParams.canCross = false;//是否可以越屏幕边界
     floatParams.systemFloat = true;TRUE系统浮窗需要权限　FALSE界面内浮窗
 
     if (!qsVideoView.enterWindowFloat(floatParams)) {
