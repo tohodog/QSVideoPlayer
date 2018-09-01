@@ -34,6 +34,8 @@ public class HandleTouchEvent {
         float x = event.getX();
         float y = event.getY();
 
+        if (moveLen == 0)
+            moveLen = ViewConfiguration.get(view.getContext()).getScaledTouchSlop() + 30;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -44,8 +46,6 @@ public class HandleTouchEvent {
                 h = view.getHeight();
                 leftX = (int) (w * 0.25);
                 rightX = (int) (w * 0.75);
-
-                moveLen = ViewConfiguration.get(view.getContext()).getScaledTouchSlop() + 30;
                 //Log.e("onTouchEvent", "ACTION_DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
