@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     String mp4 = "http://videos.kpie.com.cn/videos/20170526/037DCE54-EECE-4520-AA92-E4002B1F29B0.mp4";
     String _mp4 = "http://sinacloud.net/sakaue/shelter.mp4";
-    String m3u8 = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
+    String m3u8 = "http://d2e6xlgy8sg8ji.cloudfront.net/liveedge/eratv1/chunklist.m3u8";
 
     String url;
     Class<? extends BaseMedia> decodeMedia;
