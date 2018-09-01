@@ -71,4 +71,11 @@
 #==========videoplayer==========
 -dontwarn org.song.videoplayer.**
 -keep class org.song.videoplayer.** { *; }
+
+-dontwarn tv.danmaku.ijk.**
+-keep class tv.danmaku.ijk.** { *; }
+
+-dontwarn com.google.android.**
+-keep class com.google.android.** { *; }
 #==========videoplayer==========
+

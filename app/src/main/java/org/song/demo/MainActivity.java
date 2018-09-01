@@ -227,12 +227,12 @@ public class MainActivity extends AppCompatActivity {
             floatParams = new FloatParams();
             floatParams.x = 0;
             floatParams.y = 0;
-            floatParams.w = 640;
-            floatParams.h = 360;
+            floatParams.w = getResources().getDisplayMetrics().widthPixels * 3 / 4;
+            floatParams.h = floatParams.w * 9 / 16;
             floatParams.round = 30;
             floatParams.fade = 0.8f;
             floatParams.canMove = true;
-            floatParams.canCross = true;
+            floatParams.canCross = false;
         }
         floatParams.systemFloat = isSystemFloat;
 

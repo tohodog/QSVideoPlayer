@@ -1,5 +1,9 @@
 package org.song.videoplayer.floatwindow;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -9,11 +13,14 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import org.song.videoplayer.Util;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -94,16 +101,7 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
             int w = decorView.getMeasuredWidth();
             int h = decorView.getMeasuredHeight();
 
-            if (!newFloatParams.canCross) {
-                int ww = (w - newFloatParams.w) / 2;
-                int hh = (h - newFloatParams.h) / 2;
-                if (Math.abs(newFloatParams.x) > ww)
-                    newFloatParams.x = newFloatParams.x > 0 ? ww : -ww;
-                if (Math.abs(newFloatParams.y) > hh)
-                    newFloatParams.y = newFloatParams.y > 0 ? hh : -hh;
-            }
-
-            if (floatParams.systemFloat)
+            if (floatParams.systemFloat)//系统浮窗不能超出边界
                 getWindowManage().updateWindowView(floatMoveView, getWindowManage().creatParams(type, newFloatParams));
             else {
                 ViewGroup.MarginLayoutParams l = (ViewGroup.MarginLayoutParams) floatMoveView.getLayoutParams();
@@ -116,8 +114,54 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
 
     @Override
     public void end() {
-        if (floatMoveView != null)
-            floatParams = newFloatParams.clone();
+        if (floatMoveView == null)
+            return;
+        floatParams = newFloatParams.clone();
+        //界面内浮窗超出边界回弹动画
+        if (!floatParams.systemFloat & !floatParams.canCross) {
+            final int w = decorView.getMeasuredWidth();
+            final int h = decorView.getMeasuredHeight();
+            int maxLeft = w - floatParams.w;
+            int maxTop = h - floatParams.h;
+            int newLeft = -1;
+            int newTop = -1;
+
+            final ViewGroup.MarginLayoutParams l = (ViewGroup.MarginLayoutParams) floatMoveView.getLayoutParams();
+            if (l.leftMargin < 0) newLeft = 0;
+            if (l.leftMargin > maxLeft) newLeft = maxLeft;
+            if (l.topMargin < 0) newTop = 0;
+            if (l.topMargin > maxTop) newTop = maxTop;
+            if (newLeft == -1 & newTop == -1)
+                return;
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
+                return;
+
+            ValueAnimator animator = ValueAnimator.ofFloat(0, 1.0F);
+            animator.setTarget(floatMoveView);
+            animator.setDuration(300).start();
+            // animator.setInterpolator(value)
+            final int finalNewLeft = newLeft;
+            final int finalNewTop = newTop;
+            final int finalLeft = l.leftMargin;
+            final int finalTop = l.topMargin;
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Float f = (Float) animation.getAnimatedValue();
+                    if (finalNewLeft >= 0)
+                        l.leftMargin = (int) (finalLeft + f * (finalNewLeft - finalLeft));
+                    if (finalNewTop >= 0)
+                        l.topMargin = (int) (finalTop + f * (finalNewTop - finalTop));
+                    floatMoveView.setLayoutParams(l);
+
+                    floatParams.x = l.leftMargin - (w - floatParams.w) / 2;
+                    floatParams.y = l.topMargin - (h - floatParams.h) / 2;
+                }
+            });
+
+        }
+
     }
 
     public FloatParams getFloatParams() {

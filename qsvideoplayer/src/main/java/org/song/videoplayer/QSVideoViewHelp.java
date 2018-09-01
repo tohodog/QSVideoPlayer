@@ -117,7 +117,6 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         @Override
         public void onClick(View view) {
             int i = view.getId();
-            handlePlayListener.onEvent(EVENT_CLICK_VIEW, i);
 
             //播放按钮
             if (i == R.id.help_start || i == R.id.help_start2) {
@@ -167,6 +166,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                     setUIWithStateAndMode(currentState, currentMode);
                 }
             }
+            //点击事件
+            handlePlayListener.onEvent(EVENT_CLICK_VIEW, i);
         }
     }
 

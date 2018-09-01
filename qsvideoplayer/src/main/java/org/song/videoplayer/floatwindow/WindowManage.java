@@ -51,6 +51,7 @@ public class WindowManage {
 
 
     public WindowManager.LayoutParams creatParams(int type, FloatParams floatParams) {
+        //系统浮窗不能超出边界,更新xy
         int ww = (w - floatParams.w) / 2;
         int hh = (h - floatParams.h) / 2;
         if (Math.abs(floatParams.x) > ww)
