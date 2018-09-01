@@ -28,8 +28,8 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
 
 
 ## 使用说明
-下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可 
 
+下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可
 
 根据需求自行选择需要的解码器:<br/>
 一般简单播放视频AndroidMedia足够(体积最小,无依赖)<br/>
@@ -38,10 +38,11 @@ QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api] 
 ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
 删除exo解码器: libs里删除jar,media包里删除ExoMedia即可<br/>
 
-混淆
+Gradle
 ```
--dontwarn org.song.videoplayer.**
--keep class org.song.videoplayer.** { *; }
+dependencies {
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.4'
+}
 ```
 
 
@@ -196,7 +197,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
     <!--ImageView全屏按钮  View返回按钮-->
     <item name="help_fullscreen" type="id" />
     <item name="help_back" type="id" />
-    
+
     //如播放按钮定义,注意: @id 没有加号,这样定义父类会自动完成该按钮逻辑
     <ImageView
             android:id="@id/help_start"
@@ -211,6 +212,10 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 
 ## Log
+
+### v2.2.4(2018-9-1)
+  * 浮窗超出屏幕回弹效果
+  * 优化
 ### v2.2.3(2018-5-12)
   * +Danmaku(一行代码集成弹幕)
   * +getCurrentFrame(增加截图>=4.0)
@@ -231,7 +236,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
   * -support content uri(支持uri播放)
   * -fullwindow hide navigation(全屏隐藏虚拟按键)
   * -fix bug(修复bug)
-  
+
 ## Other
   * 有问题请Add [issues](https://github.com/tohodog/QsVideoPlayer/issues)
   * 如果项目对你有帮助的话欢迎[![star][starsvg]][star]
