@@ -1,9 +1,9 @@
 package org.song.demo;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -13,10 +13,10 @@ import android.widget.FrameLayout;
 import org.song.demo.listvideo.CallBack;
 import org.song.demo.listvideo.ListCalculator;
 import org.song.demo.listvideo.RecyclerViewGetter;
-import org.song.videoplayer.ConfigManage;
 import org.song.videoplayer.DemoQSVideoView;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
+import org.song.videoplayer.media.IjkMedia;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,14 +73,20 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
     @Override
     public void activeOnScrolling(View newActiveView, int position) {
         Log.d("activeOnScrolled", "" + position);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(newActiveView, "alpha", 0.3f, 1);
+        animator.setDuration(300);
+        animator.start();
     }
 
     @Override
     public void deactivate(View currentView, int position) {
         final DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         if (demoQSVideoView != null)
-            demoQSVideoView.releaseInThread();
+            demoQSVideoView.pause();
         Log.d("deactivate", "" + position);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(currentView, "alpha", 1, 0.3f);
+        animator.setDuration(300);
+        animator.start();
     }
 
     @Override
@@ -123,6 +129,7 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
             super(itemView);
 
             qsVideoView = (DemoQSVideoView) itemView.findViewById(R.id.qs);
+            qsVideoView.setDecodeMedia(IjkMedia.class);
             qsVideoView.setPlayListener(new PlayListener() {
                 @Override
                 public void onStatus(int status) {
@@ -149,8 +156,9 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
             String[] arr = s.split(",");
             qsVideoView.setUp(arr[1], arr[0]);
             qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
-            FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
+            FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (getResources().getDisplayMetrics().widthPixels * 3 / 4));
             //qsVideoView.setLayoutParams(l);
+            itemView.setAlpha(0.3f);
         }
 
     }

@@ -198,7 +198,7 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
             if (object == null) {
                 return false;
             }
-            Class localClass = object.getClass();
+            Class<?> localClass = object.getClass();
             Class[] arrayOfClass = new Class[3];
             arrayOfClass[0] = Integer.TYPE;
             arrayOfClass[1] = Integer.TYPE;

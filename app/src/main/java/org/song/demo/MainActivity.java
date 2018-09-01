@@ -44,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
     DanmakuControl danmakuControl;
 
     String mp4 = "http://videos.kpie.com.cn/videos/20170526/037DCE54-EECE-4520-AA92-E4002B1F29B0.mp4";
+    String _mp4 = "http://sinacloud.net/sakaue/shelter.mp4";
     String m3u8 = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
 
     String url;
-    Class decodeMedia;
+    Class<? extends BaseMedia> decodeMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        demoVideoView = (DemoQSVideoView) findViewById(R.id.qs);
+        demoVideoView = findViewById(R.id.qs);
         demoVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
         demoVideoView.setLayoutParams(new LinearLayout.LayoutParams(-1, getResources().getDisplayMetrics().widthPixels * 9 / 16));
         //进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
@@ -220,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-
+    //进入浮窗
     private void enterFloat(boolean isSystemFloat) {
         FloatParams floatParams = demoVideoView.getFloatParams();
         if (floatParams == null) {
@@ -241,9 +242,11 @@ public class MainActivity extends AppCompatActivity {
         else {
             if (!demoVideoView.enterWindowFloat(floatParams)) {
                 Toast.makeText(this, "没有浮窗权限", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 0);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, 0);
+                }
             }
         }
         if (demoVideoView.isSystemFloatMode())
@@ -331,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeUrl() {
         final EditText editText = new EditText(this);
+        editText.setText(_mp4);
         new AlertDialog.Builder(this).setView(editText).setTitle("网络视频地址").setNegativeButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

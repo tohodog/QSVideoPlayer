@@ -14,7 +14,6 @@ import android.widget.ListView;
 import org.song.demo.listvideo.CallBack;
 import org.song.demo.listvideo.ListCalculator;
 import org.song.demo.listvideo.ListViewGetter;
-import org.song.videoplayer.ConfigManage;
 import org.song.videoplayer.DemoQSVideoView;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
@@ -81,7 +80,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
     public void deactivate(View currentView, int position) {
         final DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         if (demoQSVideoView != null)
-            demoQSVideoView.releaseInThread();
+            demoQSVideoView.pause();
         Log.d("deactivate", "" + position);
     }
 
@@ -168,7 +167,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
             String[] arr = s.split(",");
             if (arr[1].equals(qsVideoView.getUrl())) return;
             qsVideoView.setUp(arr[1], arr[0]);
-            qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
+            qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover1);
             FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (int) (((int) (Math.random() * 600) + 100) * getResources().getDisplayMetrics().density));
             //qsVideoView.setLayoutParams(l);
         }

@@ -88,7 +88,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     @SuppressWarnings("unchecked")
     public void setUp(String url, Object... objects) {
-        release();
+        if (STATE_NORMAL != currentState)
+            release();
         this.url = url;
         urlMode = Util.PaserUrl(url);
         if (objects != null) {
