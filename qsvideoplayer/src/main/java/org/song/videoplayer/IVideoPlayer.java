@@ -51,7 +51,7 @@ public interface IVideoPlayer {
      * @param objects [0] 视频标题
      *                [1] Map<String, String> headers
      *                [2] IJK: List<IjkMeida.Option>
-     *                    ...
+     *                ...
      */
     void setUp(String url, Object... objects);
 
@@ -70,6 +70,8 @@ public interface IVideoPlayer {
     void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
     void setDecodeMedia(Class<? extends BaseMedia> claxx);//设置解码模块
+
+    void openCache();//打开缓存
 
     boolean onBackPressed();//返回键退出全屏
 

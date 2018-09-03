@@ -53,6 +53,7 @@ dependencies {
     //# ExoPlayer as IMediaPlayer: optional, experimental
     compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.8'
 
-
+    //cache
+    compile 'com.danikula:videocache:2.7.1'
 }
 //apply from: '../gradle/maven_push.gradle'

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import org.song.videoplayer.cache.CacheManager;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.floatwindow.FloatWindowHelp;
 import org.song.videoplayer.media.AndroidMedia;
@@ -55,7 +56,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected int currentMode = MODE_WINDOW_NORMAL;
     protected int seekToInAdvance;
     protected int aspectRatio;
-    protected boolean isMute;
+    protected boolean isMute, openCache;
 
 
     public QSVideoView(Context context) {
@@ -162,6 +163,11 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void setDecodeMedia(Class<? extends BaseMedia> claxx) {
         this.iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, claxx);
+    }
+
+    @Override
+    public void openCache() {
+        openCache = true;
     }
 
     @Override
@@ -490,6 +496,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected void prepareMediaPlayer() {
         Log.e(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
         removeRenderView();
+        String url = this.url;
+        if (openCache && urlMode == 0)
+            url = CacheManager.buildCahchUrl(getContext(), url, headers);
         iMediaControl.doPrepar(getContext(), url, headers, option);
         addRenderView();
         setStateAndMode(STATE_PREPARING, currentMode);
