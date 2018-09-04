@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
         //qsVideoView.seekTo(12300);
         demoVideoView.setMute(mute);
+        demoVideoView.openCache();
         demoVideoView.play();
         this.url = url;
         this.decodeMedia = decodeMedia;

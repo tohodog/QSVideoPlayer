@@ -20,12 +20,13 @@ public class Proxy {
     synchronized static HttpProxyCacheServer getProxy(Context context, final Map<String, String> headers) {
         if (builder == null)
             builder = new HttpProxyCacheServer.Builder(context);
-        builder.headerInjector(new HeaderInjector() {
-            @Override
-            public Map<String, String> addHeaders(String url) {
-                return headers;
-            }
-        });
+        if (headers != null)
+            builder.headerInjector(new HeaderInjector() {
+                @Override
+                public Map<String, String> addHeaders(String url) {
+                    return headers;
+                }
+            });
         return builder.build();
     }
 
