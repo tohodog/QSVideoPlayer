@@ -332,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    //=======================other=======================
 
     public void changeUrl() {
         final EditText editText = new EditText(this);

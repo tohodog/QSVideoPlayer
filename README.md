@@ -1,4 +1,7 @@
 QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
+![logo][logopng]
+<div align=center><img src="[logopng]"/></div>
+
 ====
   * QSVideoView接口完善,功能丰富
     * 支持设置视频比例
@@ -240,6 +243,8 @@ dependencies {
 ## Other
   * 有问题请Add [issues](https://github.com/tohodog/QsVideoPlayer/issues)
   * 如果项目对你有帮助的话欢迎[![star][starsvg]][star]
+
+[logopng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/logo.png
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
