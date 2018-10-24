@@ -218,7 +218,8 @@ dependencies {
 
 
 ## Log
-
+### v2.2.5(2018-10-24)
+  * 支持视频缓存
 ### v2.2.4(2018-9-1)
   * 浮窗超出屏幕回弹效果
   * 优化
@@ -246,7 +247,8 @@ dependencies {
 ## Other
   * 有问题请Add [issues](https://github.com/tohodog/QsVideoPlayer/issues)
   * 如果项目对你有帮助的话欢迎[![star][starsvg]][star]
-
+  * logo@[mirzazulfan](https://github.com/mirzazulfan)
+  
 [logopng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/logo.png
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
