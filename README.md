@@ -1,6 +1,8 @@
-QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
 ![logo][logopng]
-<div align=center><img src="[logopng]"/></div>
+<br/>
+<br/>
+<br/>
+[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
 
 ====
   * QSVideoView接口完善,功能丰富
