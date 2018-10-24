@@ -47,7 +47,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 Gradle
 ```
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.5'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.5x'
 }
 ```
 
