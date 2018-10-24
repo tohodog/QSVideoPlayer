@@ -1,10 +1,11 @@
 ![logo][logopng]
 <br/>
 <br/>
+---
 <br/>
+
 [![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
 
-====
   * QSVideoView接口完善,功能丰富
     * 支持设置视频比例
     * 支持两种悬浮窗
