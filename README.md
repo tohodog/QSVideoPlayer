@@ -254,7 +254,7 @@ dependencies {
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
 [relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
-[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.5
+[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.5x
 
 [apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
 [apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
