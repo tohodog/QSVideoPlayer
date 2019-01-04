@@ -11,6 +11,7 @@
     * 支持两种悬浮窗
     * 支持扩展解码器
     * 智能切换全屏
+    * 支持本地缓存
     * 支持静音等
   * 只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
@@ -47,7 +48,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 Gradle
 ```
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.5'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.5x'
 }
 ```
 
@@ -71,6 +72,8 @@ dependencies {
     void setAspectRatio(int aspectRatio);//设置视频比例 参数见IRenderView
 
     void setDecodeMedia(Class<? extends BaseMedia> claxx);//设置解码模块
+    
+    void openCache();//打开缓存
 
     boolean onBackPressed();//返回键退出全屏
 
@@ -254,7 +257,7 @@ dependencies {
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
 [relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
-[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.5
+[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.5x
 
 [apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
 [apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
