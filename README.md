@@ -1,5 +1,11 @@
-QSVideoPlayer　[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
-====
+![logo][logopng]
+<br/>
+<br/>
+---
+<br/>
+
+[![GitHub release][relesesvg]][relesezip] [![api][apisvg]][api]  [![License][licensesvg]][license]
+
   * QSVideoView接口完善,功能丰富
     * 支持设置视频比例
     * 支持两种悬浮窗
@@ -41,7 +47,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 Gradle
 ```
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.4'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.5'
 }
 ```
 
@@ -212,7 +218,8 @@ dependencies {
 
 
 ## Log
-
+### v2.2.5(2018-10-24)
+  * 支持视频缓存
 ### v2.2.4(2018-9-1)
   * 浮窗超出屏幕回弹效果
   * 优化
@@ -240,11 +247,14 @@ dependencies {
 ## Other
   * 有问题请Add [issues](https://github.com/tohodog/QsVideoPlayer/issues)
   * 如果项目对你有帮助的话欢迎[![star][starsvg]][star]
+  * logo@[mirzazulfan](https://github.com/mirzazulfan)
+  
+[logopng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/logo.png
 
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
 [relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
-[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.3
+[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.5
 
 [apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
 [apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
