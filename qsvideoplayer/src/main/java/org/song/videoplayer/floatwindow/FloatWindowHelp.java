@@ -54,14 +54,14 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
         }
         this.floatParams = floatParams;
         newFloatParams = floatParams.clone();
+        //拦截触摸容器view
         floatMoveView = new FloatMoveView(context);
         floatMoveView.setMoveListener(this);
         floatMoveView.setRount(floatParams.round);
         if (Build.VERSION.SDK_INT >= 11)
             floatMoveView.setAlpha(floatParams.fade);
-
         floatMoveView.addView(view, new FrameLayout.LayoutParams(-1, -1));
-
+        //添加进浮窗
         if (floatParams.systemFloat)
             getWindowManage().addWindowView(floatMoveView, getWindowManage().creatParams(type, floatParams));
         else {
@@ -125,7 +125,7 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
             int maxTop = h - floatParams.h;
             int newLeft = -1;
             int newTop = -1;
-
+            //判断是否超出边界,以及超出边界后回弹新位置的坐标
             final ViewGroup.MarginLayoutParams l = (ViewGroup.MarginLayoutParams) floatMoveView.getLayoutParams();
             if (l.leftMargin < 0) newLeft = 0;
             if (l.leftMargin > maxLeft) newLeft = maxLeft;
@@ -135,7 +135,7 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
                 return;
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
                 return;
-
+            //执行属性动画
             ValueAnimator animator = ValueAnimator.ofFloat(0, 1.0F);
             animator.setTarget(floatMoveView);
             animator.setDuration(300).start();
@@ -154,9 +154,9 @@ public class FloatWindowHelp implements FloatMoveView.MoveListener {
                     if (finalNewTop >= 0)
                         l.topMargin = (int) (finalTop + f * (finalNewTop - finalTop));
                     floatMoveView.setLayoutParams(l);
-
-                    floatParams.x = l.leftMargin - (w - floatParams.w) / 2;
-                    floatParams.y = l.topMargin - (h - floatParams.h) / 2;
+                    //更新浮窗中心点坐标
+                    floatParams.x = l.leftMargin + floatParams.w / 2 - w / 2;
+                    floatParams.y = l.topMargin + floatParams.h / 2 - h / 2;
                 }
             });
 

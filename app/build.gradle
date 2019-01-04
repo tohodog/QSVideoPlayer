@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27 
 
 
     defaultConfig {
         applicationId "org.song.demo"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "2.2.4"
     }
@@ -49,8 +48,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:appcompat-v7:27.0.0'
+    compile 'com.android.support:recyclerview-v7:27.0.0'
 
     compile 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
     compile 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'

@@ -457,7 +457,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                 return;
             if (!dismissProgressDialog()) return;
 
-            int delta = (int) (level * duration);
+            int delta = (int) (level * Math.abs(level) * duration);
             tempPosition += delta;
             if (tempPosition > duration)
                 tempPosition = duration;
@@ -474,6 +474,10 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         //音量
         if (type == HandleTouchEvent.GestureEvent.TOUCH_RIGHT_Y) {
             dismissVolumeDialog();
+        }
+
+        if (currentMode==MODE_WINDOW_FULLSCREEN){
+            Util.showNavigationBar(getContext(), false);
         }
     }
 
