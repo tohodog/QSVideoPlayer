@@ -404,6 +404,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             int duration = getDuration();
             if (duration <= 1)
                 return;
+            //拖动开始慢 后面快
             int delta = (int) (level * Math.abs(level) * duration);
             if (delta < -tempPosition)
                 delta = -tempPosition;

@@ -21,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.danikula.videocache.HttpProxyCacheServer;
+
 import org.song.demo.danmaku.DanmakuControl;
 import org.song.demo.danmaku.DanmakuConfig;
 import org.song.demo.danmaku.QSDanmakuParser;
@@ -29,12 +31,15 @@ import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
 import org.song.videoplayer.DemoQSVideoView;
 import org.song.videoplayer.Util;
+import org.song.videoplayer.cache.Proxy;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
 import org.song.demo.media.ExoMedia;
 import org.song.videoplayer.media.IjkExoMedia;
 import org.song.videoplayer.media.IjkMedia;
+
+import java.io.File;
 
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 
@@ -116,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
         //qsVideoView.seekTo(12300);
         demoVideoView.setMute(mute);
-        demoVideoView.openCache();
+        demoVideoView.openCache();//缓存配置见最后
         demoVideoView.play();
         this.url = url;
         this.decodeMedia = decodeMedia;
@@ -332,6 +337,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    //=======================以下其他逻辑=======================
+
 
     public void changeUrl() {
         final EditText editText = new EditText(this);
@@ -367,5 +374,17 @@ public class MainActivity extends AppCompatActivity {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("text", mp4));
         }
+    }
+
+    //缓存配置
+    private void cacheConfig() {
+        Proxy.setConfig(new HttpProxyCacheServer
+                .Builder(this)
+                .cacheDirectory(new File("/sdcard/video"))
+                //.fileNameGenerator() 存储文件名规则
+                .maxCacheSize(512*1024*1024)//缓存文件大小
+                //.maxCacheFilesCount(100)//缓存文件数目 二选一
+
+        );
     }
 }
