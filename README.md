@@ -48,7 +48,7 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 Gradle
 ```
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.6'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.7'
 }
 ```
 
@@ -221,7 +221,8 @@ dependencies {
 
 
 ## Log
-### v2.2.6(2019-01-04)
+### v2.2.7(2019-01-05)
+  * 倍速播放
   * 优化
 ### v2.2.5(2018-10-24)
   * 支持视频缓存
@@ -259,7 +260,7 @@ dependencies {
 [qrpng]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/video_qrcode.png
 
 [relesesvg]: https://img.shields.io/github/release/tohodog/QSVideoPlayer.svg
-[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.6
+[relesezip]: https://codeload.github.com/tohodog/QSVideoPlayer/zip/2.2.7
 
 [apkurlsvg]: https://img.shields.io/badge/download-demo.apk-brightgreen.svg?style=flat
 [apkurl]: https://raw.githubusercontent.com/tohodog/QSVideoPlayer/master/source/qsvideoplayer.apk
