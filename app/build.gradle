@@ -4,16 +4,6 @@ android {
     compileSdkVersion 27
 
 
-    signingConfigs {
-        release {
-            keyAlias 'song'
-            keyPassword 'key2923584'
-            storeFile file('song.jks')
-            storePassword 'store2923584'
-            //v2SigningEnabled false//关闭Scheme v2
-        }
-    }
-
     defaultConfig {
         applicationId "org.song.demo"
         minSdkVersion 15
@@ -41,7 +31,6 @@ android {
             zipAlignEnabled true//zipAlign优化
             shrinkResources false//移除无用的Resources文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release //加签名
 
         }
     }
