@@ -12,7 +12,7 @@
     * 支持扩展解码器
     * 智能切换全屏
     * 支持本地缓存
-    * 支持静音等
+    * 支持倍速静音等
   * 只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
   * 根据系统版本自动选择SurfaceView和TextureView
