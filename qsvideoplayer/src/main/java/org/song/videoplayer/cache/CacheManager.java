@@ -3,7 +3,6 @@ package org.song.videoplayer.cache;
 import android.content.Context;
 
 import com.danikula.videocache.HttpProxyCacheServer;
-import com.danikula.videocache.headers.HeaderInjector;
 
 import java.util.Map;
 

@@ -87,6 +87,8 @@ public interface IVideoPlayer {
 
     boolean setMute(boolean isMute);//是否静音 false不支持
 
+    boolean setSpeed(float rate);//设置播放倍速,false不支持
+
     void release();//销毁
 
     Bitmap getCurrentFrame();//截图

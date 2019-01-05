@@ -40,8 +40,11 @@ import org.song.videoplayer.media.IjkExoMedia;
 import org.song.videoplayer.media.IjkMedia;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -119,8 +122,7 @@ public class MainActivity extends AppCompatActivity {
         demoVideoView.release();
         demoVideoView.setDecodeMedia(decodeMedia);
         demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
-        //qsVideoView.seekTo(12300);
-        demoVideoView.setMute(mute);
+        //demoVideoView.seekTo(12000);
         demoVideoView.openCache();//缓存配置见最后
         demoVideoView.play();
         this.url = url;
@@ -178,6 +180,21 @@ public class MainActivity extends AppCompatActivity {
     public void 静音(View v) {
         demoVideoView.setMute(mute = !mute);
         ((Button) v).setText(mute ? "静音 ON" : "静音 OFF");
+    }
+
+
+    float rate = 1.f;
+
+    public void 倍速(View v) {
+        rate += 0.25f;
+        if (rate > 2)
+            rate = 0.25f;
+
+        if (!demoVideoView.setSpeed(rate)) {
+            Toast.makeText(this, "该解码器不支持", Toast.LENGTH_SHORT).show();
+            rate = 1f;
+        }
+        ((Button) v).setText("倍速 X" + rate);
     }
 
     //android:launchMode="singleTask" 根据自己需求设置
@@ -379,12 +396,19 @@ public class MainActivity extends AppCompatActivity {
     //缓存配置
     private void cacheConfig() {
         Proxy.setConfig(new HttpProxyCacheServer
-                .Builder(this)
-                .cacheDirectory(new File("/sdcard/video"))
-                //.fileNameGenerator() 存储文件名规则
-                .maxCacheSize(512*1024*1024)//缓存文件大小
+                        .Builder(this)
+                        .cacheDirectory(new File("/sdcard/video"))
+                        //.fileNameGenerator() 存储文件名规则
+                        .maxCacheSize(512 * 1024 * 1024)//缓存文件大小
                 //.maxCacheFilesCount(100)//缓存文件数目 二选一
 
         );
+    }
+
+    //ijk配置
+    private void ijkConfig() {
+        List<IjkMedia.Option> list = new ArrayList<>();
+        list.add(new IjkMedia.Option(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1));
+        demoVideoView.setUp(url, "这是一一一一一一一一一个标题", list);
     }
 }

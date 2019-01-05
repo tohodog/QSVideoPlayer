@@ -38,6 +38,11 @@ public class IjkExoMedia extends IjkBaseMedia {
 
 
     @Override
+    public boolean setSpeed(float rate) {
+        return false;
+    }
+
+    @Override
     public void release() {
         super.release();
         mainThreadHandler.removeCallbacks(runnable);

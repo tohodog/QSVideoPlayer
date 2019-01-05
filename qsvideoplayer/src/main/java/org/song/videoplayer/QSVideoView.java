@@ -57,6 +57,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected int seekToInAdvance;
     protected int aspectRatio;
     protected boolean isMute, openCache;
+    protected float rate;
 
 
     public QSVideoView(Context context) {
@@ -324,6 +325,13 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         return iMediaControl.setVolume(v, v);
     }
 
+
+    @Override
+    public boolean setSpeed(float rate) {
+        this.rate = rate;
+        return iMediaControl.setSpeed(rate);
+    }
+
     //防止频繁切换全屏
     private boolean checkSpaceOK() {
         long now = System.currentTimeMillis();
@@ -341,6 +349,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public void onPrepared(IMediaControl iMediaControl) {
         Log.e(TAG, "onPrepared");
         setMute(isMute);
+        setSpeed(rate);
         iMediaControl.doPlay();
         setStateAndMode(STATE_PLAYING, currentMode);
         handlePlayListener.onEvent(EVENT_PREPARE_END);

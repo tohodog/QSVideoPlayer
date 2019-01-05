@@ -35,9 +35,14 @@ public class IjkMedia extends IjkBaseMedia {
         if (objects != null && objects.length > 0 && objects[0] instanceof List) {
             List<Option> list = (List<Option>) objects[0];
             for (Option o : list) {
-                mediaPlayer.setOption(o.category, o.name, o.value);
+                if (o.strValue != null)
+                    mediaPlayer.setOption(o.category, o.name, o.strValue);
+                else
+                    mediaPlayer.setOption(o.category, o.name, o.longValue);
             }
         }
+
+        //mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
 
 //        if (mSettings.getUsingMediaCodec()) {
 //            mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
@@ -71,15 +76,31 @@ public class IjkMedia extends IjkBaseMedia {
         return mediaPlayer;
     }
 
-    public class Option {
+
+    @Override
+    public boolean setSpeed(float rate) {
+        if (isPrepar & mediaPlayer != null) {
+            ((IjkMediaPlayer) mediaPlayer).setSpeed(rate);
+        }
+        return true;
+    }
+
+    public static class Option {
         int category;
         String name;
-        String value;
+        String strValue;
+        long longValue;
 
         public Option(int category, String name, String value) {
             this.category = category;
             this.name = name;
-            this.value = value;
+            this.strValue = value;
+        }
+
+        public Option(int category, String name, long value) {
+            this.category = category;
+            this.name = name;
+            this.longValue = value;
         }
     }
 }

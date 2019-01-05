@@ -1,8 +1,5 @@
 package org.song.videoplayer.floatwindow;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
@@ -13,14 +10,11 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import org.song.videoplayer.Util;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

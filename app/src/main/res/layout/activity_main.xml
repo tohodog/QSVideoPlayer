@@ -107,6 +107,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="倍速"
+                    android:text="倍速 X1.0" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:onClick="缩放模式"
                     android:text="适应" />
 

@@ -60,6 +60,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
             mediaPlayer.setOnVideoSizeChangedListener(this);
             mediaPlayer.prepareAsync();
             //mediaPlayer.setDisplay();
+
         } catch (Exception e) {
             e.printStackTrace();
             onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
@@ -165,6 +166,11 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
         if (isPrepar)
             mediaPlayer.setVolume(leftVol, rightVol);
         return true;
+    }
+
+    @Override
+    public boolean setSpeed(float rate) {
+        return false;
     }
 
     @Override

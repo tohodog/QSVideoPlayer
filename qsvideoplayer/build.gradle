@@ -36,12 +36,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    api fileTree(dir: 'libs', include: ['*.jar'])
 
     // # required, enough for most devices.
-    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
-    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
 
     //# Other ABIs: optional
     //compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.8'
@@ -50,9 +49,9 @@ dependencies {
     //compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8'
 
     //# ExoPlayer as IMediaPlayer: optional, experimental
-    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.8'
+    api 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.8'
 
     //cache
-    compile 'com.danikula:videocache:2.7.1'
+    api 'com.danikula:videocache:2.7.1'
 }
 //apply from: '../gradle/maven_push.gradle'

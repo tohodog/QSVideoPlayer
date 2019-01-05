@@ -198,6 +198,11 @@ public class ExoMedia extends BaseMedia implements ExoPlayer.EventListener, Simp
     }
 
     @Override
+    public boolean setSpeed(float rate) {
+        return false;
+    }
+
+    @Override
     public void release() {
         isPrepar = false;
         if (simpleExoPlayer != null) {

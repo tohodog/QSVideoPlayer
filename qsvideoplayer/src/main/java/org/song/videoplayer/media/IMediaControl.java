@@ -61,6 +61,8 @@ public interface IMediaControl {
 
     boolean setVolume(float leftVol, float rightVol);
 
+    boolean setSpeed(float rate);//设置播放倍速,false不支持
+
     void release();//销毁
 
 }
