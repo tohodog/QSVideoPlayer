@@ -80,7 +80,7 @@ public class ListVideoActivity extends AppCompatActivity implements CallBack {
     public void deactivate(View currentView, int position) {
         final DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         if (demoQSVideoView != null)
-            demoQSVideoView.pause();
+            demoQSVideoView.releaseInThread();
         Log.d("deactivate", "" + position);
     }
 

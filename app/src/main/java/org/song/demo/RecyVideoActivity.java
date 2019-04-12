@@ -73,20 +73,20 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
     @Override
     public void activeOnScrolling(View newActiveView, int position) {
         Log.d("activeOnScrolled", "" + position);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(newActiveView, "alpha", 0.3f, 1);
-        animator.setDuration(300);
-        animator.start();
+//        ObjectAnimator animator = ObjectAnimator.ofFloat(newActiveView, "alpha", 0.3f, 1);
+//        animator.setDuration(300);
+//        animator.start();
     }
 
     @Override
     public void deactivate(View currentView, int position) {
         final DemoQSVideoView demoQSVideoView = (DemoQSVideoView) currentView.findViewById(R.id.qs);
         if (demoQSVideoView != null)
-            demoQSVideoView.pause();
+            demoQSVideoView.releaseInThread();
         Log.d("deactivate", "" + position);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(currentView, "alpha", 1, 0.3f);
-        animator.setDuration(300);
-        animator.start();
+//        ObjectAnimator animator = ObjectAnimator.ofFloat(currentView, "alpha", 1, 0.3f);
+//        animator.setDuration(300);
+//        animator.start();
     }
 
     @Override
@@ -158,7 +158,7 @@ public class RecyVideoActivity extends AppCompatActivity implements CallBack {
             qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);
             FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(-1, (getResources().getDisplayMetrics().widthPixels * 3 / 4));
             //qsVideoView.setLayoutParams(l);
-            itemView.setAlpha(0.3f);
+            //itemView.setAlpha(0.3f);
         }
 
     }
