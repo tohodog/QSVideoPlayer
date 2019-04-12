@@ -17,7 +17,7 @@
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
   * 根据系统版本自动选择SurfaceView和TextureView
   * 支持本地视频,在线视频,m3u8直播等
-  * 提供DemoQSVideoView成品播放器,支持手势
+  * 提供DemoQSVideoView成品播放器,支持手势,清晰度
   * 提供list视频列表自动销毁播放框架
   * 一句代码集成弹幕
 
@@ -56,7 +56,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.7'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.8'
 }
 ```
 
@@ -298,6 +298,9 @@ dependencies {
 
 
 ## Log
+### v2.2.7(2019-01-05)
+  * 清晰度选择
+  * 优化
 ### v2.2.7(2019-01-05)
   * 倍速播放
   * 优化
