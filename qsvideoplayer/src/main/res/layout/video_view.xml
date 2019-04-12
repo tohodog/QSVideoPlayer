@@ -45,8 +45,8 @@
             android:max="100"
             android:maxHeight="4dp"
             android:minHeight="4dp"
-            android:paddingBottom="8dp"
             android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:progressDrawable="@drawable/jc_seek_progress"
             android:thumb="@drawable/jc_seek_thumb" />
 
@@ -57,11 +57,21 @@
             android:text="00:00"
             android:textColor="#ffffff" />
 
+        <TextView
+            android:id="@id/help_definition"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:gravity="center"
+            android:text="高清"
+            android:textColor="#ffffff" />
+
+
         <ImageView
             android:id="@id/help_fullscreen"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:paddingLeft="16dp"
+            android:paddingLeft="12dp"
             android:paddingRight="16dp"
             android:scaleType="center"
             android:src="@drawable/jc_enlarge" />
@@ -84,7 +94,7 @@
             android:src="@drawable/jc_back" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@id/help_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -131,8 +141,8 @@
         android:id="@+id/error_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="#333333"
         android:visibility="invisible">
@@ -157,8 +167,8 @@
         android:id="@id/help_float_goback"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:padding="6dp"
         android:scaleType="fitCenter"
         android:src="@drawable/qs_goback" />

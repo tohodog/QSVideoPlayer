@@ -15,13 +15,14 @@ import android.widget.Toast;
 import org.song.videoplayer.cache.CacheManager;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.floatwindow.FloatWindowHelp;
-import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
 import org.song.videoplayer.media.IMediaCallback;
 import org.song.videoplayer.media.IMediaControl;
+import org.song.videoplayer.media.IjkMedia;
 import org.song.videoplayer.rederview.IRenderView;
 import org.song.videoplayer.rederview.SufaceRenderView;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,7 +55,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     protected int currentState = STATE_NORMAL;
     protected int currentMode = MODE_WINDOW_NORMAL;
-    protected int seekToInAdvance;
+    protected int seekToInAdvance;//初始化视频完成跳进度
+    protected boolean noPlayInAdvance;//初始化视频完成 是否播放
     protected int aspectRatio;
     protected boolean isMute, openCache;
     protected float rate;
@@ -75,7 +77,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     private void init(Context context) {
         handlePlayListener = new HandlePlayListener();
-        iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, AndroidMedia.class);
+        iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, IjkMedia.class);
         floatWindowHelp = new FloatWindowHelp(context);
         videoView = new FrameLayout(context);
         videoView.setId(R.id.qs_videoview);
@@ -88,25 +90,40 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     //-----------给外部调用的start----------
     @Override
-    @SuppressWarnings("unchecked")
-    public void setUp(String url, Object... objects) {
+    public void setUp(String url, Map<String, String> headers, Object option) {
         if (STATE_NORMAL != currentState)
             release();
         this.url = url;
-        urlMode = Util.PaserUrl(url);
-        if (objects != null) {
-            if (objects.length > 1 && objects[1] instanceof Map)
-                headers = (Map<String, String>) objects[1];
-            if (objects.length > 2)
-                option = objects[2];
-        }
+        this.urlMode = Util.PaserUrl(url);
+        this.headers = headers;
+        this.option = option;
         setStateAndMode(STATE_NORMAL, currentMode);
     }
 
+    public void setUp(String url, Map<String, String> headers, List<IjkMedia.Option> optionList) {
+        setUp(url, headers, (Object) optionList);
+    }
+
+    public void setUp(String url) {
+        setUp(url, null, (Object) null);
+    }
+
+    public void setUp(String url, Map<String, String> headers) {
+        setUp(url, headers, (Object) null);
+    }
+
+
     @Override
     public void play() {
-        if (currentState != STATE_PLAYING)
+        if (currentState != STATE_PLAYING) {
             clickPlay();
+        }
+    }
+
+    @Override
+    public void prePlay() {
+        noPlayInAdvance = true;
+        play();
     }
 
     @Override
@@ -125,14 +142,29 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             clickPlay();
     }
 
+
     @Override
-    public void setPlayListener(PlayListener playListener) {
+    public void setPlayListener(final PlayListener playListener) {
         handlePlayListener.setListener(playListener);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                playListener.onMode(currentMode);
+                playListener.onStatus(currentState);
+            }
+        });
     }
 
     @Override
-    public void addPlayListener(PlayListener playListener) {
+    public void addPlayListener(final PlayListener playListener) {
         handlePlayListener.addListener(playListener);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                playListener.onMode(currentMode);
+                playListener.onStatus(currentState);
+            }
+        });
     }
 
     @Override
@@ -350,10 +382,17 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         Log.e(TAG, "onPrepared");
         setMute(isMute);
         setSpeed(rate);
-        iMediaControl.doPlay();
-        setStateAndMode(STATE_PLAYING, currentMode);
+        if (!noPlayInAdvance) {
+            iMediaControl.doPlay();
+            setStateAndMode(STATE_PLAYING, currentMode);
+        } else {
+            noPlayInAdvance = false;
+            setStateAndMode(STATE_PAUSE, currentMode);
+        }
+
         handlePlayListener.onEvent(EVENT_PREPARE_END);
         handlePlayListener.onEvent(EVENT_PLAY, 1);
+
         if (seekToInAdvance > 0) {
             iMediaControl.seekTo(seekToInAdvance);
             handlePlayListener.onEvent(EVENT_SEEK_TO, seekToInAdvance);
@@ -508,10 +547,12 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         String url = this.url;
         if (openCache && urlMode == 0)
             url = CacheManager.buildCahchUrl(getContext(), url, headers);
-        iMediaControl.doPrepar(getContext(), url, headers, option);
-        addRenderView();
-        setStateAndMode(STATE_PREPARING, currentMode);
-        handlePlayListener.onEvent(EVENT_PREPARE_START);
+        boolean res = iMediaControl.doPrepar(getContext(), url, headers, option);
+        if (res) {
+            addRenderView();
+            setStateAndMode(STATE_PREPARING, currentMode);
+            handlePlayListener.onEvent(EVENT_PREPARE_START);
+        }
     }
 
     private void addRenderView() {

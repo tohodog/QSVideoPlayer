@@ -7,9 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,7 +32,6 @@ public class DemoQSVideoView extends QSVideoViewHelp {
     protected ViewGroup loadingContainer;//初始化
     protected ViewGroup errorContainer;//出错了显示的 重试
     protected ViewGroup bufferingContainer;//缓冲
-    protected TextView titleTextView;//标题
 
     protected List<View> changeViews;//根据状态隐藏显示的view集合
 
@@ -64,7 +65,6 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         errorContainer = (ViewGroup) findViewById(R.id.error_container);
 
         coverImageView = (ImageView) findViewById(R.id.cover);
-        titleTextView = (TextView) findViewById(R.id.title);
 
         changeViews = new ArrayList<>();
 
@@ -76,18 +76,9 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         changeViews.add(coverImageView);
         changeViews.add(startButton);
         changeViews.add(progressBar);
-
-
     }
 
-    @Override
-    public void setUp(String url, Object... objects) {
-        super.setUp(url, objects);
-        if (objects != null && objects.length > 0)
-            titleTextView.setText(String.valueOf(objects[0]));
-    }
-
-    //根据状态设置ui显示/隐藏 用方法內的参数,不要用currentStatus,currentMode
+    //根据播放状态设置ui显示/隐藏,包括控制UI
     @Override
     protected void changeUiWithStateAndMode(int status, int mode) {
         switch (status) {
@@ -113,7 +104,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         floatBackView.setVisibility(mode >= MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
     }
 
-    //播放时隐藏的view
+    //隐藏控制UI
     @Override
     protected void dismissControlView(int status, int mode) {
         bottomContainer.setVisibility(View.INVISIBLE);
@@ -192,6 +183,42 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         clickFull();
     }
 
+    //弹出清晰度选择
+    @Override
+    protected void popDefinition(View view, List<QSVideo> qsVideos, int index) {
+        VideoPopWindow videoPopWindow = new VideoPopWindow(getContext(), qsVideos, index);
+        videoPopWindow.setOnItemListener(new VideoPopWindow.OnItemListener() {
+            @Override
+            public void OnClick(int position) {
+                switchVideo(position);
+            }
+        });
+        videoPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                startDismissControlViewTimer(1314);
+            }
+        });
+        videoPopWindow.showTop(view);
+        cancelDismissControlViewTimer();
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+//            PopupMenu mPopupMenu = new PopupMenu(getContext(), view);
+//            for (int i = 0; i < qsVideos.size(); i++) {
+//                QSVideo q = qsVideos.get(i);
+//                mPopupMenu.getMenu().add(i, i, i, q.resolution());
+//            }
+//            mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                @Override
+//                public boolean onMenuItemClick(MenuItem item) {
+//                    switchVideo(item.getItemId());
+//                    return true;
+//                }
+//            });
+//            mPopupMenu.show();
+//        }
+
+    }
+
     protected PopupWindow mProgressDialog;
     protected ProgressBar mDialogProgressBar;
     protected TextView tv_current;
@@ -216,9 +243,9 @@ public class DemoQSVideoView extends QSVideoViewHelp {
             mProgressDialog.showAtLocation(this, Gravity.CENTER, 0, 0);
         }
 
-        tv_delta.setText(
-                (delta > 0 ? "+" : "") +
-                        delta / 1000 + "秒");
+        tv_delta.setText(String.format("%s%ss",
+                (delta > 0 ? "+" : ""),
+                delta / 1000));
         tv_current.setText(Util.stringForTime(position + delta) + "/");
         tv_duration.setText(Util.stringForTime(duration));
         mDialogProgressBar.setProgress((position + delta) * 100 / duration);
@@ -259,7 +286,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         if (!mVolumeDialog.isShowing())
             mVolumeDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), currentMode == MODE_WINDOW_NORMAL ? 25 : 50));
 
-        mDialogVolumeTextView.setText(nowVolume + "");
+        mDialogVolumeTextView.setText(String.valueOf(nowVolume));
         mDialogVolumeProgressBar.setProgress(nowVolume);
         return true;
     }
@@ -292,7 +319,7 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         if (!mBrightnessDialog.isShowing())
             mBrightnessDialog.showAtLocation(this, Gravity.TOP, 0, Util.dp2px(getContext(), currentMode == MODE_WINDOW_NORMAL ? 25 : 50));
 
-        mDialogBrightnessTextView.setText(brightnessPercent + "");
+        mDialogBrightnessTextView.setText(String.valueOf(brightnessPercent));
         mDialogBrightnessProgressBar.setProgress(brightnessPercent);
         return true;
     }

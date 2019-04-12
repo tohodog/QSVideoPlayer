@@ -30,6 +30,7 @@ import org.song.demo.io.FileUtil;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
 import org.song.videoplayer.DemoQSVideoView;
+import org.song.videoplayer.QSVideo;
 import org.song.videoplayer.Util;
 import org.song.videoplayer.cache.Proxy;
 import org.song.videoplayer.floatwindow.FloatParams;
@@ -80,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         //是否非全屏下也可以手势调节进度
         demoVideoView.isWindowGesture = true;
         demoVideoView.setPlayListener(new PlayListener() {
+
+            int mode;
+
             @Override
             public void onStatus(int status) {//播放状态
                 if (status == IVideoPlayer.STATE_AUTO_COMPLETE)
@@ -88,16 +92,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override//全屏/普通/浮窗
             public void onMode(int mode) {
-
+                this.mode = mode;
             }
 
             @Override
             public void onEvent(int what, Integer... extra) {
-                if (what == DemoQSVideoView.EVENT_CONTROL_VIEW & Build.VERSION.SDK_INT >= 19 & !demoVideoView.isWindowFloatMode())
-                    if (extra[0] == 0)//状态栏隐藏/显示
-                        Util.CLEAR_FULL(MainActivity.this);
-                    else
-                        Util.SET_FULL(MainActivity.this);
+                if (what == DemoQSVideoView.EVENT_CONTROL_VIEW && mode == IVideoPlayer.MODE_WINDOW_NORMAL) {
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        if (extra[0] == 0)//状态栏隐藏/显示
+                            Util.CLEAR_FULL(MainActivity.this);
+                        else
+                            Util.SET_FULL(MainActivity.this);
+                    }
+                }
                 //系统浮窗点击退出退出activity
                 if (what == DemoQSVideoView.EVENT_CLICK_VIEW
                         && extra[0] == R.id.help_float_close)
@@ -121,12 +128,21 @@ public class MainActivity extends AppCompatActivity {
     private void play(String url, Class<? extends BaseMedia> decodeMedia) {
         demoVideoView.release();
         demoVideoView.setDecodeMedia(decodeMedia);
-        demoVideoView.setUp(url, "这是一一一一一一一一一个标题");
+
+        demoVideoView.setUp(
+                QSVideo.Build(url).title("这是标清标题").definition("标清").resolution("标清 720P").build(),
+                QSVideo.Build(url).title("这是高清标题").definition("高清").resolution("高清 1080P").build(),
+                QSVideo.Build(url).title("这是2K标题").definition("2K").resolution("超高清 2K").build(),
+                QSVideo.Build(url).title("这是4K标题").definition("4K").resolution("极致 4K").build()
+
+        );
+//        demoVideoView.setUp(url, "这是一个标题");
         //demoVideoView.seekTo(12000);
-        demoVideoView.openCache();//缓存配置见最后
+        demoVideoView.openCache();//缓存配置见最后,缓存框架可能会出错,
         demoVideoView.play();
         this.url = url;
         this.decodeMedia = decodeMedia;
+
     }
 
 
@@ -300,10 +316,14 @@ public class MainActivity extends AppCompatActivity {
 
     //=======================以下生命周期控制=======================
 
+    private boolean playFlag;//记录退出时播放状态 回来的时候继续播放
+    private int position;//记录销毁时的进度 回来继续该进度播放
+    private Handler handler = new Handler();
+
     @Override
     public void onResume() {
         super.onResume();
-        if (flag)
+        if (playFlag)
             demoVideoView.play();
         handler.removeCallbacks(runnable);
         if (position > 0) {
@@ -312,16 +332,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    boolean flag;//记录退出时播放状态 回来的时候继续播放
-    int position;//记录销毁时的进度 回来继续盖进度播放
-
     @Override
     public void onPause() {
         super.onPause();
         if (demoVideoView.isSystemFloatMode())
             return;
         //暂停
-        flag = demoVideoView.isPlaying();
+        playFlag = demoVideoView.isPlaying();
         demoVideoView.pause();
     }
 
@@ -331,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (demoVideoView.isSystemFloatMode())
             return;
-        //不马上销毁 延时15秒
+        //进入后台不马上销毁,延时15秒
         handler.postDelayed(runnable, 1000 * 15);
     }
 
@@ -341,11 +358,10 @@ public class MainActivity extends AppCompatActivity {
         if (demoVideoView.isSystemFloatMode())
             demoVideoView.quitWindowFloat();
         demoVideoView.release();
+        handler.removeCallbacks(runnable);
     }
 
-
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (demoVideoView.getCurrentState() != IVideoPlayer.STATE_AUTO_COMPLETE)
@@ -409,6 +425,6 @@ public class MainActivity extends AppCompatActivity {
     private void ijkConfig() {
         List<IjkMedia.Option> list = new ArrayList<>();
         list.add(new IjkMedia.Option(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1));
-        demoVideoView.setUp(url, "这是一一一一一一一一一个标题", list);
+        demoVideoView.setUp(QSVideo.Build(url).title("").option(list).build());
     }
 }

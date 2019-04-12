@@ -37,7 +37,7 @@ public interface IMediaControl {
     int MEDIA_ERROR_UNSUPPORTED = -1010;
     int MEDIA_ERROR_TIMED_OUT = -110;
 
-    void doPrepar(Context context, String url, Map<String, String> headers, Object... objects);//准备播放
+    boolean doPrepar(Context context, String url, Map<String, String> headers, Object... objects);//准备播放
 
     void setSurface(Surface surface);//api14以上用这个 可以无缝全屏切换
 

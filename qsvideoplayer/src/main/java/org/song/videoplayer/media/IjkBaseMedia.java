@@ -27,7 +27,7 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
     }
 
     @Override
-    public void doPrepar(final Context context, final String url, final Map<String, String> headers, Object... objects) {
+    public boolean doPrepar(final Context context, final String url, final Map<String, String> headers, Object... objects) {
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -44,12 +44,13 @@ public abstract class IjkBaseMedia extends BaseMedia implements IMediaPlayer.OnP
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setScreenOnWhilePlaying(true);
             mediaPlayer.prepareAsync();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
+            return false;
         }
         //}  }).start();
-
 
     }
 
