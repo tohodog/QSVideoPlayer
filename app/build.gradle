@@ -9,9 +9,17 @@ android {
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
-        versionName "2.2.7"
+        versionName "2.2.8"
     }
-
+    signingConfigs {
+        release {
+            keyAlias 'song'
+            keyPassword 'key2923584'
+            storeFile file('song.jks')
+            storePassword 'store2923584'
+            //v2SigningEnabled false//关闭Scheme v2
+        }
+    }
     sourceSets {
         main() {
             manifest.srcFile 'src/main/AndroidManifest.xml'
@@ -31,7 +39,7 @@ android {
             zipAlignEnabled true//zipAlign优化
             shrinkResources false//移除无用的Resources文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
+            signingConfig signingConfigs.release //加签名
         }
     }
     //忽略xml多国语言问题
