@@ -17,6 +17,14 @@
     <!--ImageView浮窗返回按钮 -->
     <item name="help_float_goback" type="id" />
 
+    <!--标题-->
+    <item name="help_title" type="id" />
+    <item name="help_definition" type="id" />
+
+
     <item name="qs_videoview" type="id" />
+
+
+
 
 </resources>

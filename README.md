@@ -17,7 +17,7 @@
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
   * 根据系统版本自动选择SurfaceView和TextureView
   * 支持本地视频,在线视频,m3u8直播等
-  * 提供DemoQSVideoView成品播放器,支持手势
+  * 提供DemoQSVideoView成品播放器,支持手势,清晰度
   * 提供list视频列表自动销毁播放框架
   * 一句代码集成弹幕
 
@@ -47,8 +47,16 @@ ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除I
 
 Gradle
 ```
+allprojects {
+    repositories {
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.7'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.8'
 }
 ```
 
@@ -57,7 +65,9 @@ dependencies {
 ```
     void setUp(String url, Object... objects);//设置视频地址
 
-    void play();//播放
+    void play();//播放/初始化(完成自动播放)
+
+    void prePlay();//初始化(完成不会播放)
 
     void pause();//暂停
 
@@ -117,6 +127,11 @@ dependencies {
 
     qsVideoView.setUp(url, "这是一一一一一一一一一个标题");
 
+    //设置多个清晰度
+    //demoVideoView.setUp(
+    //                QSVideo.Build(url).title("这是标清标题").definition("标清").resolution("标清 720P").build(),
+    //                QSVideo.Build(url).title("这是高清标题").definition("高清").resolution("高清 1080P").build());
+
     qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);//封面
 
     //设置监听
@@ -153,6 +168,22 @@ dependencies {
     }
 ```
 
+### XML
+```
+        <org.song.videoplayer.DemoQSVideoView
+                android:id="@+id/xxx"
+                android:layout_width="match_parent"
+                android:layout_height="400dp" />
+```
+
+### AndroidManifest
+```
+        <activity
+            android:name=".VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
+```
+
 ### 悬浮窗
 ```
     FloatParams floatParams = new FloatParams();
@@ -174,20 +205,64 @@ dependencies {
         }
     }
 ```
-### XML
-```
-        <org.song.videoplayer.DemoQSVideoView
-                android:id="@+id/xxx"
-                android:layout_width="match_parent"
-                android:layout_height="400dp" />
-```
 
-### AndroidManifest
+
+### 生命周期控制
+</br>实现后台暂停播放,超过15秒销毁,回来还原播放状态,体验好
 ```
-        <activity
-            android:name=".VideoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
-        </activity>
+    private boolean playFlag;//记录退出时播放状态 回来的时候继续播放
+    private int position;//记录销毁时的进度 回来继续该进度播放
+    private Handler handler = new Handler();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (playFlag)
+            demoVideoView.play();
+        handler.removeCallbacks(runnable);
+        if (position > 0) {
+            demoVideoView.seekTo(position);
+            position = 0;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (demoVideoView.isSystemFloatMode())
+            return;
+        //暂停
+        playFlag = demoVideoView.isPlaying();
+        demoVideoView.pause();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (demoVideoView.isSystemFloatMode())
+            return;
+        //进入后台不马上销毁,延时15秒
+        handler.postDelayed(runnable, 1000 * 15);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();//销毁
+        if (demoVideoView.isSystemFloatMode())
+            demoVideoView.quitWindowFloat();
+        demoVideoView.release();
+        handler.removeCallbacks(runnable);
+    }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (demoVideoView.getCurrentState() != IVideoPlayer.STATE_AUTO_COMPLETE)
+                position = demoVideoView.getPosition();
+            demoVideoView.release();
+        }
+    };
 ```
 
 ## DIY播放器:
@@ -223,6 +298,9 @@ dependencies {
 
 
 ## Log
+### v2.2.8(2019-04-12)
+  * 清晰度选择
+  * 优化
 ### v2.2.7(2019-01-05)
   * 倍速播放
   * 优化

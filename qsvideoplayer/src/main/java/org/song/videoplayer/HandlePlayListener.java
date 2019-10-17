@@ -38,11 +38,11 @@ class HandlePlayListener implements PlayListener {
 
 
     void setListener(PlayListener playListener) {
+        removeListener(setPlayListener);
         if (playListener != null) {
             setPlayListener = playListener;
             addListener(playListener);
-        } else
-            removeListener(setPlayListener);
+        }
     }
 
     void addListener(PlayListener playListener) {

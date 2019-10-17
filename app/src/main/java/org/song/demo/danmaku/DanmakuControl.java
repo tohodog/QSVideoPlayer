@@ -46,7 +46,6 @@ public class DanmakuControl implements PlayListener {
         this.danmakuContext = danmakuContext;
         parser.setTextSize(context.getResources().getDisplayMetrics().density);
 
-        qsVideoView.addPlayListener(this);
         danmakuView = new DanmakuView(context);
         ViewGroup videoview = qsVideoView.findViewById(R.id.qs_videoview);
         videoview.addView(danmakuView, 1, new ViewGroup.LayoutParams(-1, -1));
@@ -79,6 +78,9 @@ public class DanmakuControl implements PlayListener {
                 }
             }
         });
+
+        qsVideoView.addPlayListener(this);
+
     }
 
     public boolean isShow() {

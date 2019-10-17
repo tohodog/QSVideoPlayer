@@ -16,6 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by song on 2017/2/13.
  * Contact github.com/tohodog
@@ -38,11 +41,14 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     public static final int EVENT_SEEKBAR_END = 1004;//进度条拖动事件结束
     public static final int EVENT_CLICK_VIEW = 1005;//点击事件
 
-
+    public int controlUIHideTime = 2500;//控制UI隐藏时间
+    public boolean isDoneShowControlUI = false;//初始化完成/视频播放完成后,是否显示控制UI
     public boolean isWindowGesture = false;//是否非全屏下也可以手势调节进度
 
     protected ViewGroup controlContainer;//控制ui容器
     //提供辅助的控件
+    protected TextView titleTextView;//标题
+    protected TextView definitionTextView;//清晰度
     protected ImageView startButton, startButton2;//播放按钮
     protected SeekBar seekBar;//拖动条
     protected TextView currentTimeTextView, totalTimeTextView;//播放时间/视频长度
@@ -56,6 +62,9 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     private HandleTouchEvent handleTouchEvent;
     private MyOnClickListener myOnClickListener;
 
+    private List<QSVideo> qsVideos;
+    private QSVideo nowPlayVideo;
+
     public QSVideoViewHelp(Context context) {
         this(context, null);
     }
@@ -67,6 +76,54 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     public QSVideoViewHelp(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initHelpView(context);
+    }
+
+    public void setUp(String url, String title) {
+        setUp(QSVideo.Build(url).title(title).build());
+    }
+
+    public void setUp(QSVideo... qsVideos) {
+        setUp(Arrays.asList(qsVideos));
+    }
+
+    public void setUp(List<QSVideo> qsVideos) {
+        this.qsVideos = qsVideos;
+        switchVideo(0);
+    }
+
+    //切视频
+    protected void switchVideo(int index) {
+        if (qsVideos != null && qsVideos.size() > index) {
+            if (qsVideos.indexOf(nowPlayVideo) == index)
+                return;
+
+            int position = getPosition();
+            boolean isPlaying = isPlaying();
+            boolean checkReady = checkReady();
+
+            nowPlayVideo = qsVideos.get(index);
+            super.setUp(nowPlayVideo.url(), nowPlayVideo.headers(), nowPlayVideo.option());
+            if (titleTextView != null) titleTextView.setText(nowPlayVideo.title());
+            //开启清晰度
+            if (definitionTextView != null) {
+                if (nowPlayVideo.definition() != null) {
+                    definitionTextView.setVisibility(VISIBLE);
+                    definitionTextView.setText(nowPlayVideo.definition());
+                } else {
+                    definitionTextView.setVisibility(GONE);
+                }
+            }
+
+            if (checkReady) {
+                seekTo(position);
+                if (isPlaying) play();
+                else prePlay();
+            }
+        }
+    }
+
+    public int getNowPlayIndex() {
+        return qsVideos == null ? -1 : qsVideos.indexOf(nowPlayVideo);
     }
 
     protected void initHelpView(Context context) {
@@ -84,6 +141,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             }
         });
 
+        titleTextView = (TextView) findViewById(R.id.help_title);
         startButton = (ImageView) findViewById(R.id.help_start);
         startButton2 = (ImageView) findViewById(R.id.help_start2);
         fullscreenButton = (ImageView) findViewById(R.id.help_fullscreen);
@@ -94,14 +152,14 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         backView = findViewById(R.id.help_back);
         floatCloseView = findViewById(R.id.help_float_close);
         floatBackView = findViewById(R.id.help_float_goback);
-
+        definitionTextView = findViewById(R.id.help_definition);
         if (seekBar != null) {
             seekBar.setOnSeekBarChangeListener(this);
             seekBar.setMax(progressMax);
         }
         if (progressBar != null)
             progressBar.setMax(progressMax);
-        setClick(videoView, startButton, startButton2, fullscreenButton, backView, floatCloseView, floatBackView);
+        setClick(videoView, startButton, startButton2, fullscreenButton, backView, floatCloseView, floatBackView, definitionTextView);
 
     }
 
@@ -166,6 +224,12 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                     setUIWithStateAndMode(currentState, currentMode);
                 }
             }
+
+            //清晰度按钮
+            if (i == R.id.help_definition) {
+                popDefinition(definitionTextView, qsVideos, getNowPlayIndex());
+            }
+
             //点击事件
             handlePlayListener.onEvent(EVENT_CLICK_VIEW, i);
         }
@@ -211,8 +275,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     //-----------ui监听end-----------------
 
 
-    //-----------设置数据start-----------------
-    @Override//覆盖监听播放器状态
+    //-----------设置UI数据start-----------------
+    @Override//覆盖父类监听播放器状态//todo 父类这个方法后面考虑改成final,子类从监听里获取状态,事件
     protected void setUIWithStateAndMode(final int status, final int mode) {
         cancelDismissControlViewTimer();
         cancelProgressTimer();
@@ -225,14 +289,21 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                 break;
             case STATE_PLAYING:
                 startDismissControlViewTimer();
+                startProgressTimer();
+                if (currentState == STATE_PREPARING)//加载完成显示下控制UI
+                    if (isDoneShowControlUI) isShowControlView = true;
+                break;
             case STATE_PAUSE:
                 startProgressTimer();
+                if (currentState == STATE_PREPARING)//加载完成显示下控制UI
+                    isShowControlView = true;
                 break;
             case STATE_ERROR:
                 onBuffering(false);
                 isShowControlView = false;
                 break;
             case STATE_AUTO_COMPLETE:
+                if (isDoneShowControlUI) isShowControlView = true;
                 setCompleProgressAndTime();
                 onBuffering(false);
                 break;
@@ -241,8 +312,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         if ((status == STATE_PLAYING || status == STATE_PAUSE || status == STATE_AUTO_COMPLETE)
                 & !isShowControlView)
             dismissControlView(status, mode);
+        //调用父类...
         super.setUIWithStateAndMode(status, mode);
-
         //状态改变监听回调永远放在最后
         handlePlayListener.onEvent(EVENT_CONTROL_VIEW, isShowControlView ? 0 : 1);
     }
@@ -274,7 +345,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             if (duration > 1)
                 totalTimeTextView.setText(Util.stringForTime(duration));
             else
-                totalTimeTextView.setText("直播");
+                totalTimeTextView.setText(R.string.online);
     }
 
     //初始化进度和时间
@@ -324,7 +395,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
 
     //-----------定时任务隐藏控制栏start-----------------
     protected void startDismissControlViewTimer() {
-        startDismissControlViewTimer(2500);
+        startDismissControlViewTimer(controlUIHideTime);
     }
 
     protected void startDismissControlViewTimer(int delayed) {
@@ -411,7 +482,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             if (delta > duration - tempPosition)
                 delta = duration - tempPosition;
             if (showProgressDialog(delta, tempPosition, duration)) {
-
+                //pause();
             }
         }
         //亮度
@@ -466,7 +537,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
                 tempPosition = 0;
             seekTo(tempPosition);
             tempPosition = 0;
-
+            //play();
         }
         //亮度
         if (type == HandleTouchEvent.GestureEvent.TOUCH_LEFT_Y) {
@@ -477,7 +548,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
             dismissVolumeDialog();
         }
 
-        if (currentMode==MODE_WINDOW_FULLSCREEN){
+        if (currentMode == MODE_WINDOW_FULLSCREEN) {
             Util.showNavigationBar(getContext(), false);
         }
     }
@@ -487,6 +558,8 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
     protected abstract boolean showWifiDialog();//要弹出非wifi提示框覆盖return true即可
 
     protected abstract void doubleClick();
+
+    protected abstract void popDefinition(View view, List<QSVideo> qsVideos, int index);//弹出清晰度
 
     protected abstract boolean showProgressDialog(int delay, int position, int duration);
 

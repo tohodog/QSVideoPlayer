@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.BaseMedia;
+import org.song.videoplayer.media.IjkMedia;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 2017/2/10.
@@ -48,14 +52,14 @@ public interface IVideoPlayer {
      * 设置视频参数
      *
      * @param url     视频地址
-     * @param objects [0] 视频标题
-     *                [1] Map<String, String> headers
-     *                [2] IJK: List<IjkMeida.Option>
-     *                ...
+     * @param headers 头参数
+     * @param option  ijk配置...
      */
-    void setUp(String url, Object... objects);
+    void setUp(String url, Map<String, String> headers, Object option);
 
-    void play();//播放
+    void play();//初始化(完成自动播放)/播放
+
+    void prePlay();//初始化(完成不会播放)
 
     void pause();//暂停
 

@@ -29,7 +29,7 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
 
     /////////////以下MediaPlayer控制/////////////
     @Override
-    public void doPrepar(Context context, String url, Map<String, String> headers, Object... objects) {
+    public boolean doPrepar(Context context, String url, Map<String, String> headers, Object... objects) {
         try {
             release();
             mediaPlayer = new MediaPlayer();
@@ -60,10 +60,11 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
             mediaPlayer.setOnVideoSizeChangedListener(this);
             mediaPlayer.prepareAsync();
             //mediaPlayer.setDisplay();
-
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             onError(mediaPlayer, MEDIA_ERROR_UNKNOWN, MEDIA_ERROR_UNKNOWN);
+            return false;
         }
     }
 
