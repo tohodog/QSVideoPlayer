@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -39,6 +40,8 @@ public class AndroidMedia extends BaseMedia implements MediaPlayer.OnPreparedLis
                     mediaPlayer.setDataSource(context, Uri.parse(url), headers);
                 else
                     mediaPlayer.setDataSource(context, Uri.parse(url));
+            } else if (url.startsWith(ContentResolver.SCHEME_FILE)) {
+                mediaPlayer.setDataSource(url.replace("file:/", ""));
             } else {
                 try {
                     Class<MediaPlayer> clazz = MediaPlayer.class;

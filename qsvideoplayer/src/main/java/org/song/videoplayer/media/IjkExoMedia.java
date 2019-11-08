@@ -1,5 +1,6 @@
 package org.song.videoplayer.media;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 
@@ -22,7 +23,13 @@ public class IjkExoMedia extends IjkBaseMedia {
     @Override
     IMediaPlayer getMedia(Context context, String url, Map<String, String> headers, Object... objects) throws Exception {
         IjkExoMediaPlayer mediaPlayer = new IjkExoMediaPlayer(context);
-        mediaPlayer.setDataSource(context, Uri.parse(url), headers);
+
+        if (url.startsWith(ContentResolver.SCHEME_FILE)) {
+            mediaPlayer.setDataSource(url.replace("file:/", ""));
+        } else {
+            mediaPlayer.setDataSource(context, Uri.parse(url), headers);
+        }
+
         mainThreadHandler.postDelayed(runnable, 500);
         return mediaPlayer;
     }
