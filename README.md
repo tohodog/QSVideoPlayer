@@ -127,10 +127,12 @@ dependencies {
 
     qsVideoView.setUp(url, "这是一一一一一一一一一个标题");
 
-    //设置多个清晰度
+    //设置多个清晰度和ijk配置
+    //List<IjkMedia.Option> list = new ArrayList<>();
+    //list.add(new IjkMedia.Option(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1));
     //demoVideoView.setUp(
     //                QSVideo.Build(url).title("这是标清标题").definition("标清").resolution("标清 720P").build(),
-    //                QSVideo.Build(url).title("这是高清标题").definition("高清").resolution("高清 1080P").build());
+    //                QSVideo.Build(url).title("这是高清标题").definition("高清").resolution("高清 1080P").option(list).build());
 
     qsVideoView.getCoverImageView().setImageResource(R.mipmap.cover);//封面
 
