@@ -47,7 +47,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.tohodog:QSVideoPlayer:2.2.8'
+    implementation 'com.github.tohodog:QSVideoPlayer:2.2.9'
 
     //是否需要其他架构的ijk解码器支持,默认只有v7
     //so不存在报错可以配置ndk{abiFilters 'armeabi-v7a'}或导入下面的包
