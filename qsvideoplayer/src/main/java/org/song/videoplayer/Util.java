@@ -117,18 +117,33 @@ public class Util {
     }
 
 
-    public static void showNavigationBar(Context context, boolean show) {
+    private static void showNavigationBar(Context context, boolean show) {
+//        View.SYSTEM_UI_FLAG_LAYOUT_STABLE：全屏显示时保证尺寸不变。
+//        View.SYSTEM_UI_FLAG_VISIBLE：Activity非全屏显示，显示状态栏和导航栏。
+//        View.INVISIBLE：Activity伸展全屏显示，隐藏状态栏。
+//        View.SYSTEM_UI_LAYOUT_FLAGS：效果同View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+//        SYSTEM_UI_FLAG_LOW_PROFILE	弱化状态栏和导航栏的图标
+//        SYSTEM_UI_FLAG_HIDE_NAVIGATION	隐藏导航栏，用户点击屏幕会显示导航栏
+//        SYSTEM_UI_FLAG_FULLSCREEN	隐藏状态栏
+//        SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION	拓展布局到导航栏后面
+//        SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN	拓展布局到状态栏后面
+//        SYSTEM_UI_FLAG_LAYOUT_STABLE	稳定的布局，不会随系统栏的隐藏、显示而变化
+//        SYSTEM_UI_FLAG_IMMERSIVE	沉浸模式，用户可以交互的界面
+//        SYSTEM_UI_FLAG_IMMERSIVE_STICKY	沉浸模式，用户可以交互的界面。同时，用户上下拉系统栏时，会自动隐藏系统栏
+//        必须配合View.SYSTEM_UI_FLAG_FULLSCREEN和View.SYSTEM_UI_FLAG_HIDE_NAVIGATION组合使用，达到的效果是拉出状态栏和导航栏后显示一会儿消失。
+
         try {
             Activity a = scanForActivity(context);
+            Window w = a.getWindow();
+            View v = w.getDecorView();
+//            int ops = v.getSystemUiVisibility();
             if (show) {
                 if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-                    View v = a.getWindow().getDecorView();
                     v.setSystemUiVisibility(View.GONE);
                 } else if (Build.VERSION.SDK_INT >= 19) {
-                    a.getWindow().getDecorView().setSystemUiVisibility(
+                    v.setSystemUiVisibility(
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     );
                 }
 
@@ -137,21 +152,26 @@ public class Util {
                 // Set the content to appear under the system bars so that the content
                 // doesn't resize when the system bars hide and show.
                 if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-                    View v = a.getWindow().getDecorView();
                     v.setSystemUiVisibility(View.VISIBLE);
                 } else if (Build.VERSION.SDK_INT >= 19) {
-                    a.getWindow().getDecorView().setSystemUiVisibility(
+                    v.setSystemUiVisibility(
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                                    | View.SYSTEM_UI_FLAG_LOW_PROFILE
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
                                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                                    | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                                    | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    );
                 }
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public static int dp2px(Context context, float value) {

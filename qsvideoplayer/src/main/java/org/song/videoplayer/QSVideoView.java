@@ -132,14 +132,16 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
             if (duration >= 0) {
                 seek(duration);
             }
-        } else
+        } else {
             seekToInAdvance = duration;
+        }
     }
 
     @Override
     public void pause() {
-        if (currentState == STATE_PLAYING)
+        if (currentState == STATE_PLAYING) {
             clickPlay();
+        }
     }
 
 
@@ -265,29 +267,26 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void enterWindowFullscreen() {
         if (currentMode == MODE_WINDOW_NORMAL & checkSpaceOK()) {
-            boolean flag = false;
-            if (enterFullMode == 3) {
-                flag = true;
-                enterFullMode = height > width ? 1 : 0;
+            Util.hideBottomUIMenu(getContext());
+
+            int mode = enterFullMode;
+            if (mode == 3) {
+                mode = height > width ? 1 : 0;
             }
 
             full_flag = Util.SET_FULL(getContext());
             orientation_flag = Util.isScreenOriatationPortrait(getContext());
 
-            if (enterFullMode == 0)
+            if (mode == 0) {
                 Util.SET_LANDSCAPE(getContext());
-            else if (enterFullMode == 1)
+            } else if (mode == 1) {
                 Util.SET_PORTRAIT(getContext());
-            else if (enterFullMode == 2)
+            } else if (mode == 2) {
                 Util.SET_SENSOR(getContext());
-            if (flag)
-                enterFullMode = 3;
-
-            Util.showNavigationBar(getContext(), false);
+            }
 
             ViewGroup vp = (ViewGroup) videoView.getParent();
-            if (vp != null)
-                vp.removeView(videoView);
+            if (vp != null) vp.removeView(videoView);
             ViewGroup decorView = (ViewGroup) (Util.scanForActivity(getContext())).getWindow().getDecorView();
             //.findViewById(Window.ID_ANDROID_CONTENT);
             decorView.addView(videoView, new LayoutParams(-1, -1));
@@ -299,20 +298,22 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void quitWindowFullscreen() {
         if (currentMode == MODE_WINDOW_FULLSCREEN & checkSpaceOK()) {
-            if (full_flag)
-                Util.SET_FULL(getContext());
-            else
-                Util.CLEAR_FULL(getContext());
-            if (orientation_flag)
-                Util.SET_PORTRAIT(getContext());
-            else
-                Util.SET_LANDSCAPE(getContext());
+            Util.showBottomUIMenu(getContext());
 
-            Util.showNavigationBar(getContext(), true);
+            if (full_flag) {
+                Util.SET_FULL(getContext());
+            } else {
+                Util.CLEAR_FULL(getContext());
+            }
+            if (orientation_flag) {
+                Util.SET_PORTRAIT(getContext());
+            } else {
+                Util.SET_LANDSCAPE(getContext());
+            }
+
 
             ViewGroup vp = (ViewGroup) videoView.getParent();
-            if (vp != null)
-                vp.removeView(videoView);
+            if (vp != null) vp.removeView(videoView);
             addView(videoView, new LayoutParams(-1, -1));
             setStateAndMode(currentState, MODE_WINDOW_NORMAL);
         }
@@ -325,13 +326,13 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         boolean b = true;
         if (currentMode == MODE_WINDOW_NORMAL && floatParams != null) {
             ViewGroup vp = (ViewGroup) videoView.getParent();
-            if (vp != null)
-                vp.removeView(videoView);
+            if (vp != null) vp.removeView(videoView);
             b = floatWindowHelp.enterWindowFloat(videoView, floatParams);
             if (b) {
                 setStateAndMode(currentState, floatParams.systemFloat ? MODE_WINDOW_FLOAT_SYS : MODE_WINDOW_FLOAT_ACT);
-            } else
+            } else {
                 addView(videoView, new LayoutParams(-1, -1));
+            }
         }
         return b;
     }
@@ -341,8 +342,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     public void quitWindowFloat() {
         if (isWindowFloatMode()) {
             ViewGroup vp = (ViewGroup) videoView.getParent();
-            if (vp != null)
-                vp.removeView(videoView);
+            if (vp != null) vp.removeView(videoView);
             addView(videoView, new LayoutParams(-1, -1));
             floatWindowHelp.quieWindowFloat();
             setStateAndMode(currentState, MODE_WINDOW_NORMAL);
@@ -417,8 +417,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     @Override
     public void onInfo(IMediaControl iMediaControl, int what, int extra) {
         Log.e(TAG, "onInfo" + " what" + what + " extra" + extra);
-        if ((what == 804 | what == 805) & extra == -1004)
+        if ((what == 804 | what == 805) & extra == -1004) {
             onError(iMediaControl, what, extra);//8.0断流走的onInfo
+        }
 
         if (what == IMediaControl.MEDIA_INFO_BUFFERING_START) {
             onBuffering(true);
@@ -545,8 +546,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         Log.e(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
         removeRenderView();
         String url = this.url;
-        if (openCache && urlMode == 0)
+        if (openCache && urlMode == 0) {
             url = CacheManager.buildCahchUrl(getContext(), url, headers);
+        }
         boolean res = iMediaControl.doPrepar(getContext(), url, headers, option);
         if (res) {
             addRenderView();
