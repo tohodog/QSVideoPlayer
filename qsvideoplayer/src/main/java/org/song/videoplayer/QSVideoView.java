@@ -379,7 +379,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     //-----------解码器回调start-----------------
     @Override
     public void onPrepared(IMediaControl iMediaControl) {
-        Log.e(TAG, "onPrepared");
+        Log.i(TAG, "onPrepared");
         setMute(isMute);
         setSpeed(rate);
         if (!noPlayInAdvance) {
@@ -403,20 +403,20 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onCompletion(IMediaControl iMediaControl) {
-        Log.e(TAG, "onCompletion");
+        Log.i(TAG, "onCompletion");
         setStateAndMode(STATE_AUTO_COMPLETE, currentMode);
         handlePlayListener.onEvent(EVENT_COMPLETION);
     }
 
     @Override
     public void onSeekComplete(IMediaControl iMediaControl) {
-        Log.e(TAG, "onSeekComplete");
+        Log.i(TAG, "onSeekComplete");
         handlePlayListener.onEvent(EVENT_SEEK_COMPLETION, getPosition());
     }
 
     @Override
     public void onInfo(IMediaControl iMediaControl, int what, int extra) {
-        Log.e(TAG, "onInfo" + " what" + what + " extra" + extra);
+        Log.i(TAG, "onInfo" + " what" + what + " extra" + extra);
         if ((what == 804 | what == 805) & extra == -1004) {
             onError(iMediaControl, what, extra);//8.0断流走的onInfo
         }
@@ -436,7 +436,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onVideoSizeChanged(IMediaControl iMediaControl, int width, int height) {
-        Log.e(TAG, "onVideoSizeChanged" + " width:" + width + " height:" + height);
+        Log.i(TAG, "onVideoSizeChanged" + " width:" + width + " height:" + height);
         iRenderView.setVideoSize(width, height);
         this.width = width;
         this.height = height;
@@ -457,7 +457,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void onBufferingUpdate(IMediaControl iMediaControl, float bufferProgress) {
-        //Log.e(TAG, "onBufferingUpdate" + bufferProgress);
+//        Log.i(TAG, "onBufferingUpdate" + bufferProgress);
         setBufferProgress(bufferProgress);
         handlePlayListener.onEvent(EVENT_BUFFERING_UPDATE, (int) (bufferProgress * 100));
     }
@@ -495,7 +495,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     protected void setUIWithStateAndMode(final int status, final int mode) {
-        Log.e(TAG, "status:" + status + " mode:" + mode);
+        Log.i(TAG, "status:" + status + " mode:" + mode);
         if (status == STATE_PLAYING)
             Util.KEEP_SCREEN_ON(getContext());
         else
@@ -543,7 +543,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     //一开始点击准备播放--初始化
     protected void prepareMediaPlayer() {
-        Log.e(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
+        Log.i(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
         removeRenderView();
         String url = this.url;
         if (openCache && urlMode == 0) {
