@@ -137,13 +137,18 @@ public class Util {
             Activity a = scanForActivity(context);
             Window w = a.getWindow();
             View v = w.getDecorView();
-//            int ops = v.getSystemUiVisibility();
             if (show) {
                 if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
                     v.setSystemUiVisibility(View.GONE);
                 } else if (Build.VERSION.SDK_INT >= 19) {
+                    int ops = v.getSystemUiVisibility();
                     v.setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            (ops | View.SYSTEM_UI_FLAG_LAYOUT_STABLE) &
+                                    ~(View.SYSTEM_UI_FLAG_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
                     );
                 }
 
@@ -154,8 +159,9 @@ public class Util {
                 if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
                     v.setSystemUiVisibility(View.VISIBLE);
                 } else if (Build.VERSION.SDK_INT >= 19) {
-                    v.setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    int ops = v.getSystemUiVisibility();
+                    v.setSystemUiVisibility(ops
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 //                                    | View.SYSTEM_UI_FLAG_LOW_PROFILE
                                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
