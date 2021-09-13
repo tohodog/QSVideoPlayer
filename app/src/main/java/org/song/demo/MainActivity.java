@@ -15,29 +15,28 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danikula.videocache.HttpProxyCacheServer;
 
-import org.song.demo.danmaku.DanmakuControl;
 import org.song.demo.danmaku.DanmakuConfig;
+import org.song.demo.danmaku.DanmakuControl;
 import org.song.demo.danmaku.QSDanmakuParser;
 import org.song.demo.io.FileUtil;
+import org.song.demo.media.ExoMedia;
+import org.song.videoplayer.DemoQSVideoView;
 import org.song.videoplayer.IVideoPlayer;
 import org.song.videoplayer.PlayListener;
-import org.song.videoplayer.DemoQSVideoView;
 import org.song.videoplayer.QSVideo;
-import org.song.videoplayer.Util;
 import org.song.videoplayer.cache.Proxy;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
-import org.song.demo.media.ExoMedia;
 import org.song.videoplayer.media.IjkExoMedia;
 import org.song.videoplayer.media.IjkMedia;
 
@@ -53,21 +52,24 @@ public class MainActivity extends AppCompatActivity {
     DemoQSVideoView demoVideoView;
     DanmakuControl danmakuControl;
 
-    String mp4 = "http://videos.kpie.com.cn/videos/20170526/037DCE54-EECE-4520-AA92-E4002B1F29B0.mp4";
+    String mp4 = "http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401897159_VID_20200629_113726.mp4";
+    String mp42 = "http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401975332_VID_20200629_113705.mp4";
+
     String _mp4 = "http://sinacloud.net/sakaue/shelter.mp4";
     String m3u8 = "http://d2e6xlgy8sg8ji.cloudfront.net/liveedge/eratv1/chunklist.m3u8";
 
+    //横屏 http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401897159_VID_20200629_113726.mp4
+    //竖屏 http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401975332_VID_20200629_113705.mp4
     String url;
     Class<? extends BaseMedia> decodeMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 19)//透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
+//        Util.SET_FULL(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},1);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
         findViewById(R.id.btn_url).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -101,19 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(int what, Integer... extra) {
-                if (what == DemoQSVideoView.EVENT_CONTROL_VIEW && mode == IVideoPlayer.MODE_WINDOW_NORMAL) {
-                    if (Build.VERSION.SDK_INT >= 19) {
-                        if (extra[0] == 0)//状态栏隐藏/显示
-                            Util.CLEAR_FULL(MainActivity.this);
-                        else
-                            Util.SET_FULL(MainActivity.this);
-                    }
-                }
                 //系统浮窗点击退出退出activity
-                if (what == DemoQSVideoView.EVENT_CLICK_VIEW
-                        && extra[0] == R.id.help_float_close)
-                    if (demoVideoView.isSystemFloatMode())
-                        finish();
+                if (what == DemoQSVideoView.EVENT_CLICK_VIEW && extra[0] == R.id.help_float_close) {
+                    if (demoVideoView.isSystemFloatMode()) finish();
+                }
             }
 
         });
@@ -242,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void 发弹幕(View v) {
         addDanmaku(false);
-        //((ImageView) findViewById(R.id.image)).setImageBitmap(demoVideoView.getCurrentFrame());
+        ((ImageView) findViewById(R.id.image)).setImageBitmap(demoVideoView.getCurrentFrame());
     }
 
 
@@ -379,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeUrl() {
         final EditText editText = new EditText(this);
-        editText.setText(_mp4);
+        editText.setText(mp42);
         new AlertDialog.Builder(this).setView(editText).setTitle("网络视频地址").setNegativeButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

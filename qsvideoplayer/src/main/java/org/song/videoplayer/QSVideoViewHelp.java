@@ -549,7 +549,7 @@ public abstract class QSVideoViewHelp extends QSVideoView implements HandleTouch
         }
 
         if (currentMode == MODE_WINDOW_FULLSCREEN) {
-            Util.showNavigationBar(getContext(), false);
+//            Util.hideBottomUIMenu(getContext());
         }
     }
 
