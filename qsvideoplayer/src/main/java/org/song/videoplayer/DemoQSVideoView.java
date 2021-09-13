@@ -7,11 +7,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -90,28 +88,38 @@ public class DemoQSVideoView extends QSVideoViewHelp {
                 break;
             case STATE_PLAYING:
             case STATE_PAUSE:
-            case STATE_AUTO_COMPLETE://显示 播放按钮  [底部] [顶部]
+            case STATE_AUTO_COMPLETE://播放中显示 播放按钮  [底部] [顶部]
                 showChangeViews(startButton,
-                        mode >= MODE_WINDOW_FLOAT_SYS ? null : bottomContainer,
-                        mode == MODE_WINDOW_FULLSCREEN ? topContainer : null);
+                        mode >= MODE_WINDOW_FLOAT_SYS ? null : bottomContainer,//浮窗不显示底部
+                        mode == MODE_WINDOW_FULLSCREEN ? topContainer : null);//全屏显示顶部
                 break;
             case STATE_ERROR://出错显示errorContainer
                 showChangeViews(errorContainer);
                 break;
         }
-        updateViewImage(status, mode);
+
+        //播放,全屏按钮
+        startButton.setImageResource(status == STATE_PLAYING ?
+                R.drawable.jc_click_pause_selector : R.drawable.jc_click_play_selector);
+        fullscreenButton.setImageResource(mode == MODE_WINDOW_FULLSCREEN ?
+                R.drawable.jc_shrink : R.drawable.jc_enlarge);
+
+        //浮窗显示两个按钮
         floatCloseView.setVisibility(mode >= MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
         floatBackView.setVisibility(mode >= MODE_WINDOW_FLOAT_SYS ? View.VISIBLE : View.INVISIBLE);
     }
 
-    //隐藏控制UI
+    //自动隐藏控制UI
     @Override
     protected void dismissControlView(int status, int mode) {
         bottomContainer.setVisibility(View.INVISIBLE);
         topContainer.setVisibility(View.INVISIBLE);
+        //显示mini进度条
         progressBar.setVisibility(View.VISIBLE);
+        //播放完成不隐藏播放按钮
         if (status != STATE_AUTO_COMPLETE)
             startButton.setVisibility(View.INVISIBLE);
+        //浮窗隐藏角落按钮
         if (mode >= MODE_WINDOW_FLOAT_SYS)
             floatCloseView.setVisibility(View.INVISIBLE);
         if (mode >= MODE_WINDOW_FLOAT_SYS)
@@ -132,13 +140,6 @@ public class DemoQSVideoView extends QSVideoViewHelp {
         for (View v : views)
             if (v != null)
                 v.setVisibility(VISIBLE);
-    }
-
-    protected void updateViewImage(int status, int mode) {
-        startButton.setImageResource(status == STATE_PLAYING ?
-                R.drawable.jc_click_pause_selector : R.drawable.jc_click_play_selector);
-        fullscreenButton.setImageResource(mode == MODE_WINDOW_FULLSCREEN ?
-                R.drawable.jc_shrink : R.drawable.jc_enlarge);
     }
 
     public ImageView getCoverImageView() {
@@ -180,7 +181,8 @@ public class DemoQSVideoView extends QSVideoViewHelp {
     //双击执行什么
     @Override
     protected void doubleClick() {
-        clickFull();
+//        clickFull();
+        clickPlay();
     }
 
     //弹出清晰度选择

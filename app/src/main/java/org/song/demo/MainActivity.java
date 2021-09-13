@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     String mp42 = "http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401975332_VID_20200629_113705.mp4";
 
     String _mp4 = "http://sinacloud.net/sakaue/shelter.mp4";
-    String m3u8 = "http://d2e6xlgy8sg8ji.cloudfront.net/liveedge/eratv1/chunklist.m3u8";
+    String m3u8 = "http://cctvalih5ca.v.myalicdn.com/live/cctv1_2/index.m3u8";
 
     //横屏 http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401897159_VID_20200629_113726.mp4
     //竖屏 http://goinphoto1005.oss-cn-shenzhen.aliyuncs.com/light/video/20200629/1593401975332_VID_20200629_113705.mp4
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         );
 //        demoVideoView.setUp(url, "这是一个标题");
         //demoVideoView.seekTo(12000);
-        demoVideoView.openCache();//缓存配置见最后,缓存框架可能会出错,
+//        demoVideoView.openCache();//缓存配置见最后,缓存框架太久没更新,不是很稳定
         demoVideoView.play();
         this.url = url;
         this.decodeMedia = decodeMedia;
@@ -410,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
     private void cacheConfig() {
         Proxy.setConfig(new HttpProxyCacheServer
                         .Builder(this)
-                        .cacheDirectory(new File("/sdcard/video"))
+                        .cacheDirectory(new File(Environment.getExternalStorageDirectory(), "qsvideo"))
                         //.fileNameGenerator() 存储文件名规则
                         .maxCacheSize(512 * 1024 * 1024)//缓存文件大小
                 //.maxCacheFilesCount(100)//缓存文件数目 二选一

@@ -15,14 +15,13 @@ import android.widget.Toast;
 import org.song.videoplayer.cache.CacheManager;
 import org.song.videoplayer.floatwindow.FloatParams;
 import org.song.videoplayer.floatwindow.FloatWindowHelp;
+import org.song.videoplayer.media.AndroidMedia;
 import org.song.videoplayer.media.BaseMedia;
 import org.song.videoplayer.media.IMediaCallback;
 import org.song.videoplayer.media.IMediaControl;
-import org.song.videoplayer.media.IjkMedia;
 import org.song.videoplayer.rederview.IRenderView;
 import org.song.videoplayer.rederview.SufaceRenderView;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +38,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
      * 进入全屏的模式 0横屏 1竖屏 2传感器自动横竖屏 3根据视频比例自动确定横竖屏      -1什么都不做
      */
     public int enterFullMode = 3;
+    public int renderViewType;//1=SufaceRenderView, 2=TextureRenderView
 
     private IMediaControl iMediaControl;
     protected HandlePlayListener handlePlayListener;
@@ -60,7 +60,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     protected int aspectRatio;
     protected boolean isMute, openCache;
     protected float rate;
-
+    protected Class<? extends BaseMedia> mediaClass = AndroidMedia.class;//解码器
 
     public QSVideoView(Context context) {
         this(context, null);
@@ -77,7 +77,12 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     private void init(Context context) {
         handlePlayListener = new HandlePlayListener();
-        iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, IjkMedia.class);
+//        try {
+//            mediaClass = (Class<? extends BaseMedia>) Class.forName("org.song.videoplayer.media.IjkMedia");
+//        } catch (Exception e) {
+//            mediaClass = AndroidMedia.class;
+//        }
+        iMediaControl = ConfigManage.getInstance(getContext()).newMediaControl(this, mediaClass);
         floatWindowHelp = new FloatWindowHelp(context);
         videoView = new FrameLayout(context);
         videoView.setId(R.id.qs_videoview);
@@ -85,14 +90,14 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         renderViewContainer.setBackgroundColor(Color.BLACK);
         videoView.addView(renderViewContainer, new LayoutParams(-1, -1));
         addView(videoView, new LayoutParams(-1, -1));
+        ConfigManage.getInstance(getContext()).addVideoView(this);
     }
 
 
     //-----------给外部调用的start----------
     @Override
     public void setUp(String url, Map<String, String> headers, Object option) {
-        if (STATE_NORMAL != currentState)
-            release();
+        if (STATE_NORMAL != currentState) release();
         this.url = url;
         this.urlMode = Util.PaserUrl(url);
         this.headers = headers;
@@ -100,9 +105,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         setStateAndMode(STATE_NORMAL, currentMode);
     }
 
-    public void setUp(String url, Map<String, String> headers, List<IjkMedia.Option> optionList) {
-        setUp(url, headers, (Object) optionList);
-    }
+//    public void setUp(String url, Map<String, String> headers, List<IjkMedia.Option> optionList) {
+//        setUp(url, headers, (Object) optionList);
+//    }
 
     public void setUp(String url) {
         setUp(url, null, (Object) null);
@@ -197,7 +202,8 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     @Override
     public void setDecodeMedia(Class<? extends BaseMedia> claxx) {
-        this.iMediaControl = ConfigManage.getInstance(getContext()).getMediaControl(this, claxx);
+        mediaClass = claxx;
+        this.iMediaControl = ConfigManage.getInstance(getContext()).newMediaControl(this, claxx);
     }
 
     @Override
@@ -368,8 +374,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     private boolean checkSpaceOK() {
         long now = System.currentTimeMillis();
         long d = now - tempLong;
-        if (d > 888)
-            tempLong = now;
+        if (d > 888) tempLong = now;
         return d > 888;
     }
 
@@ -496,19 +501,22 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
     protected void setUIWithStateAndMode(final int status, final int mode) {
         Log.i(TAG, "status:" + status + " mode:" + mode);
-        if (status == STATE_PLAYING)
+        if (status == STATE_PLAYING) {
             Util.KEEP_SCREEN_ON(getContext());
-        else
+        } else {
             Util.KEEP_SCREEN_OFF(getContext());
+        }
 
         final int temp_status = this.currentState;
         final int temp_mode = this.currentMode;
         this.currentState = status;
         this.currentMode = mode;
-        if (temp_status != status)
+        if (temp_status != status) {
             handlePlayListener.onStatus(status);
-        if (temp_mode != mode)
+        }
+        if (temp_mode != mode) {
             handlePlayListener.onMode(mode);
+        }
 
     }
 
@@ -520,8 +528,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
         }
         if (currentState == STATE_NORMAL) {
             if (urlMode >= 0 && !Util.isWifiConnected(getContext())) {
-                if (showWifiDialog())
-                    return;
+                if (showWifiDialog()) return;
             }
             prepareMediaPlayer();
         } else if (currentState == STATE_PLAYING) {
@@ -558,7 +565,7 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
     }
 
     private void addRenderView() {
-        iRenderView = ConfigManage.getInstance(getContext()).getIRenderView(getContext());
+        iRenderView = ConfigManage.getInstance(getContext()).getIRenderView(getContext(), renderViewType);
         iRenderView.addRenderCallback(new IRenderView.IRenderCallback() {
             @Override
             public void onSurfaceCreated(IRenderView holder, int width, int height) {
@@ -592,9 +599,9 @@ public class QSVideoView extends FrameLayout implements IVideoPlayer, IMediaCall
 
 
     private void seek(int time) {
-        if (currentState == STATE_PLAYING ||
-                currentState == STATE_PAUSE)
+        if (currentState == STATE_PLAYING || currentState == STATE_PAUSE) {
             iMediaControl.seekTo(time);
+        }
         if (currentState == STATE_AUTO_COMPLETE) {
             //seekToInAdvance = time;//播放完成 拖动进度条重新播放
             //prepareMediaPlayer();

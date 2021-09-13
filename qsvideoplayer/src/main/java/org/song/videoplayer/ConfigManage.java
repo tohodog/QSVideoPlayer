@@ -38,31 +38,29 @@ public class ConfigManage {
 
     private SharedPreferences preferences;
     private String decodeClassName = "";
+    private int renderViewType;//1=SufaceRenderView, 2=TextureRenderView
 
     private ConfigManage(Context context) {
         preferences = context.getSharedPreferences("cfg_qsvideo",
                 Context.MODE_PRIVATE);
         decodeClassName = preferences.getString("decodeClassName", AndroidMedia.class.getName());
+
+        int def = Build.VERSION.SDK_INT >= 14 ? 2 : 1;
+        renderViewType = preferences.getInt("renderViewType", def);
     }
 
 
-    IRenderView getIRenderView(Context context) {
-        if (Build.VERSION.SDK_INT >= 14)
-            return new TextureRenderView(context);
-        else
-            return new SufaceRenderView(context);
+    IRenderView getIRenderView(Context context, int type) {
+        if (type == 0) type = renderViewType;
+        if (type == 1) return new SufaceRenderView(context);
+        if (type == 2 && Build.VERSION.SDK_INT >= 14) return new TextureRenderView(context);
+        Log.e(QSVideoView.TAG, "renderViewType设置有误,默认使用SufaceRenderView");
+        return new SufaceRenderView(context);
     }
 
 
-    //后期扩展其他解码器 exo ijk... exo api需大于16
-    IMediaControl getMediaControl(IMediaCallback iMediaCallback, Class<? extends BaseMedia> claxx) {
-        if (iMediaCallback instanceof QSVideoView)
-            addVideoView((QSVideoView) iMediaCallback);
-        return newInstance(claxx.getName(), iMediaCallback);
-    }
-
-    private IMediaControl newInstance(String className, IMediaCallback iMediaCallback) {
-        IMediaControl i = Util.newInstance(className, iMediaCallback);
+    IMediaControl newMediaControl(IMediaCallback iMediaCallback, Class<? extends BaseMedia> className) {
+        IMediaControl i = Util.newInstance(className.getName(), iMediaCallback);
         if (i == null) {
             Log.e(QSVideoView.TAG, "newInstance error: " + iMediaCallback);
             i = new AndroidMedia(iMediaCallback);
@@ -70,22 +68,20 @@ public class ConfigManage {
         return i;
     }
 
-    private void addVideoView(QSVideoView q) {
+    void addVideoView(QSVideoView q) {
         WeakReference<QSVideoView> w = new WeakReference<>(q);
         videos.add(w);
         Iterator<WeakReference<QSVideoView>> iterList = videos.iterator();//List接口实现了Iterable接口
         while (iterList.hasNext()) {
             WeakReference<QSVideoView> ww = iterList.next();
-            if (ww.get() == null)
-                iterList.remove();
+            if (ww.get() == null) iterList.remove();
         }
     }
 
     public static void releaseAll() {
         for (WeakReference<QSVideoView> w : videos) {
             QSVideoView q = w.get();
-            if (q != null)
-                q.release();
+            if (q != null) q.release();
         }
         videos.clear();
     }
@@ -93,8 +89,7 @@ public class ConfigManage {
     public static void releaseOther(QSVideoView qs) {
         for (WeakReference<QSVideoView> w : videos) {
             QSVideoView q = w.get();
-            if (q != null & q != qs)
-                q.release();
+            if (q != null & q != qs) q.release();
         }
     }
 
@@ -105,5 +100,14 @@ public class ConfigManage {
 
     public String getDecodeMediaClass() {
         return decodeClassName;
+    }
+
+    public void setRenderViewType(int renderViewType) {
+        this.renderViewType = renderViewType;
+        preferences.edit().putInt("renderViewType", renderViewType).apply();
+    }
+
+    public int getRenderViewType() {
+        return renderViewType;
     }
 }

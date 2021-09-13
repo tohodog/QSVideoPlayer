@@ -109,7 +109,7 @@ public class TextureRenderView extends TextureView implements TextureView.Surfac
 
     private SurfaceTexture surface;
 
-    @TargetApi(16)
+//    @TargetApi(16)
     @Override//改变大小时会重建Surface
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         Log.i(TAG, "onSurfaceTextureAvailable " + width + "-" + height);
