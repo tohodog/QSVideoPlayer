@@ -13,13 +13,13 @@
     * 智能切换全屏
     * 支持本地缓存
     * 支持倍速静音等
-  * 只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
   * 架构设计优良,模块化可扩展设计,解码模块目前提供了 AndroidMedia(系统自带)、ijkMedia(基于ffmepg)+ijkExoMedia(基于exo)、ExoMedia(2.0.4)解码器
-  * 根据系统版本自动选择SurfaceView和TextureView
+  * 可选择SurfaceView和TextureView
   * 支持本地视频,在线视频,m3u8直播等
   * 提供DemoQSVideoView成品播放器,支持手势,清晰度
+  * 极速DIY:只需100行java代码即可打造自己的播放器!<br/>提供QSVideoViewHelp辅助类,该类提供了常用控件的逻辑和手势调节支持,可快速自定义ui打造自己的播放器,不用写一行播放逻辑
   * 提供list视频列表自动销毁播放框架
-  * 一句代码集成弹幕
+  * 提供一行代码集成弹幕框架
 
 ![qrcode][qrpng]
 <br/>
@@ -36,16 +36,7 @@
 
 ## 使用说明
 
-下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可
-
-根据需求自行选择需要的解码器:<br/>
-一般简单播放视频AndroidMedia足够(体积最小,无依赖)<br/>
-需求高的可选AndroidMedia+(ijkMedia+ijkExoMedia)(2MB单v7a包)<br/>
-目前测试解码效果ijkMedia兼容性最好,AndroidMedia个别视频有半途中断BUG,exo无明显缺陷<br/>
-ps:<br/>删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
-删除exo解码器: libs里删除jar,media包里删除ExoMedia即可<br/>
-
-Gradle
+#### Gradle 自动集成
 ```
 allprojects {
     repositories {
@@ -57,9 +48,25 @@ allprojects {
 
 dependencies {
     implementation 'com.github.tohodog:QSVideoPlayer:2.2.8'
+
+    //是否需要其他架构的ijk解码器支持,默认只有v7
+    //so不存在报错可以配置ndk{abiFilters 'armeabi-v7a'}或导入下面的包
+    //implementation 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.8'
+    //implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8'
+    //implementation 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8'
+    //implementation 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8'
 }
 ```
 
+#### 手动集成
+
+下载项目 添加qsvideoplayer文件夹为自己的项目依赖即可
+可根据需求自行选择需要的解码器:<br/>
+默认一般简单播放视频AndroidMedia足够(体积最小,无依赖)<br/>
+需求高的可选AndroidMedia+(ijkMedia+ijkExoMedia)(2MB单v7a包)<br/>
+目前测试解码效果ijkMedia兼容性最好,AndroidMedia个别视频有半途中断BUG,exo无明显缺陷<br/>
+ps:<br/>如需精简删除ijk解码器: build.gradle注释掉所有依赖,media包里删除IjkBaseMedia IjkExoMedia IjkMedia三个类即可<br/>
+弹幕、exo解码器在demo里,需要自行下载demo复制集成
 
 ## QSVideoView API接口
 ```
@@ -300,6 +307,9 @@ dependencies {
 
 
 ## Log
+### v2.2.9(2021-09-12)
+  * 全屏虚拟键问题
+  * 优化
 ### v2.2.8(2019-04-12)
   * 清晰度选择
   * 优化
